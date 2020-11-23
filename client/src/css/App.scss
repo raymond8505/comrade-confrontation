@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;700;800&display=swap');
+
+@import "../../../../common/scss-lib/bourbon/addons/timing-functions";
+@import "../../../../common/scss-lib/framework/variables";
+@import "../../../../common/scss-lib/framework/mixins";
+@import "../../../../common/scss-lib/framework/framework";
+
+@import './variables';
+
+body
+{
+    background: $red_dark;
+    font-family: $body_font;
+    
+    &,*
+    {
+        font-variant: small-caps;
+    }
+
+}
+
+@import './forms';
+@import './components/SignIn';
+@import './components/GameBoard';
+@import './components/TeamStats';
+@import './components/StatusDot';

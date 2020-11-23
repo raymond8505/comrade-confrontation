@@ -1,0 +1,14 @@
+{
+    "number" : -1,
+    "strikes" : 0,
+    "question" : {
+        "question" : "",
+        "answers" : [
+            {
+                "answer" : "",
+                "score" : 0,
+                "answered" : false
+            }
+        ]
+    }
+}

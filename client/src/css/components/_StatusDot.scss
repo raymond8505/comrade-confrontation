@@ -1,0 +1,12 @@
+.StatusDot
+{
+    height: .75em;
+    width: .75em;
+    border-radius: 50%;
+    background: rgba(white,.5);
+    margin-right: .4em;
+}
+.StatusDot--on
+{
+    background: $yellow;
+}

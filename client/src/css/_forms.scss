@@ -1,0 +1,47 @@
+input
+{
+    &[type="text"]
+    {
+        @include animated;
+        outline: none;
+        border-radius: 0;
+        border-color: $red_dark;
+        padding: .4em .8em .2em;
+        line-height: 1;
+        font-weight: $fw_medium;
+        margin-bottom: .5em;
+
+        &:focus
+        {
+            border-color: $yellow;
+        }
+    }
+}
+
+button
+{
+    @include no-button-style;
+    @include animated;
+    outline: none;
+    font-weight: $fw_bold;
+    //text-transform: uppercase;
+    border: 2px solid transparent;  
+    font-size: 1.1em;
+    background: $white;
+    color: $red_dark;
+    box-shadow: 0 0 2px 0 rgba(black,.5);
+    padding: .4em .5e .2em;
+
+    &.cta
+    {
+        background: $red;
+        color: $yellow;
+
+        &:focus
+        {
+            border-color: $yellow;
+            box-shadow: none;
+            color: white;
+        }
+    }
+}

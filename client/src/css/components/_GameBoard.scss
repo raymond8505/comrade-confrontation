@@ -1,0 +1,66 @@
+.GameBoard
+{
+    //color: $red_dark;
+    //background: $white;
+
+    background: $dots_bg;
+    color : white;
+    width: 100%;
+    max-width: $container_width;
+    margin: auto;
+    padding: 2em;
+    @include border(horizontal,2px solid $yellow);
+    min-height: 100vh;
+}
+.GameBoard__logo
+{
+    width: 50%;
+    margin: 0 auto 1em;
+    display: block;
+}
+.GameBoard__game-code
+{
+    font-size: 2em;
+    font-weight: $fw_black;
+    text-align: center;
+}
+.GameBoard__round-number
+{
+    font-weight: $fw_black;
+    font-size: 4em;
+}
+.GameBoard__row
+{
+    display: flex;
+    justify-content: space-between;
+
+    > *
+    {
+        width: 33.333%;
+
+        &:nth-child(2)
+        {
+            margin: 0 1em;
+            text-align: center;
+        }
+
+        &:nth-child(3)
+        {
+            &, .TeamStats__name
+            {
+                text-align: right;
+            }
+
+            .TeamStats__name
+            {
+                justify-content: flex-end;
+            }
+
+            .StatusDot
+            {
+                order: 3;
+                margin: 0 0 0 .4em;
+            }
+        }
+    }
+}

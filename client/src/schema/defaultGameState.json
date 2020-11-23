@@ -1,0 +1,21 @@
+{
+    "ID" : "",
+    "users" : [],
+    "hostID" : -1,
+    "teams" : [
+        {
+            "name" : "Team 1",
+            "players" : [],
+            "score" : 0
+        },
+        {
+            "name" : "Team 2",
+            "players" : [],
+            "score" : 0
+        }
+    ],
+    "rounds" : [],
+    "currentRound" : 0,
+    "modified" : -1,
+    "activeTeam" : -1
+}

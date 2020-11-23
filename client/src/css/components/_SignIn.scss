@@ -1,0 +1,53 @@
+.SignIn
+{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.SignIn__form
+{
+    background: $white;
+    padding: 1em;
+    width: 90%;
+    box-shadow: 0 0 .5em 0 rgba(black,.75);
+    border: 2px solid $red_dark;
+    display: grid;
+    grid-template-columns: calc(60% - .5em) calc(40% - .5em);
+    grid-template-rows: 2em 2em;
+    gap: 1em;
+
+    input
+    {
+        margin-right: 1em;
+        width: 60%;
+    }
+
+    button
+    {
+        margin-bottom: 1em;
+        flex-grow: 1;
+        //padding: .2em .8em .1em;
+    }
+
+    input,button
+    {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.SignIn__logo
+{
+    margin-bottom: 2em;
+}
+
+.SignIn__inner
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

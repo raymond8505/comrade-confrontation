@@ -1,0 +1,17 @@
+$red : #ed1b24;
+
+$red_dark : darken($red,10%);
+
+$white : #f7f5e6;// #faeff0;
+
+$yellow : #fee60d;
+
+$body_bg : $red;
+
+$epilogue : 'Epilogue', Roboto, Arial, Helvetica, sans-serif;
+
+$body_font : $epilogue;
+
+$dots : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAL0lEQVQoU2NkIAAYSVLw//9/NZAGRkbGWzCNcBNgknAJqCLiFYB04rUCl2MJ+gIAXLQQCeHUB60AAAAASUVORK5CYII=);
+
+$dots_bg : $red_dark $dots repeat top left;
