@@ -1,6 +1,6 @@
 # Comrade Confrontation
 
-Two teams of country-men and / or women face off to see who is more in touch with _The Will of the People_.
+Two teams of compatriots face off to see who is more in touch with _The Will of the People_.
 
 Test your knowledge of The Motherland and her peoples against your brothers and sisters of The Proletariat (Land owners need not apply).
 
