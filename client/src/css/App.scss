@@ -11,6 +11,7 @@ body
 {
     background: $red_dark;
     font-family: $body_font;
+    color: white;
     
     &,*
     {
@@ -24,3 +25,4 @@ body
 @import './components/GameBoard';
 @import './components/TeamStats';
 @import './components/StatusDot';
+@import './components/QuestionPicker';

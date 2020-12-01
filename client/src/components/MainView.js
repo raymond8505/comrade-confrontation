@@ -24,7 +24,7 @@ const MainView = ({}) => {
         return ()=>{}
     },[]);
 
-    console.log(gameState);
+    //console.log(gameState);
 
     return (<div className="MainView">
         

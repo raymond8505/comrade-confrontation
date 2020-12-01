@@ -1,13 +1,12 @@
 import React,{useReducer, useState} from 'react';
 import defaultGameState from '../schema/defaultGameState.json';
+import allQuestions from '../data/sample-questions.json';
 
 export const GameContext = React.createContext();
 
 const HOST = 'ws://135.23.208.111:8080';
 
 const LOCAL_STORAGE_KEY = 'cc-creds';
-
-
 
 export const GameController = () => {
 
@@ -17,14 +16,20 @@ export const GameController = () => {
 
     const gameStateReducer = (state,action) => {
         
-        console.log(state,action);
         switch(action.type)
         {
             case 'connect' :
                 state.socket = action.data;
                 break;
+            
+            //these actions just need to update the game in state because the server
+            //did the work.
+            case 'game-rounds-set' :
             case 'create-game' :
-                return action.data; //replace the entire game state with the new game data
+                
+                console.log(action);
+                state = updateGame(state,action.data);
+
             default :
                 break;
         }
@@ -32,7 +37,19 @@ export const GameController = () => {
         return state;
     }
 
-    const connect = (cb) => {
+    /**
+     * updates the game state with a server provided replacement, but maintains the socket.
+     * @param {Object} game 
+     * @returns {Object} a copy of the new game, but with the socket field maintained
+     */
+    const updateGame = (oldGame,newGame) => {
+
+        newGame.socket = oldGame.socket;
+
+        return newGame;
+    }
+
+    const connect = (cb,tries = 0) => {
         
         socket = new WebSocket(HOST);
         
@@ -48,7 +65,15 @@ export const GameController = () => {
             cb(socket);
         });
 
-        
+        socket.addEventListener('close',()=>{
+            
+            console.log('socket close');
+            
+            /*sendMessage('reconnect',{
+                userID : currentUser.ID,
+                gameID : gameState.ID
+            });*/
+        });
     }
 
     const handleMessage = msg => {
@@ -60,14 +85,14 @@ export const GameController = () => {
             case 'game-created' :
                 console.log('Game Created',msg.data);
 
-                setLocalCredentials(msg.data.ID,msg.data.hostID);
+                // setLocalCredentials(msg.data.ID,msg.data.hostID);
 
-                setGameState({
-                    type : 'create-game',
-                    data : msg.data
-                });
+                // setGameState({
+                //     type : 'create-game',
+                //     data : msg.data
+                // });
 
-                setCurrentUser(msg.data.hostID);
+                // setCurrentUser(msg.data.hostID);
 
                 break;
 
@@ -85,6 +110,12 @@ export const GameController = () => {
 
             case 'game-join-failed' :
                 console.log(`Can't join game`,msg.data);
+                break;
+            case 'game-rounds-set' :
+                setGameState({
+                    type : 'game-rounds-set',
+                    data : msg.data.game
+                });
                 break;
         }
     }
@@ -106,7 +137,10 @@ export const GameController = () => {
             }
             else
             {
-                sendMessage(action,data);
+                connect(()=>{
+                    sendMessage(action,data);
+                })
+                
             }
         },5);
     }
@@ -169,6 +203,21 @@ export const GameController = () => {
         return creds === null ? null : JSON.parse(creds);
     }
 
+    const getQuestionByID = id => {
+
+        const matches = allQuestions.filter(q=>q.ID === id);
+
+        return matches.length > 0 ? matches[0] : null;
+    }
+
+    const setGameRounds = (gameID,questions) => {
+
+        sendMessage('set-game-rounds',{
+            questions,
+            gameID
+        });
+    }
+
     return {
         gameState,
         setGameState,
@@ -177,7 +226,10 @@ export const GameController = () => {
         joinGame,
         setLocalCredentials,
         getLocalCredentials,
-        currentUser
+        currentUser,
+        allQuestions,
+        getQuestionByID,
+        setGameRounds
     };
 
     

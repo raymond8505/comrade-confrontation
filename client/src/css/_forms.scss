@@ -29,13 +29,14 @@ button
     font-size: 1.1em;
     background: $white;
     color: $red_dark;
-    box-shadow: 0 0 2px 0 rgba(black,.5);
-    padding: .4em .5e .2em;
+    box-shadow: 0 0 .25em 0 rgba(black,.5);
+    padding: .5em .8em .3em;
 
     &.cta
     {
-        background: $red;
+        background: $red_dark;
         color: $yellow;
+        border: 2px solid $yellow;
 
         &:focus
         {
@@ -43,5 +44,10 @@ button
             box-shadow: none;
             color: white;
         }
+    }
+
+    & + button
+    {
+        margin-left: 1em;
     }
 }

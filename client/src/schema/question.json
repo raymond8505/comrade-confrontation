@@ -1,0 +1,11 @@
+{
+    "ID" : -1,
+    "question" : "",
+    "answers" : [
+        {
+            "answer" : "",
+            "score" : 0,
+            "answered" : false
+        }
+    ]
+}

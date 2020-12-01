@@ -9,6 +9,8 @@ const SignIn = ({}) => {
     const {createGame,joinGame} = useContext(GameContext);
 
     const handleCreateGame = e => {
+
+        console.log('creating game');
         createGame(hostNameField.current.value);
     }
 

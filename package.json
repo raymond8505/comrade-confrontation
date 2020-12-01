@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "cd client && npm start",
+    "build": "cd client && npm run build", 
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sampleqs": "node generate-questions.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "lorem-ipsum": "^2.0.3",
     "ws": "^7.4.0"
   }
 }

@@ -1,11 +1,14 @@
-import React,{useContext} from "react";
+import React,{useContext,useEffect} from "react";
 import {GameContext} from '../contexts/gameContext';
 import logo from '../img/logo.png';
+import QuestionPicker from "./QuestionPicker";
 import TeatStats from "./TeamStats";
 
 const GameBoard = ({}) => {
 
     const {gameState,getTeamName} = useContext(GameContext);
+
+    console.log(gameState);
 
     return (<div className="GameBoard">
 
@@ -34,6 +37,7 @@ const GameBoard = ({}) => {
             />
         </div>
         
+        {gameState.rounds.length === 0 ? <QuestionPicker /> : null}
         
     </div>);
 }
