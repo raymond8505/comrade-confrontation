@@ -4,7 +4,7 @@ import allQuestions from '../data/sample-questions.json';
 
 export const GameContext = React.createContext();
 
-const HOST = 'ws://135.23.208.111:8080';
+const HOST = require('../config.json').HOST;
 
 const LOCAL_STORAGE_KEY = 'cc-creds';
 
