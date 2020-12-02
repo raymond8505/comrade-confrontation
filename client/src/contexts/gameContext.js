@@ -70,6 +70,12 @@ export const GameController = () => {
         socket = newSocket;
     }
 
+    const currentUserIsHost = () => userIsHost(currentUser);
+
+    const userIsHost = user => gameState.hostID === user.ID;
+
+    const getCurrentRound = () => gameState.rounds[gameState.currentRound];
+
     const handleMessage = msg => {
 
         msg = JSON.parse(msg.data);
@@ -229,7 +235,8 @@ export const GameController = () => {
         currentUser,
         allQuestions,
         getQuestionByID,
-        setGameRounds
+        setGameRounds,
+        getCurrentRound
     };
 
     

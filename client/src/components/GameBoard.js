@@ -1,19 +1,18 @@
 import React,{useContext,useEffect} from "react";
 import {GameContext} from '../contexts/gameContext';
 import logo from '../img/logo.png';
+import QuestionBoard from "./QuestionBoard";
 import QuestionPicker from "./QuestionPicker";
-import TeatStats from "./TeamStats";
+import TeamStats from "./TeamStats";
 
 const GameBoard = ({}) => {
 
-    const {gameState,getTeamName} = useContext(GameContext);
-
-    console.log(gameState);
+    const {gameState,getTeamName,getCurrentRound} = useContext(GameContext);
 
     return (<div className="GameBoard">
 
         <div className="GameBoard__row GameBoard__row--top">
-            <TeatStats 
+            <TeamStats 
                 team={gameState.teams[0]}
                 enableDot = {gameState.activeTeam === 0} 
             />
@@ -29,9 +28,10 @@ const GameBoard = ({}) => {
                 <div className="GameBoard__round-status-and-controls">
                     menu - wrongs - mark wrong
                 </div>
+                <QuestionBoard question={getCurrentRound().question} />
             </div>
 
-            <TeatStats 
+            <TeamStats 
                 team={gameState.teams[1]} 
                 enableDot={gameState.activeTeam === 1} 
             />

@@ -36,12 +36,14 @@
 
     > *
     {
-        width: 33.333%;
+        flex-grow: 1;
 
         &:nth-child(2)
         {
             margin: 0 1em;
             text-align: center;
+            width: 40%;
+            flex-grow: 2;
         }
 
         &:nth-child(3)
