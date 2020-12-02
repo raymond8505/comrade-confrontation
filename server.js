@@ -3,6 +3,7 @@ const socketManager = require('./socket-manager');
 const gameManager = require('./game-manager');
 
 const helpers = require('./helpers');
+const { send } = require('./socket-manager');
 
 //console.log(games);
 
@@ -19,7 +20,7 @@ const handleMessage = (msg,sender) => {
     
     msg = JSON.parse(msg);
 
-    console.log(msg);
+    console.log('handling message',msg);
 
     let game;
 
@@ -28,10 +29,13 @@ const handleMessage = (msg,sender) => {
         //expects msg.data to be the a string - the name of the host user
         case 'create-game' :
 
-            const hostID = helpers.generateID();
-            game = gameManager.createGame(msg.data);
+            const host = gameManager.createUser(helpers.generateID(),msg.data.name);
+
+            game = gameManager.createGame();
+
+            gameManager.addHost(game,host);
+            socketManager.addSocket(host.ID,sender);
             
-                
             broadcastToGame(game,'game-created',game);
             break;
 
@@ -42,6 +46,8 @@ const handleMessage = (msg,sender) => {
                             msg.data.userID,
                             );
 
+            socketManager.addSocket(msg.data.userID,sender);
+
             if(game !== null)
             {
                 broadcastToGame(game,'game-joined',{
@@ -49,7 +55,7 @@ const handleMessage = (msg,sender) => {
                     userID : msg.data.userID
                 });
 
-                updateGame(game);
+                gameManager.updateGame(game);
             }
             else
             {
@@ -63,15 +69,15 @@ const handleMessage = (msg,sender) => {
         case 'set-game-rounds' :
             console.log('setting rounds for game',msg.data.gameID);
 
-            const rounds = generateRounds(msg.data.questions);
+            const rounds = gameManager.generateRounds(msg.data.questions);
             
-            game = getGameByID(msg.data.gameID);
+            game = gameManager.getGameByID(msg.data.gameID);
             
             game.rounds = rounds;
 
-            updateGame(game);
+            gameManager.updateGame(game);
 
-            broadcast(game,'game-rounds-set',{
+            broadcastToGame(game,'game-rounds-set',{
                 game
             });
             break;
@@ -92,7 +98,7 @@ const handleMessage = (msg,sender) => {
  */
 const broadcastToGame = (game,msg,data) => {
 
-    const players = gameManager.getAllPlayers(game).map(p => p.ID);
+    const users = game.users.map(p => p.ID);
 
-    socketManager.broadcast(players,msg,data);
+    socketManager.broadcast(users,msg,data);
 }

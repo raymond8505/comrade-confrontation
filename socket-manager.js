@@ -9,7 +9,7 @@ const sockets = [];
 
 const addSocket = (ID,socket) => {
     
-    if(socketExists(id))
+    if(socketExists(ID))
     {
         sockets.filter(u=>u.ID === ID).socket = socket;
     }
@@ -49,10 +49,7 @@ const broadcast = (userIDs,action,data = null,except = []) => {
 
         if(s.readyState === 1)
         {
-            send(JSON.stringify({
-                action,
-                data
-            }));
+            send(s,action,data);
         }
     });
 }
@@ -70,5 +67,6 @@ module.exports = {
     broadcast,
     send,
     sockets,
-    server
+    server,
+    addSocket
 };

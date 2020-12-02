@@ -1,3 +1,5 @@
+const helpers = require('./helpers');
+
 const updateGame = game => {
 
     game.modified = new Date().getTime();
@@ -43,6 +45,7 @@ const saveGames = (gamesIn = games) => {
 
     let cop = [...games];
 
+    //console.log('saving games disabled');
     require('fs').writeFileSync(SAVE_PATH,JSON.stringify(cop));
 }
 
@@ -63,65 +66,84 @@ const loadGames = () => {
 const games = loadGames();
 
 const findGame = ID => {
-
+    
     const game = games.filter(game => game.ID === ID);
 
     return game.length > 0 ? game[0] : null;
 }
 
-const createGame = (hostName,hostSocket) => {
+/**
+ * Instantiates a blank game, pushes it to the games array and saves the games
+ */
+const createGame = () => {
     console.log('Creating Game');
 
     const game = {...defaultGameState};
-        game.ID = generateID(games);
+        game.ID = helpers.generateID(games);
         game.modified = new Date().getTime();
 
-    const host = createUser(game,hostName,hostSocket);
-    
-    addGameSocket(game.ID,host.ID,hostSocket);
-
-    console.log('game sockets',getGameSockets(game.ID));
-
-    game.hostID = host.ID;
-    game.users.push(host);
+    games.push(game);
+    saveGames();
 
     return game;
 }
+const createUser = (id,name = '') => {
+    return {
+        ID : id,
+        name
+    };
+}
+/**
+ * Adds a user to a game
+ * @param {Object} game 
+ * @param {Object} user 
+ */
+const addUser = (game,user) => {
 
-const userExists = (game,userID) => getAllPlayers(game).includes(p => p.ID === userID);
+    game.users.push(user);
 
+    saveGames();
+}
+
+/**
+ * Adds a user to a game, then sets that user as the game's host
+ * @param {Object} game 
+ * @param {Object} user 
+ */
+const addHost = (game,user) => {
+
+    addUser(game,user);
+
+    game.hostID = user.ID;
+
+    saveGames();
+}
+const userExists = (game,userID) => game.users.includes(p => p.ID === userID);
+
+/**
+ * Gets all the players of both teams (so everyone but the host)
+ * @param {Object} game 
+ */
 const getAllPlayers = game => {
 
     return game.teams.flatMap(team => team.players);
 }
 
-const createUser = (game,name) => {
-
-    //get all users in the game and return an array of their IDs for use with
-    //generateID
-    const user = {
-        ID : generateID(getAllPlayers(game).map((socket)=>socket.userID)),
-        name
-    }
-
-    return user;
-}
-
 const joinGame = (gameID,socket,userID,userName = '') =>
 {
-    const game = findGame(gameID);
+    const game = findGame(gameID); 
 
     if(game !== null)
     {
         if(userExists(game,userID))
         {
-            console.log(userID,'exists');
+            console.log(userID,'exists','in',gameID);
             
             return game;
         }
         else
         {
-            console.log('todo: create new user and join');
+            console.log(game.users,userID);
         }
     }
 
@@ -137,5 +159,8 @@ module.exports = {
     findGame,
     createGame,
     joinGame,
-    getAllPlayers
+    getAllPlayers,
+    addUser,
+    createUser,
+    addHost
 }

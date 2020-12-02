@@ -8,9 +8,9 @@ const HOST = require('../config.json').HOST;
 
 const LOCAL_STORAGE_KEY = 'cc-creds';
 
-export const GameController = () => {
+let socket;
 
-    let socket;
+export const GameController = () => {
 
     const [currentUser,setCurrentUser] = useState(null);
 
@@ -19,16 +19,16 @@ export const GameController = () => {
         switch(action.type)
         {
             case 'connect' :
-                state.socket = action.data;
+               socket = action.data;
+                
                 break;
             
-            //these actions just need to update the game in state because the server
-            //did the work.
+            //these actions just need to update the game in state because
+            //the server did the work.
             case 'game-rounds-set' :
             case 'create-game' :
                 
-                console.log(action);
-                state = updateGame(state,action.data);
+                return action.data;
 
             default :
                 break;
@@ -37,35 +37,27 @@ export const GameController = () => {
         return state;
     }
 
-    /**
-     * updates the game state with a server provided replacement, but maintains the socket.
-     * @param {Object} game 
-     * @returns {Object} a copy of the new game, but with the socket field maintained
-     */
-    const updateGame = (oldGame,newGame) => {
+    const [gameState,setGameState] = useReducer(gameStateReducer,defaultGameState);
 
-        newGame.socket = oldGame.socket;
-
-        return newGame;
-    }
+    const gameIsRunning = !gameState || gameState.ID !== '';
 
     const connect = (cb,tries = 0) => {
         
-        socket = new WebSocket(HOST);
-        
-        socket.addEventListener('message',handleMessage);
+        const newSocket = new WebSocket(HOST);
+                
+        newSocket.addEventListener('message',handleMessage);
 
-        socket.addEventListener('open',e => {
+        newSocket.addEventListener('open',e => {
             
             setGameState({
                 type : 'connect',
                 data : socket
             });
 
-            cb(socket);
+            cb(newSocket);
         });
 
-        socket.addEventListener('close',()=>{
+        newSocket.addEventListener('close',()=>{
             
             console.log('socket close');
             
@@ -74,6 +66,8 @@ export const GameController = () => {
                 gameID : gameState.ID
             });*/
         });
+
+        socket = newSocket;
     }
 
     const handleMessage = msg => {
@@ -85,14 +79,14 @@ export const GameController = () => {
             case 'game-created' :
                 console.log('Game Created',msg.data);
 
-                // setLocalCredentials(msg.data.ID,msg.data.hostID);
+                setLocalCredentials(msg.data.ID,msg.data.hostID);
 
-                // setGameState({
-                //     type : 'create-game',
-                //     data : msg.data
-                // });
+                setGameState({
+                    type : 'create-game',
+                    data : msg.data
+                });
 
-                // setCurrentUser(msg.data.hostID);
+                setCurrentUser(msg.data.hostID);
 
                 break;
 
@@ -120,9 +114,12 @@ export const GameController = () => {
         }
     }
 
+    /**
+     * Send a message to the server
+     * @param {String} action 
+     * @param {Any} data 
+     */
     const sendMessage = (action,data) => {
-
-        const {socket} = gameState;
 
         const msg = JSON.stringify({
             action,
@@ -130,18 +127,25 @@ export const GameController = () => {
         });
 
         setTimeout(()=>{
-
-            if(socket.readyState === 1)
+            
+            if(socket === null)
             {
-                socket.send(msg);
+                //if the socket hasn't bee set yet, keep trying
+                sendMessage(action,data);
+                console.log('retrying');
             }
             else
             {
-                connect(()=>{
+                if(socket.readyState === 1)
+                {
+                    socket.send(msg);
+                }
+                else
+                {
                     sendMessage(action,data);
-                })
-                
+                }
             }
+            
         },5);
     }
 
@@ -179,10 +183,6 @@ export const GameController = () => {
         }
         
     }
-    
-    const [gameState,setGameState] = useReducer(gameStateReducer,defaultGameState);
-
-    const gameIsRunning = gameState.ID !== '';
 
     const setLocalCredentials = (gameID,userID) => {
 
