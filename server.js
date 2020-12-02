@@ -4,6 +4,8 @@ const gameManager = require('./game-manager');
 
 const helpers = require('./helpers');
 const { send } = require('./socket-manager');
+const { createUser, getGameByID } = require('./game-manager');
+const { generateID } = require('./helpers');
 
 //console.log(games);
 
@@ -41,27 +43,50 @@ const handleMessage = (msg,sender) => {
 
         //expects msg.data to be an object {gameID,userID}
         case 'join-game' :
-            game = gameManager.joinGame(msg.data.gameID,
-                            sender,
-                            msg.data.userID,
-                            );
 
-            socketManager.addSocket(msg.data.userID,sender);
-
-            if(game !== null)
+            //user is sending a playerName instead of a userID
+            //this mean's they're not associated with a game
+            //yet
+            if(msg.data.userID === undefined)
             {
-                broadcastToGame(game,'game-joined',{
-                    game,
-                    userID : msg.data.userID
-                });
+                game = getGameByID(msg.data.gameID);
 
-                gameManager.updateGame(game);
+                const userObj = createUser(generateID(game.users),msg.data.userName);
+
+                socketManager.addSocket(userObj.ID,sender);
+
+                const suggestedTeam = gameManager.suggestTeam(game);
+
+                socketManager.send(sender,'team-selection-request',{
+                    userID : userObj.ID,
+                    game,
+                    suggestedTeam
+                });
             }
             else
             {
-                send(sender,'non-existent-game')
+                game = gameManager.joinGame(msg.data.gameID,
+                                sender,
+                                msg.data.userID,
+                                );
+
+                socketManager.addSocket(msg.data.userID,sender);
+
+                if(game !== null)
+                {
+                    broadcastToGame(game,'game-joined',{
+                        game,
+                        userID : msg.data.userID
+                    });
+
+                    gameManager.updateGame(game);
+                }
+                else
+                {
+                    send(sender,'non-existent-game')
+                }
             }
-            
+                
             break;
         
         //expects game.data to be an object {gameID,questions} where questions
@@ -74,6 +99,7 @@ const handleMessage = (msg,sender) => {
             game = gameManager.getGameByID(msg.data.gameID);
             
             game.rounds = rounds;
+            game.currentRound = 1;
 
             gameManager.updateGame(game);
 

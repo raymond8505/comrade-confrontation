@@ -1,0 +1,17 @@
+.Alert
+{
+    font-weight: $fw_medium;
+    border-width: 2px;
+    border-style: solid;
+    padding: 1em;
+    font-size: 1.2em;
+    border-radius: 4px;
+    margin: .5em 0;
+}
+
+.Alert--error
+{
+    border-color: $yellow; //darken($red_dark,20%);
+    background: $red_dark;
+    color: $yellow;
+}

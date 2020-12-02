@@ -7,7 +7,10 @@ import TeamStats from "./TeamStats";
 
 const GameBoard = ({}) => {
 
-    const {gameState,getTeamName,getCurrentRound} = useContext(GameContext);
+    const {gameState,
+            getTeamName,
+            getCurrentRound,
+            gameIsRunning} = useContext(GameContext);
 
     return (<div className="GameBoard">
 
@@ -28,7 +31,7 @@ const GameBoard = ({}) => {
                 <div className="GameBoard__round-status-and-controls">
                     menu - wrongs - mark wrong
                 </div>
-                <QuestionBoard question={getCurrentRound().question} />
+                {gameState.currentRound > 0 ? <QuestionBoard question={getCurrentRound().question} /> : null}
             </div>
 
             <TeamStats 

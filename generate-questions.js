@@ -12,6 +12,11 @@ const maxAnswers = 8;
 const minPoints = 32;
 const maxPoints = 86;
 
+const maxAnswerWords = 3;
+const minAnswerWords = 1;
+
+const maxWordLength = 6;
+
 const questions = [];
 
 const lorem = new LoremIpsum({
@@ -46,12 +51,18 @@ const makeQuestion = (id) => {
     return question;
 }
 
+const shortenWords = sentence => sentence.split(' ').map(word => word.substring(0,maxWordLength)).join(' ');
+
 const makeAnswer = () => {
 
     const answer = Object.assign({},answerSchema);
-        answer.answer = lorem.generateWords(4);
+        answer.answer = shortenWords(
+                            lorem.generateWords(
+                                between(minAnswerWords,maxAnswerWords)
+                            )
+                        );        
         answer.points = between(minPoints,maxPoints);
-
+    
     return answer;
 }
 

@@ -24,6 +24,12 @@ const addSocket = (ID,socket) => {
 
 const socketExists = id => sockets.includes(id);
 
+/**
+ * Sends some data with an action slug to the given web socket
+ * @param {WebSocket} recipient 
+ * @param {String} action 
+ * @param {Any} data 
+ */
 const send = (recipient,action,data = null) => {
 
     //console.log(recipient);

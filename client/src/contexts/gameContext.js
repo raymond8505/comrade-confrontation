@@ -14,6 +14,15 @@ export const GameController = () => {
 
     const [currentUser,setCurrentUser] = useState(null);
 
+    const [alerts,setAlerts] = useState([]);
+
+    const createAlert = (msg,type='info') => {
+        return {
+            type,
+            msg
+        };
+    }
+
     const gameStateReducer = (state,action) => {
         
         switch(action.type)
@@ -29,7 +38,6 @@ export const GameController = () => {
             case 'create-game' :
                 
                 return action.data;
-
             default :
                 break;
         }
@@ -70,11 +78,20 @@ export const GameController = () => {
         socket = newSocket;
     }
 
+    /**
+     * Checks if the given user is the host of the current game
+     * @param {Object} user
+     * @returns {Boolean}
+     */
+    const userIsHost = user => gameState.hostID === user;
+
     const currentUserIsHost = () => userIsHost(currentUser);
 
-    const userIsHost = user => gameState.hostID === user.ID;
-
-    const getCurrentRound = () => gameState.rounds[gameState.currentRound];
+    /**
+     * Round count starts at 1, but obviously the rounds array
+     * starts at 0.
+     */
+    const getCurrentRound = () => gameState.rounds[gameState.currentRound - 1];
 
     const handleMessage = msg => {
 
@@ -116,6 +133,14 @@ export const GameController = () => {
                     type : 'game-rounds-set',
                     data : msg.data.game
                 });
+                break;
+            
+            case 'non-existent-game' :
+
+                setAlerts([
+                    createAlert(
+                        'No game exists with that code. Please double check your spelling, or host your own game.','error')
+                ]);
                 break;
         }
     }
@@ -236,8 +261,11 @@ export const GameController = () => {
         allQuestions,
         getQuestionByID,
         setGameRounds,
-        getCurrentRound
+        getCurrentRound,
+        userIsHost,
+        currentUserIsHost,
+        alerts,
+        setAlerts,
+        createAlert
     };
-
-    
 }

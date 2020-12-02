@@ -6,6 +6,8 @@
   "scripts": {
     "start": "cd client && npm start",
     "build": "cd client && npm run build", 
+    "devserver" : "nodemon server.js --ignore *.json --ignore client/*",
+    "prodserver" : "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sampleqs": "node generate-questions.js"
   },

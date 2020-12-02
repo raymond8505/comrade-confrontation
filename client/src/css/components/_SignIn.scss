@@ -6,14 +6,22 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    background: $dots_bg;
 }
-
+.SignIn .Alert,
+.SignIn__form
+{
+    width: 90%;
+}
+.SignIn__form,
+.SignIn .Alert
+{
+    box-shadow: 0 0 .5em 0 rgba(black,.75);
+}
 .SignIn__form
 {
     background: $white;
     padding: 1em;
-    width: 90%;
-    box-shadow: 0 0 .5em 0 rgba(black,.75);
     border: 2px solid $red_dark;
     display: grid;
     grid-template-columns: calc(60% - .5em) calc(40% - .5em);
@@ -50,4 +58,22 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
+    @media (min-width: $mobile_break)
+    {
+        width: 33vw;
+    }
+}
+.SignIn .Alert
+{
+    margin: 1em 0 0;
+}
+.Alert__code-field
+{
+    text-transform: uppercase;
+
+    @include style-placeholder
+    {
+        text-transform: none;
+    }
 }

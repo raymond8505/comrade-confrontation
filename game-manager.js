@@ -129,6 +129,14 @@ const getAllPlayers = game => {
     return game.teams.flatMap(team => team.players);
 }
 
+/**
+ * auto suggest joining the team with fewer players
+ * default team 1 if same num players
+ * @param {Object} game a game object to check
+ * @returns {Int} (1|0) the index of the team to suggest  
+ */
+const suggestTeam = game => game.teams[0].players.length <= game.teams[1].players.length ? 0 : 1;
+
 const joinGame = (gameID,socket,userID,userName = '') =>
 {
     const game = findGame(gameID); 
@@ -143,7 +151,7 @@ const joinGame = (gameID,socket,userID,userName = '') =>
         }
         else
         {
-            console.log(game.users,userID);
+            console.log('todo: create new user and join');
         }
     }
 
@@ -162,5 +170,6 @@ module.exports = {
     getAllPlayers,
     addUser,
     createUser,
-    addHost
+    addHost,
+    suggestTeam
 }
