@@ -21,7 +21,7 @@ const GameBoard = ({}) => {
         window.location.reload();
     }
 
-    return (<div className="GameBoard">
+    return (<div className={`GameBoard${currentUserIsHost() ? ' GameBoard--host' : ''}`}>
 
         <div className="GameBoard__row GameBoard__row--top">
             <div className="GameBoard__team-1">

@@ -9,6 +9,10 @@ const QuestionBoard = ({question}) => {
         currentUser,
         gameState} = useContext(GameContext);
     
+    const handleAnswerClick = e => {
+
+    }
+    
     const renderAnswers = () => {
 
         const toRet = [];
@@ -23,19 +27,24 @@ const QuestionBoard = ({question}) => {
                 answer !== undefined && (currentUserIsHost() || answer.answered)
 
             toRet.push(<li className={`QuestionBoard__answer${
-                revealed ? ' QuestionBoard__answer--revealed' : ''}`} key={answerKey}>
-                {
-                    answer !== undefined && revealed ? 
-                        <div className="QuestionBoard__answer-details">
-                            <span className="QuestionBoard__answer-text">
-                                <span>{answer.answer}</span>
-                            </span>
-                            <span className="QuestionBoard__answer-points">
-                                <span>{answer.points}</span>
-                            </span>
-                        </div> 
-                        : <span className="QuestionBoard__answer-num">{i + 1}</span>
-                }
+                                revealed ? ' QuestionBoard__answer--revealed' : ''}${
+                                    (answer != undefined && answer.answered) ? ' QuestionBoard__answer--answered' : ''
+                                }`} 
+                            key={answerKey}
+                            onClick={handleAnswerClick}
+                    >
+                    {
+                        answer !== undefined && revealed ? 
+                            <div className="QuestionBoard__answer-details">
+                                <span className="QuestionBoard__answer-text">
+                                    <span>{answer.answer}</span>
+                                </span>
+                                <span className="QuestionBoard__answer-points">
+                                    <span>{answer.points}</span>
+                                </span>
+                            </div> 
+                            : <span className="QuestionBoard__answer-num">{i + 1}</span>
+                    }
             </li>);
         }
 

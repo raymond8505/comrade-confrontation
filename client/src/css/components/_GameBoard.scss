@@ -3,13 +3,13 @@
     //color: $red_dark;
     //background: $white;
 
-    background: $dots_bg;
+    //background: $dots_bg;
     color : white;
     width: 100%;
     max-width: $container_width;
     margin: auto;
     padding: 2em;
-    @include border(horizontal,2px solid $yellow);
+    //@include border(horizontal,2px solid $yellow);
     min-height: 100vh;
 }
 .GameBoard__logo
@@ -91,5 +91,24 @@
                 margin: 0 0 0 .4em;
             }
         }
+    }
+}
+.GameBoard--host .QuestionBoard__answer--revealed
+{
+    cursor: pointer;
+
+    &:hover
+    {
+        &,.QuestionBoard__answer-text
+        {
+            border-color: $yellow;
+        }
+    }
+}
+.GameBoard--host .QuestionBoard__answer--answered
+{
+    &,.QuestionBoard__answer-text
+    {
+        border-color: $yellow;
     }
 }

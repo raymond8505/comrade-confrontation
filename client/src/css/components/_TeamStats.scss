@@ -1,13 +1,19 @@
 .TeamStats__name
 {
-    font-size: 3em;
+    font-size: 3.5em;
     font-weight: $fw_black;
     display: flex;
     align-items: center;
     line-height: 1;
+    margin-bottom: 1rem;
 }
 .TeamStats__score
 {
-    font-size: 2em;
+    font-size: 3em;
     padding-left: .25em;
+    font-weight: $fw_bold;
+    border: 3px solid $yellow;
+    border-radius: .3em;
+    text-align: center;
+    background: $red_dark;
 }
