@@ -12,16 +12,18 @@ body
     background: $red_dark;
     font-family: $body_font;
     color: white;
+    font-variant: small-caps;
     
-    &,*
+    *
     {
-        font-variant: small-caps;
+        font-variant: inherit;
     }
 
 }
 
 @import './forms';
 @import './components/Alert';
+@import './components/PlayerList';
 @import './components/TeamPicker';
 @import './components/SignIn';
 @import './components/GameBoard';

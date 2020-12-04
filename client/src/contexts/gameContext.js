@@ -222,7 +222,7 @@ export const GameController = () => {
 
                 updateGameState(msg.data.game);
                 setUserCanSeeGameBoard(true);
-                
+
                 break;
         }
     }
@@ -348,6 +348,14 @@ export const GameController = () => {
         });
     }
 
+    /**
+     * Takes an array of user iDs and returns an array of user objects
+     * @param {String[]} users  an array of user IDs for which to get full user info
+     * @param {Object} game [default gameState] the game in which the users exist
+     * @returns {Object[]}
+     */
+    const getUserInfo = (users,game=gameState) => game.users.filter(u=>users.includes(u.ID));
+
     return {
         gameState,
         setGameState,
@@ -369,6 +377,7 @@ export const GameController = () => {
         showTeamPicker,
         suggestedTeam,
         joinTeam,
-        userCanSeeGameBoard
+        userCanSeeGameBoard,
+        getUserInfo
     };
 }

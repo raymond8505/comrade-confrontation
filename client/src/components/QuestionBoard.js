@@ -42,10 +42,12 @@ const QuestionBoard = ({question}) => {
     }
     return (<div className="QuestionBoard">
         
-        
-            {currentUserIsHost() ? 
-                (<h2 className="QuestionBoard__question">{question.question}</h2>) : null}
-        
+        {currentUserIsHost() ? 
+            (<div className="QuestionBoard__question-and-controls">
+                <h2 className="QuestionBoard__question">{question.question}</h2>
+
+                
+            </div>) : null}
         <ul className="QuestionBoard__answers">
             {renderAnswers()}
         </ul>
