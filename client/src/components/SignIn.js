@@ -2,6 +2,7 @@ import React,{useContext,useReducer,useRef} from "react";
 import logo from '../img/logo.png';
 import {GameContext} from '../contexts/gameContext';
 import Alert from "./Alert";
+import TeamPicker from "./TeamPicker";
 
 const SignIn = ({}) => {
 
@@ -9,7 +10,14 @@ const SignIn = ({}) => {
 
     const gameCodeField = useRef(null);
 
-    const {createGame,joinGame,alerts,setAlerts,createAlert} = useContext(GameContext);
+    const {createGame,
+            joinGame,
+            alerts,
+            setAlerts,
+            createAlert,
+            showTeamPicker,
+            gameState,
+            suggestedTeam} = useContext(GameContext);
 
     const handleEmptyNameField = () => {
         setAlerts([createAlert('Please enter your name','error')]);
@@ -55,19 +63,26 @@ const SignIn = ({}) => {
                 <input type="text" 
                         placeholder="Your Name" 
                         ref={hostNameField}
-                        defaultValue="player 1" />
+                        defaultValue="player 1"
+                        disabled={showTeamPicker} />
                 <button type="button" 
                         className="cta" 
-                        onClick={handleCreateGame}>Host Game</button>
+                        onClick={handleCreateGame}
+                        disabled={showTeamPicker}>Host Game</button>
 
                 <input type="text" 
                         placeholder="Game Code, ex: SPQR" 
                         ref={gameCodeField}
                         className="Alert__code-field"
-                        defaultValue="AOLJ" />
+                        defaultValue="MSGJ"
+                        disabled={showTeamPicker} />
                 <button type="button" 
                         className="cta" 
-                        onClick={handleJoinGame}>Join Game</button>
+                        onClick={handleJoinGame}
+                        disabled={showTeamPicker}>Join Game</button>
+                
+                {showTeamPicker ? <TeamPicker teams={gameState.teams} 
+                suggestedTeam={suggestedTeam} /> : null}
                 
             </div>
 

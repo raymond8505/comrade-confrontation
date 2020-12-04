@@ -28,20 +28,20 @@
     grid-template-rows: 2em 2em;
     gap: 1em;
 
-    input
+    input[type="text"]
     {
         margin-right: 1em;
         width: 60%;
     }
 
-    button
+    button:not(.TeamPicker__cta)
     {
         margin-bottom: 1em;
         flex-grow: 1;
         //padding: .2em .8em .1em;
     }
 
-    input,button
+    input[type="text"],button:not(.TeamPicker__cta)
     {
         width: 100%;
         height: 100%;

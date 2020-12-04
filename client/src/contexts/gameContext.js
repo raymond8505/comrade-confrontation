@@ -1,4 +1,4 @@
-import React,{useReducer, useState} from 'react';
+import React,{useEffect, useMemo, useReducer, useState} from 'react';
 import defaultGameState from '../schema/defaultGameState.json';
 import allQuestions from '../data/sample-questions.json';
 
@@ -12,9 +12,14 @@ let socket;
 
 export const GameController = () => {
 
+    /**
+     * an object representing the current user.
+     */
     const [currentUser,setCurrentUser] = useState(null);
 
     const [alerts,setAlerts] = useState([]);
+
+    const [suggestedTeam,setSuggestedTeam] = useState(0);
 
     const createAlert = (msg,type='info') => {
         return {
@@ -36,7 +41,7 @@ export const GameController = () => {
             //the server did the work.
             case 'game-rounds-set' :
             case 'create-game' :
-                
+            case 'update' :
                 return action.data;
             default :
                 break;
@@ -45,7 +50,21 @@ export const GameController = () => {
         return state;
     }
 
+    /**
+     * Sometimes the server gives us a whole new game state and we 
+     * just need to override our local game state with it.
+     * @param {Object} newGame a new game object
+     */
+    const updateGameState = newGame => setGameState({
+        type : 'update',
+        data : newGame
+    });
+
     const [gameState,setGameState] = useReducer(gameStateReducer,defaultGameState);
+
+    const [showTeamPicker,setShowTeamPicker] = useState(false);
+
+    const [userCanSeeGameBoard,setUserCanSeeGameBoard] = useState(false);
 
     const gameIsRunning = !gameState || gameState.ID !== '';
 
@@ -67,7 +86,7 @@ export const GameController = () => {
 
         newSocket.addEventListener('close',()=>{
             
-            console.log('socket close');
+            //console.log('socket close');
             
             /*sendMessage('reconnect',{
                 userID : currentUser.ID,
@@ -83,10 +102,52 @@ export const GameController = () => {
      * @param {Object} user
      * @returns {Boolean}
      */
-    const userIsHost = user => gameState.hostID === user;
+    const userIsHost = user => gameState.hostID === user.ID;
 
     const currentUserIsHost = () => userIsHost(currentUser);
+    
+    /**
+     * Checks if the current user is on a team in the given game
+     * @param {Object} game 
+     * @returns {Boolean}
+     */
+    const currentUserHasTeam = (game=gameState) => {
+        
+        //console.log(currentUser.ID,game);
+        return userHasTeam(currentUser.ID,game);
+    }
+    
+    /**
+     * Check if the given user is on a team in the game
+     * @param {String} userID the user ID to check
+     * @param {Object} game [default gameState] the game to check
+     */
+    const userHasTeam = (userID,game=gameState) => game.teams.map(t => t.players).flat().includes(userID);
 
+    const _userCanSeeGameBoard = ()=>{
+
+        console.log(gameState);
+
+        if(currentUser === undefined || currentUser === null)
+        {
+            //console.log(currentUser,'isnt set');
+            return false;
+        }
+        if(currentUserIsHost())
+        {
+            //console.log('user is host');
+            return gameState.ID !== '';
+        }
+        else
+        {
+            //console.log(currentUserHasTeam());
+            return currentUserHasTeam();
+            
+        }
+
+    };
+
+    
     /**
      * Round count starts at 1, but obviously the rounds array
      * starts at 0.
@@ -102,31 +163,37 @@ export const GameController = () => {
             case 'game-created' :
                 console.log('Game Created',msg.data);
 
-                setLocalCredentials(msg.data.ID,msg.data.hostID);
-
-                setGameState({
-                    type : 'create-game',
-                    data : msg.data
-                });
-
-                setCurrentUser(msg.data.hostID);
-
-                break;
-
-            case 'game-joined' :
-                console.log('Joined Game',msg.data);
-
-                setCurrentUser(msg.data.userID);
+                setLocalCredentials(msg.data.game.ID,msg.data.user.ID);
 
                 setGameState({
                     type : 'create-game',
                     data : msg.data.game
                 });
 
+                setCurrentUser(msg.data.user);
+                setUserCanSeeGameBoard(true);
+
+                break;
+
+            case 'game-joined' :
+                console.log('Joined Game',msg.data);
+
+                if(msg.data.userID != undefined)
+                {
+                    const user = getUserByID(msg.data.userID,msg.data.game);
+
+                    setCurrentUser(user);
+                }
+                
+
+                updateGameState(msg.data.game);
+
+                setUserCanSeeGameBoard(true);
+
                 break;
 
             case 'game-join-failed' :
-                console.log(`Can't join game`,msg.data);
+                //console.log(`Can't join game`,msg.data);
                 break;
             case 'game-rounds-set' :
                 setGameState({
@@ -142,8 +209,31 @@ export const GameController = () => {
                         'No game exists with that code. Please double check your spelling, or host your own game.','error')
                 ]);
                 break;
+            case 'team-selection-request' :
+                setLocalCredentials(msg.data.game.ID,msg.data.userID);
+                updateGameState(msg.data.game);
+                setShowTeamPicker(true);
+                setCurrentUser(getUserByID(msg.data.userID,msg.data.game));
+                setSuggestedTeam(msg.data.suggestedTeam);
+
+                break;
+            case 'team-joined' :
+                //console.log('team joined');
+
+                updateGameState(msg.data.game);
+                setUserCanSeeGameBoard(true);
+                
+                break;
         }
     }
+
+    /**
+     * Finds a user in the game b
+     * @param {Object} game the game to search
+     * @param {String} userID the ID of the user to return
+     * @returns {Object|undefined} returns the user, or undefined if not found
+     */
+    const getUserByID = (userID,game=gameState) => game.users.find(u => u.ID === userID);
 
     /**
      * Send a message to the server
@@ -163,7 +253,7 @@ export const GameController = () => {
             {
                 //if the socket hasn't bee set yet, keep trying
                 sendMessage(action,data);
-                console.log('retrying');
+                //console.log('retrying');
             }
             else
             {
@@ -185,6 +275,15 @@ export const GameController = () => {
         connect(socket => {
 
             sendMessage('create-game',playerName);
+        });
+    }
+
+    const joinTeam = (teamIndex,userID=currentUser.ID,gameID=gameState.ID) => {
+
+        sendMessage('join-team',{
+            teamIndex,
+            userID,
+            gameID
         });
     }
 
@@ -266,6 +365,10 @@ export const GameController = () => {
         currentUserIsHost,
         alerts,
         setAlerts,
-        createAlert
+        createAlert,
+        showTeamPicker,
+        suggestedTeam,
+        joinTeam,
+        userCanSeeGameBoard
     };
 }

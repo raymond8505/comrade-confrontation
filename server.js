@@ -3,8 +3,8 @@ const socketManager = require('./socket-manager');
 const gameManager = require('./game-manager');
 
 const helpers = require('./helpers');
-const { send } = require('./socket-manager');
-const { createUser, getGameByID } = require('./game-manager');
+
+//const { createUser, getGameByID, userExists } = require('./game-manager');
 const { generateID } = require('./helpers');
 
 //console.log(games);
@@ -38,7 +38,10 @@ const handleMessage = (msg,sender) => {
             gameManager.addHost(game,host);
             socketManager.addSocket(host.ID,sender);
             
-            broadcastToGame(game,'game-created',game);
+            broadcastToGame(game,'game-created',{
+                game,
+                user : host
+            });
             break;
 
         //expects msg.data to be an object {gameID,userID}
@@ -47,15 +50,21 @@ const handleMessage = (msg,sender) => {
             //user is sending a playerName instead of a userID
             //this mean's they're not associated with a game
             //yet
+            //this can definitely be refactored
             if(msg.data.userID === undefined)
             {
-                game = getGameByID(msg.data.gameID);
+                game = gameManager.getGameByID(msg.data.gameID);
 
-                const userObj = createUser(generateID(game.users),msg.data.userName);
+                const userObj = gameManager.createUser(generateID(game.users),msg.data.userName);
 
                 socketManager.addSocket(userObj.ID,sender);
 
                 const suggestedTeam = gameManager.suggestTeam(game);
+
+                if(!gameManager.userExists(game,userObj.ID))
+                {
+                    gameManager.addUser(game,userObj);
+                }
 
                 socketManager.send(sender,'team-selection-request',{
                     userID : userObj.ID,
@@ -65,6 +74,8 @@ const handleMessage = (msg,sender) => {
             }
             else
             {
+                const {userID} = msg.data;
+                 
                 game = gameManager.joinGame(msg.data.gameID,
                                 sender,
                                 msg.data.userID,
@@ -75,15 +86,20 @@ const handleMessage = (msg,sender) => {
                 if(game !== null)
                 {
                     broadcastToGame(game,'game-joined',{
+                        game
+                        
+                    },[userID]);
+
+                    socketManager.broadcast([userID],'game-joined',{
                         game,
-                        userID : msg.data.userID
+                        userID
                     });
 
                     gameManager.updateGame(game);
                 }
                 else
                 {
-                    send(sender,'non-existent-game')
+                    socketManager.send(sender,'non-existent-game')
                 }
             }
                 
@@ -111,6 +127,22 @@ const handleMessage = (msg,sender) => {
         case 'reconnect' :
             console.log('todo: reconnect logic');
             break;
+        case 'join-team' :
+            const {teamIndex,userID,gameID} = msg.data;
+
+            game = gameManager.getGameByID(gameID);
+
+            //console.log('joining team',game.users.includes(String(u=>u.ID) == String(userID)));//,game,userID);
+
+            if(gameManager.userExists(game,userID))
+            {
+                console.log('user exists, broadcasting');
+                gameManager.addUserToTeam(game,userID,teamIndex);
+
+                
+                broadcastToGame(game,'team-joined',{game});
+            }
+        
 
     }
 }
@@ -122,9 +154,9 @@ const handleMessage = (msg,sender) => {
  * @param {String} msg 
  * @param {Any} data 
  */
-const broadcastToGame = (game,msg,data) => {
+const broadcastToGame = (game,msg,data,except = []) => {
 
     const users = game.users.map(p => p.ID);
 
-    socketManager.broadcast(users,msg,data);
+    socketManager.broadcast(users,msg,data,except);
 }

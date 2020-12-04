@@ -43,10 +43,8 @@ const SAVE_PATH = './games.json';
 
 const saveGames = (gamesIn = games) => {
 
-    let cop = [...games];
-
     //console.log('saving games disabled');
-    require('fs').writeFileSync(SAVE_PATH,JSON.stringify(cop));
+    require('fs').writeFileSync(SAVE_PATH,JSON.stringify(gamesIn));
 }
 
 const loadGames = () => {
@@ -118,7 +116,14 @@ const addHost = (game,user) => {
 
     saveGames();
 }
-const userExists = (game,userID) => game.users.includes(p => p.ID === userID);
+
+/**
+ * Checks if the given user exists in the given game
+ * @param {Object} game 
+ * @param {String} userID 
+ * @returns {Boolean}
+ */
+const userExists = (game,userID) => game.users.filter(p => p.ID === userID).length > 0;
 
 /**
  * Gets all the players of both teams (so everyone but the host)
@@ -139,13 +144,13 @@ const suggestTeam = game => game.teams[0].players.length <= game.teams[1].player
 
 const joinGame = (gameID,socket,userID,userName = '') =>
 {
-    const game = findGame(gameID); 
+    const game = findGame(gameID);
 
     if(game !== null)
     {
         if(userExists(game,userID))
         {
-            console.log(userID,'exists','in',gameID);
+            //console.log(userID,'exists','in',gameID);
             
             return game;
         }
@@ -156,6 +161,13 @@ const joinGame = (gameID,socket,userID,userName = '') =>
     }
 
     return game;
+}
+
+const addUserToTeam = (game,userID,teamIndex) => {
+
+    game.teams[teamIndex].players.push(userID);
+
+    saveGames();
 }
 
 module.exports = {
@@ -169,7 +181,9 @@ module.exports = {
     joinGame,
     getAllPlayers,
     addUser,
+    addUserToTeam,
     createUser,
     addHost,
-    suggestTeam
+    suggestTeam,
+    userExists
 }

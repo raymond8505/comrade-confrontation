@@ -3,11 +3,16 @@ import { GameContext } from "../contexts/gameContext";
 
 const QuestionBoard = ({question}) => {
 
-    const {currentUserIsHost,currentUser} = useContext(GameContext);
+    const {
+        currentUserIsHost,
+        currentUser,
+        gameState} = useContext(GameContext);
     
     const renderAnswers = () => {
 
         const toRet = [];
+
+        console.log(gameState,currentUser);
         
         for(let i = 0; i < 8; i++)
         {   
@@ -16,14 +21,10 @@ const QuestionBoard = ({question}) => {
             const revealed = 
                 answer !== undefined && (currentUserIsHost() || answer.answered)
 
-                // console.log(i,currentUserIsHost(), 
-                // (answer !== undefined && answer.answered));
-                // console.log(currentUser);
-
             toRet.push(<li className={`QuestionBoard__answer${
                 revealed ? ' QuestionBoard__answer--revealed' : ''}`} key={answerKey}>
                 {
-                    answer !== undefined ? 
+                    answer !== undefined && revealed ? 
                         <div className="QuestionBoard__answer-details">
                             <span className="QuestionBoard__answer-text">
                                 <span>{answer.answer}</span>
@@ -41,9 +42,10 @@ const QuestionBoard = ({question}) => {
     }
     return (<div className="QuestionBoard">
         
-        <h2 className="QuestionBoard__question">
-            {question.question}
-        </h2>
+        
+            {currentUserIsHost() ? 
+                (<h2 className="QuestionBoard__question">{question.question}</h2>) : null}
+        
         <ul className="QuestionBoard__answers">
             {renderAnswers()}
         </ul>

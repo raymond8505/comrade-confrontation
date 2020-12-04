@@ -8,9 +8,11 @@ const MainView = ({}) => {
     const {gameState,
             gameIsRunning,
             getLocalCredentials,
-            joinGame} = useContext(GameContext);
+            joinGame,
+            userCanSeeGameBoard} = useContext(GameContext);
 
     useEffect(()=>{
+        
         if(!gameIsRunning)
         {
             const localCreds = getLocalCredentials();
@@ -22,13 +24,11 @@ const MainView = ({}) => {
         }
 
         return ()=>{}
-    },[]);
-
-    //console.log(gameState);
+    },[gameState]);
 
     return (<div className="MainView">
         
-        {gameIsRunning ? <GameBoard /> : <SignIn />}
+        {userCanSeeGameBoard ? <GameBoard /> : <SignIn />}
 
     </div>);
 }

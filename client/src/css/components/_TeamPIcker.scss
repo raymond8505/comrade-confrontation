@@ -1,0 +1,35 @@
+.TeamPicker
+{
+    border: none;
+    color: black;
+    grid-column: 1 / span 2;
+    padding: 0;
+    margin-top: .5em;
+
+    legend
+    {
+        display: block;
+        margin: 0 0 .5em;
+        font-weight: $fw_bold;
+    }
+}
+.TeamPicker__inner
+{
+    display: flex;
+    justify-content: space-between;
+
+    label
+    {
+        font-size: 1.2em;
+        font-weight: $fw_medium;
+    }
+
+    input[type="radio"]
+    {
+        margin-right: .2em;
+    }
+}
+.TeamPicker__cta
+{
+    flex-grow: 0;
+}
