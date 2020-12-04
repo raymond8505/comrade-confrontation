@@ -18,11 +18,33 @@
     margin: 0 auto 1em;
     display: block;
 }
+.GameBoard__logout-btn
+{
+    margin-left: 1em;
+    font-size: .8em;
+}
+.GameBoard__top-controls
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
 .GameBoard__game-code
 {
-    font-size: 2em;
-    font-weight: $fw_black;
+    font-variant: normal;
+    text-transform: uppercase;
+    font-size: .9em;
+    letter-spacing: .1em;
+    font-weight: $fw_medium;
     text-align: center;
+    border: 3px solid rgba($yellow,.65);
+    border-radius: .5em;
+    padding: .4em .6em .2em;
+    background: $red_dark;
+    display: inline-block;
+    line-height: 1;
+    
 }
 .GameBoard__round-number
 {

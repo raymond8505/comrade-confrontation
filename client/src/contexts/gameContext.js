@@ -364,6 +364,7 @@ export const GameController = () => {
         joinGame,
         setLocalCredentials,
         getLocalCredentials,
+        clearLocalCredentials,
         currentUser,
         allQuestions,
         getQuestionByID,

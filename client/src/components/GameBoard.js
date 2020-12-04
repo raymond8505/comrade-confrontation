@@ -4,6 +4,7 @@ import logo from '../img/logo.png';
 import PlayerList from "./PlayerList";
 import QuestionBoard from "./QuestionBoard";
 import QuestionPicker from "./QuestionPicker";
+import StrikeBoxes from "./StrikeBoxes";
 import TeamStats from "./TeamStats";
 
 const GameBoard = ({}) => {
@@ -11,7 +12,14 @@ const GameBoard = ({}) => {
     const {gameState,
             getUserInfo,
             getCurrentRound,
-            currentUserIsHost} = useContext(GameContext);
+            currentUserIsHost,
+            clearLocalCredentials} = useContext(GameContext);
+    
+    const handleLogout = e => {
+
+        clearLocalCredentials();
+        window.location.reload();
+    }
 
     return (<div className="GameBoard">
 
@@ -25,16 +33,29 @@ const GameBoard = ({}) => {
             <PlayerList players={getUserInfo(gameState.teams[0].players)} />
             </div>
             <div className="GameBoard__game-stats">
-                <img src={logo} alt="Comrade Confrontation" className="GameBoard__logo" />
-                <div className="GameBoard__game-code">
-                    {gameState.ID}
+                <div className="GameBoard__top-controls">
+                    <span className="GameBoard__game-code">
+                        {gameState.ID}
+                    </span>
+                    <button 
+                        type="button" 
+                        className="GameBoard__logout-btn"
+                        onClick={handleLogout}
+                    >Logout</button>
                 </div>
-                <div className="GameBoard__round-number">
-                    {gameState.currentRound}
+                <img src={logo} alt="Comrade Confrontation" className="GameBoard__logo" />
+                
+                <div className="GameBoard__round-info">
+
+                    <div className="GameBoard__round-number">
+                        {gameState.currentRound}
+                    </div>
                 </div>
 
-                {gameState.currentRound > 0 ? 
-                    <QuestionBoard question={getCurrentRound().question} /> : null}
+                {gameState.currentRound > 0 ? (<div>
+                    <QuestionBoard question={getCurrentRound().question} />
+                    <StrikeBoxes strikes={getCurrentRound().strikes} />
+                </div>) : null}
             </div>
 
             <div className="GameBoard__team-2">

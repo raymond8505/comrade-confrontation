@@ -1,0 +1,57 @@
+.StrikeBoxes
+{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    margin: 0;
+}
+.StrikeBoxes__box
+{
+    $stroke : 3px;
+    border-radius: 3px;
+    opacity: .4;
+    width: 5vh;
+    height: 5vh;
+    border: $stroke solid white;
+    position: relative;
+
+    &:nth-child(2)
+    {
+        margin: 0 1vw;
+    }
+
+    &:before,
+    &:after
+    {
+        content: '';
+        width: 130%;
+        height: $stroke;
+        background: white;
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: -15%;
+    }
+
+    &:before
+    {
+        transform: rotate(45deg);
+    }
+
+    &:after
+    {
+        transform: rotate(-45deg);
+    }
+}
+.StrikeBoxes__box--show
+{
+    opacity: 1;
+
+    &:before,
+    &:after
+    {
+        background: $yellow;
+    }
+}

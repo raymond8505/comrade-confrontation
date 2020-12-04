@@ -1,5 +1,6 @@
 import React,{useContext,useRef} from "react";
 import { GameContext } from "../contexts/gameContext";
+import HostControls from './HostControls';
 
 const QuestionBoard = ({question}) => {
 
@@ -45,8 +46,7 @@ const QuestionBoard = ({question}) => {
         {currentUserIsHost() ? 
             (<div className="QuestionBoard__question-and-controls">
                 <h2 className="QuestionBoard__question">{question.question}</h2>
-
-                
+                <HostControls />
             </div>) : null}
         <ul className="QuestionBoard__answers">
             {renderAnswers()}

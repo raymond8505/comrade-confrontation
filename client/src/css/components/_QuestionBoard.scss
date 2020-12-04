@@ -91,17 +91,18 @@
 {
     font-size: 1em;
     line-height: 1;
-    padding: .5em;
+    padding: .25em;
     color: white;
     background: darken($red_dark,5%);
     border-width: 2px;
     border-style: solid;
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
     text-align: center;
     border-radius: 50%;
     font-weight: $fw_medium;
     display: inline-block;
+    box-shadow: 0 0 .35em .01em black;
 }
 
 .QuestionBoard__answer,
@@ -123,7 +124,7 @@
 }
 .QuestionBoard
 {
-    margin: 2em 0;
+    margin: 1em 0;
 }
 .QuestionBoard__answer--revealed
 {

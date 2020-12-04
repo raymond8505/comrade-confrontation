@@ -17,5 +17,6 @@
     "rounds" : [],
     "currentRound" : 0,
     "modified" : -1,
-    "activeTeam" : -1
+    "activeTeam" : -1,
+    "started" : false
 }
