@@ -6,18 +6,18 @@ const QuestionBoard = ({question}) => {
 
     const {
         currentUserIsHost,
-        currentUser,
-        gameState} = useContext(GameContext);
+        sendCorrectAnswer} = useContext(GameContext);
     
-    const handleAnswerClick = e => {
-
+    const handleAnswerClick = (e,index) => {
+        
+        sendCorrectAnswer(index);
     }
     
     const renderAnswers = () => {
 
         const toRet = [];
 
-        console.log(gameState,currentUser);
+        //console.log(gameState,currentUser);
         
         for(let i = 0; i < 8; i++)
         {   
@@ -29,10 +29,14 @@ const QuestionBoard = ({question}) => {
             toRet.push(<li className={`QuestionBoard__answer${
                                 revealed ? ' QuestionBoard__answer--revealed' : ''}${
                                     (answer != undefined && answer.answered) ? ' QuestionBoard__answer--answered' : ''
-                                }`} 
+                                }${answer === undefined ? ' QuestionBoard__answer--disabled' : ''}`} 
                             key={answerKey}
-                            onClick={handleAnswerClick}
-                    >
+                            onClick={(e)=>{
+                                if(answer !== undefined && currentUserIsHost()) {
+                                    handleAnswerClick(e,i);
+                                    }
+                                }
+                            }>
                     {
                         answer !== undefined && revealed ? 
                             <div className="QuestionBoard__answer-details">

@@ -50,6 +50,11 @@
 {
     font-weight: $fw_black;
     font-size: 4em;
+    opacity: .5;
+}
+.GameBoard--round-started .GameBoard__round-number
+{
+    opacity: 1;
 }
 .GameBoard__row
 {
@@ -64,8 +69,7 @@
         {
             margin: 0 1em;
             text-align: center;
-            width: 40%;
-            flex-grow: 2;
+            flex-grow: 1;
         }
 
         &:nth-child(3)
@@ -105,10 +109,11 @@
         }
     }
 }
-.GameBoard--host .QuestionBoard__answer--answered
+.GameBoard__questions-wrapper
 {
-    &,.QuestionBoard__answer-text
-    {
-        border-color: $yellow;
-    }
+    width: 50%;
+}
+.GameBoard__row > .PlayerList
+{
+    min-width: calc(25% - 1em);
 }

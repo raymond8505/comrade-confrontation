@@ -1,11 +1,24 @@
 import React,{useContext,useRef,useState} from "react";
 import { GameContext } from "../contexts/gameContext";
 
-const TeamPicker = ({teams,suggestedTeam = 0}) => {
+const TeamPicker = ({suggestedTeam}) => {
 
-    const [chosenTeam,setChosenTeam] = useState(suggestedTeam);
-    
-    const {joinTeam} = useContext(GameContext);
+    const {joinTeam,gameState,smallestTeam} = useContext(GameContext);
+
+    let st = suggestedTeam;
+
+    if(st === undefined)
+    {
+        st = smallestTeam === -1 ? 0 : smallestTeam;
+    }
+
+    const [chosenTeam,setChosenTeam] = useState(st);
+
+    console.log(chosenTeam);
+
+    const {game} = gameState;
+
+    const {teams} = game;
 
     const onTeamChange = e => {
         setChosenTeam(Number(e.target.value));

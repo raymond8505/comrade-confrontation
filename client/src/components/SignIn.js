@@ -1,4 +1,4 @@
-import React,{useContext,useReducer,useRef} from "react";
+import React,{useContext,useRef,useEffect} from "react";
 import logo from '../img/logo.png';
 import {GameContext} from '../contexts/gameContext';
 import Alert from "./Alert";
@@ -12,12 +12,14 @@ const SignIn = ({}) => {
 
     const {createGame,
             joinGame,
-            alerts,
             setAlerts,
             createAlert,
-            showTeamPicker,
             gameState,
-            suggestedTeam} = useContext(GameContext);
+            currentUserHasTeam,
+            currentUserInGame
+        } = useContext(GameContext);
+
+    const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
 
     const handleEmptyNameField = () => {
         setAlerts([createAlert('Please enter your name','error')]);
@@ -52,8 +54,6 @@ const SignIn = ({}) => {
         }
     }
 
-    
-
     return (<div className="SignIn">
         <div className="SignIn__inner">
             <img src={logo} alt="Comrade Confrontation" className="SignIn__logo" />
@@ -74,19 +74,18 @@ const SignIn = ({}) => {
                         placeholder="Game Code, ex: SPQR" 
                         ref={gameCodeField}
                         className="Alert__code-field"
-                        defaultValue="MSGJ"
+                        //defaultValue="MSGJ"
                         disabled={showTeamPicker} />
                 <button type="button" 
                         className="cta" 
                         onClick={handleJoinGame}
                         disabled={showTeamPicker}>Join Game</button>
                 
-                {showTeamPicker ? <TeamPicker teams={gameState.teams} 
-                suggestedTeam={suggestedTeam} /> : null}
+                {showTeamPicker ? <TeamPicker /> : null}
                 
             </div>
 
-            {alerts.length > 0 ? alerts.map((a,i)=><Alert alert={a} key={i} />) : null}
+            {gameState.alerts.length > 0 ? gameState.alerts.map((a,i)=><Alert alert={a} key={i} />) : null}
         </div>
     </div>);
 }

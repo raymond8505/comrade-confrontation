@@ -11,10 +11,12 @@ const addSocket = (ID,socket) => {
     
     if(socketExists(ID))
     {
-        sockets.filter(u=>u.ID === ID).socket = socket;
+        console.log('updating socket for',ID);
+        sockets.filter(u=>u.ID === ID)[0].socket = socket;
     }
     else
     {
+        console.log('adding socket for',ID);
         sockets.push({
             ID,
             socket
@@ -22,7 +24,7 @@ const addSocket = (ID,socket) => {
     }
 }
 
-const socketExists = id => sockets.includes(id);
+const socketExists = id => sockets.filter(s=>s.ID === id).length > 0;
 
 /**
  * Sends some data with an action slug to the given web socket

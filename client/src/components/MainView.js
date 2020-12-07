@@ -11,24 +11,11 @@ const MainView = ({}) => {
             joinGame,
             userCanSeeGameBoard} = useContext(GameContext);
 
-    useEffect(()=>{
-        
-        if(!gameIsRunning)
-        {
-            const localCreds = getLocalCredentials();
-
-            if(localCreds)
-            {
-                joinGame(localCreds.gameID,localCreds.userID);
-            }
-        }
-
-        return ()=>{}
-    },[gameState]);
+    //console.log('user can see board',userCanSeeGameBoard);
 
     return (<div className="MainView">
         
-        {userCanSeeGameBoard ? <GameBoard /> : <SignIn />}
+        {userCanSeeGameBoard() ? <GameBoard /> : <SignIn />}
 
     </div>);
 }

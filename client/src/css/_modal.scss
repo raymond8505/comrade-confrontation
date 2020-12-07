@@ -1,0 +1,23 @@
+.modal
+{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: rgba(black,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+.modal__inner
+{
+    max-width: calc(100% - 4em);
+    max-height: calc(100% - 4em);
+    background: $red_dark;
+    border: 2px solid $yellow;
+    padding: 2em;
+    width: 80%;
+    box-shadow: 0 0 5vw 0 black;
+}

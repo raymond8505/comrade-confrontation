@@ -1,11 +1,15 @@
 import React,{useContext,useState,useRef, useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import {fillArrayUnique} from '../helpers';
+import allQuestions from '../data/sample-questions.json';
 
 const QuestionPicker = ({questions = null,openOnInit}) => {
 
     const [open,setOpen] = useState(openOnInit);
-    const {gameState,allQuestions,setGameRounds} = useContext(GameContext);
+    const {gameState,setGameRounds} = useContext(GameContext);
+
+    const gameID = gameState.game.ID;
+
     const randomizeOptionsBtn = useRef(null);
 
     const [questionOptions,setQuestionOptions] = useState([]);
@@ -52,7 +56,7 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
     const onConfirmQuestionsClick = e => {
 
         //console.log(gameState);
-        setGameRounds(gameState.ID,chosenQuestions);
+        setGameRounds(gameID,chosenQuestions);
     }
 
     if(questions === null)
@@ -73,8 +77,8 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
 
     },[chosenQuestions.length]);
 
-    return (<dialog className="QuestionPicker" open={open}>
-        <div className="QuestionPicker__inner">
+    return (<dialog className="QuestionPicker modal" open={open}>
+        <div className="QuestionPicker__inner modal__inner">
             <h2 className="QuestionPicker__title">Choose the Questions</h2>
             <h3>Chosen Questions</h3>
             <ul className="QuestionPicker__questions QuestionPicker__questions--chosen">

@@ -1,0 +1,25 @@
+.PassOrPlay
+{
+    
+}
+.PassOrPlay__inner
+{
+    text-align: center;
+    font-size: 1.5em;
+
+    @media (min-width: $small_break)
+    {
+        width: 33vw;
+    }
+}
+.GameBoard--host .PassOrPlay button
+{
+    cursor: pointer;
+}
+
+.GameBoard:not(.GameBoard--host) .PassOrPlay button
+{
+    @include no-button-style;
+    color: white;
+    box-shadow: none;
+}

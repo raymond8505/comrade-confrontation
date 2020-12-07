@@ -1,26 +1,95 @@
-import React,{useEffect, useMemo, useReducer, useState} from 'react';
+import React,{useReducer,useMemo,setImmediate,useState, useEffect} from 'react';
 import defaultGameState from '../schema/defaultGameState.json';
-import allQuestions from '../data/sample-questions.json';
+
+import soundManager from '../soundManager';
 
 export const GameContext = React.createContext();
 
-const HOST = require('../config.json').HOST;
-
-const LOCAL_STORAGE_KEY = 'cc-creds';
-
-let socket;
+const {HOST,LOCAL_STORAGE_KEY} = require('../config.json')
 
 export const GameController = () => {
 
+    const [updated,setUpdated] = useState(0);
     /**
-     * an object representing the current user.
+     * The central handler for all messages coming from the server
+     * @param {Object} msg 
      */
-    const [currentUser,setCurrentUser] = useState(null);
+    const handleMessage = msg => {
 
-    const [alerts,setAlerts] = useState([]);
+        msg = JSON.parse(msg.data);
 
-    const [suggestedTeam,setSuggestedTeam] = useState(0);
+        console.log('handling message from server',msg);
 
+        switch(msg.action)
+        {
+            case 'game-created' :
+
+                console.log('Game Created',msg.data);
+
+                setLocalCredentials(msg.data.game.ID,msg.data.user.ID);
+
+                setGameState({
+                    type : ['game','user'],
+                    data : [msg.data.game,msg.data.user]
+                });
+
+            break;
+            
+            case 'game-joined' :
+
+                console.log('Joined Game',msg.data);
+
+                if(msg.data.userID !== undefined)
+                {
+                    const user = getUserByID(msg.data.userID,msg.data.game);
+
+                    setGameState({
+                        type : ['user','game'],
+                        data : [user,msg.data.game]
+                    });
+                }
+                else
+                {
+                    updateGameState(msg.data.game);
+                }
+
+            break;
+
+            case 'team-selection-request' :
+
+                setLocalCredentials(msg.data.game.ID,msg.data.userID);
+
+                setGameState({
+                    type : ['game','user'],
+                    data : [msg.data.game,
+                            getUserByID(msg.data.userID,msg.data.game)
+                            ]
+                });
+
+            break;
+
+            case 'round-stage-changed' :
+            case 'round-team-chosen':
+            case 'game-rounds-set' :
+            case 'answers-updated' :
+            case 'round-changed':
+            case 'team-joined' :
+                updateGameState(msg.data.game);
+            break;
+
+            case 'error' :
+                setGameState({
+                    type : 'alerts',
+                    data : msg.data
+                });
+        }
+    }
+
+    /**
+     * Creates an alert oject to use in the alerts gameState array
+     * @param {String} msg some error message to display
+     * @param {String} type [default 'info'] info|error|warning|success
+     */
     const createAlert = (msg,type='info') => {
         return {
             type,
@@ -28,257 +97,83 @@ export const GameController = () => {
         };
     }
 
-    const gameStateReducer = (state,action) => {
-        
-        switch(action.type)
-        {
-            case 'connect' :
-               socket = action.data;
-                
-                break;
-            
-            //these actions just need to update the game in state because
-            //the server did the work.
-            case 'game-rounds-set' :
-            case 'create-game' :
-            case 'update' :
-                return action.data;
-            default :
-                break;
-        }
+    const updateGameState = game => {
 
-        return state;
-    }
+        console.log('updating game state');
 
-    /**
-     * Sometimes the server gives us a whole new game state and we 
-     * just need to override our local game state with it.
-     * @param {Object} newGame a new game object
-     */
-    const updateGameState = newGame => setGameState({
-        type : 'update',
-        data : newGame
-    });
-
-    const [gameState,setGameState] = useReducer(gameStateReducer,defaultGameState);
-
-    const [showTeamPicker,setShowTeamPicker] = useState(false);
-
-    const [userCanSeeGameBoard,setUserCanSeeGameBoard] = useState(false);
-
-    const gameIsRunning = !gameState || gameState.ID !== '';
-
-    const connect = (cb,tries = 0) => {
-        
-        const newSocket = new WebSocket(HOST);
-                
-        newSocket.addEventListener('message',handleMessage);
-
-        newSocket.addEventListener('open',e => {
-            
-            setGameState({
-                type : 'connect',
-                data : socket
-            });
-
-            cb(newSocket);
+        setGameState({
+            type : 'game',
+            data : game
         });
-
-        newSocket.addEventListener('close',()=>{
-            
-            //console.log('socket close');
-            
-            /*sendMessage('reconnect',{
-                userID : currentUser.ID,
-                gameID : gameState.ID
-            });*/
-        });
-
-        socket = newSocket;
     }
 
-    /**
-     * Checks if the given user is the host of the current game
-     * @param {Object} user
-     * @returns {Boolean}
-     */
-    const userIsHost = user => gameState.hostID === user.ID;
-
-    const currentUserIsHost = () => userIsHost(currentUser);
-    
-    /**
-     * Checks if the current user is on a team in the given game
-     * @param {Object} game 
-     * @returns {Boolean}
-     */
-    const currentUserHasTeam = (game=gameState) => {
-        
-        //console.log(currentUser.ID,game);
-        return userHasTeam(currentUser.ID,game);
-    }
-    
-    /**
-     * Check if the given user is on a team in the game
-     * @param {String} userID the user ID to check
-     * @param {Object} game [default gameState] the game to check
-     */
-    const userHasTeam = (userID,game=gameState) => game.teams.map(t => t.players).flat().includes(userID);
-
-    const _userCanSeeGameBoard = ()=>{
-
-        console.log(gameState);
-
-        if(currentUser === undefined || currentUser === null)
-        {
-            //console.log(currentUser,'isnt set');
-            return false;
-        }
-        if(currentUserIsHost())
-        {
-            //console.log('user is host');
-            return gameState.ID !== '';
-        }
-        else
-        {
-            //console.log(currentUserHasTeam());
-            return currentUserHasTeam();
-            
-        }
-
-    };
-
-    
     /**
      * Round count starts at 1, but obviously the rounds array
      * starts at 0.
      */
-    const getCurrentRound = () => gameState.rounds[gameState.currentRound - 1];
+    const getCurrentRound = (game=gameState.game) => game.rounds[game.currentRound];
 
-    const handleMessage = msg => {
+    /**
+     * Shortcut for getting the current round's stage
+     * @param {Object} game 
+     * @returns {Int}
+     */
+    const getCurrentRoundStage = (game=gameState.game) => {
 
-        msg = JSON.parse(msg.data);
+        return getCurrentRound(game).currentStage;
+    }
 
-        switch(msg.action)
+    /**
+     * Updates the user field in the state object with the given user
+     * @param {Object} user 
+     */
+    const setCurrentUser = user => {
+
+        setGameState({
+            type : 'user',
+            data : user
+        })
+    }
+
+    /**
+     * Join a game
+     * @param {String} gameID the ID of the game to join
+     * @param {String} userID the ID of the user joining
+     * @param {String1} userName [optional] when joining a newly created name, this is the host's name
+     */
+    const joinGame = (gameID,userID=null,userName=null) => {
+
+        
+        if(userID !== null || userName != null)
         {
-            case 'game-created' :
-                console.log('Game Created',msg.data);
-
-                setLocalCredentials(msg.data.game.ID,msg.data.user.ID);
-
-                setGameState({
-                    type : 'create-game',
-                    data : msg.data.game
-                });
-
-                setCurrentUser(msg.data.user);
-                setUserCanSeeGameBoard(true);
-
-                break;
-
-            case 'game-joined' :
-                console.log('Joined Game',msg.data);
-
-                if(msg.data.userID != undefined)
-                {
-                    const user = getUserByID(msg.data.userID,msg.data.game);
-
-                    setCurrentUser(user);
-                }
+            if(userID !== null)
+            {
                 
-
-                updateGameState(msg.data.game);
-
-                setUserCanSeeGameBoard(true);
-
-                break;
-
-            case 'game-join-failed' :
-                //console.log(`Can't join game`,msg.data);
-                break;
-            case 'game-rounds-set' :
-                setGameState({
-                    type : 'game-rounds-set',
-                    data : msg.data.game
+                //console.log(gameID,userID);
+                //join as an existing user
+                sendMessage('join-game',{
+                    gameID,
+                    userID 
                 });
-                break;
-            
-            case 'non-existent-game' :
-
-                setAlerts([
-                    createAlert(
-                        'No game exists with that code. Please double check your spelling, or host your own game.','error')
-                ]);
-                break;
-            case 'team-selection-request' :
-                setLocalCredentials(msg.data.game.ID,msg.data.userID);
-                updateGameState(msg.data.game);
-                setShowTeamPicker(true);
-                setCurrentUser(getUserByID(msg.data.userID,msg.data.game));
-                setSuggestedTeam(msg.data.suggestedTeam);
-
-                break;
-            case 'team-joined' :
-                //console.log('team joined');
-
-                updateGameState(msg.data.game);
-                setUserCanSeeGameBoard(true);
-
-                break;
+            }
+            else
+            {
+                //join as a new user
+                sendMessage('join-game',{
+                    gameID,
+                    userName 
+                });
+            } 
         }
     }
 
     /**
-     * Finds a user in the game b
-     * @param {Object} game the game to search
-     * @param {String} userID the ID of the user to return
-     * @returns {Object|undefined} returns the user, or undefined if not found
+     * adds the given user to the given team in the given game
+     * @param {Int} teamIndex 
+     * @param {String} userID 
+     * @param {String} gameID 
      */
-    const getUserByID = (userID,game=gameState) => game.users.find(u => u.ID === userID);
-
-    /**
-     * Send a message to the server
-     * @param {String} action 
-     * @param {Any} data 
-     */
-    const sendMessage = (action,data) => {
-
-        const msg = JSON.stringify({
-            action,
-            data
-        });
-
-        setTimeout(()=>{
-            
-            if(socket === null)
-            {
-                //if the socket hasn't bee set yet, keep trying
-                sendMessage(action,data);
-                //console.log('retrying');
-            }
-            else
-            {
-                if(socket.readyState === 1)
-                {
-                    socket.send(msg);
-                }
-                else
-                {
-                    sendMessage(action,data);
-                }
-            }
-            
-        },5);
-    }
-
-    const createGame = playerName => {
-
-        connect(socket => {
-
-            sendMessage('create-game',playerName);
-        });
-    }
-
-    const joinTeam = (teamIndex,userID=currentUser.ID,gameID=gameState.ID) => {
+    const joinTeam = (teamIndex,userID=gameState.user.ID,gameID=gameState.game.ID) => {
 
         sendMessage('join-team',{
             teamIndex,
@@ -287,33 +182,196 @@ export const GameController = () => {
         });
     }
 
-    const joinGame = (gameID,userID=null,userName=null) => {
+    useEffect(()=>{
 
-        if(userID !== null || userName != null)
+        const localCreds = getLocalCredentials();
+
+        if(localCreds !== null)
         {
-            connect(socket => {
+            joinGame(localCreds.gameID,localCreds.userID);
+        }
+
+        return ()=>{}
+    },[]);
+
+    /**
+     * Send a message to the server
+     * @param {String} action 
+     * @param {Any} data 
+     */
+    const sendMessage = (action,data,curTry=0,tries=25) => {
+
+        const msg = JSON.stringify({
+            action,
+            data
+        });
+
+        console.log('sending',msg);
             
-                if(userID !== null)
+        if(gameState.socket === null)
+        {
+            //if the socket hasn't bee set yet, keep trying
+            //sendMessage(action,data);
+            console.log('socket is null');
+        }
+        else
+        {
+            if(gameState.socket.readyState !== 1)
+            {
+                if(curTry < tries)
                 {
-                    //join as an existing user
-                    sendMessage('join-game',{
-                        gameID,
-                        userID 
-                    });
+                    setTimeout(()=>{
+
+                        sendMessage(action,data,curTry + 1,tries);
+
+                    },1);
                 }
                 else
                 {
-                    //join as a new user
-                    sendMessage('join-game',{
-                        gameID,
-                        userName 
-                    });
+                    console.warn('server connection lost')
                 }
-            });
+                
+            }
+            else
+            {
+                gameState.socket.send(msg);
+            }
+
         }
-        
     }
 
+    /**
+     * The central state reducer. Action type is expected to be a field in the
+     * gameState object
+     * @param {Object} state the state object containing socket,user,game
+     * @param {*} action 
+     */
+    const stateReducer = (state,action) => {
+
+        let {type,data} = action;
+        const copy = {...state};
+        copy.updated = new Date().getTime();
+
+        if(typeof type === 'string')
+        {
+            console.log('changing',type,'from',state[type],'to',data);
+
+            copy[type] = data;
+        }
+        else
+        {
+            type.forEach((t,i)=>{
+
+                console.log('changing',t,'from',state[t],'to',data[i]);
+
+                copy[t] = data[i];
+            });
+        }
+
+        setUpdated(updated + 1);
+
+        return copy;
+    }
+
+    /**
+     * Central connection function, creates and saves the socket to the server
+     * adding all necessary event handlers
+     * @param {Function} cb a callback to fire when the socket opens
+     * @param {Int} tries number of times it's attempted to reconnect, it stops
+     * @param {Int} maxTries number of times to try reconnecting after close
+     */
+    const connect = (cb,tries = 0,maxTries = 10) => {
+
+        if(cb !== undefined)
+            throw new Error('NO MORE CALLBACKS !');
+        
+            return;
+        const newSocket = new WebSocket(HOST);
+                
+        newSocket.addEventListener('message',handleMessage);
+
+        newSocket.addEventListener('open',e => {
+            
+            setGameState({
+                type : 'socket',
+                data : newSocket
+            });
+
+            cb(newSocket);
+        });
+
+        return newSocket;
+    }
+
+    const initSocket = () => {
+
+        console.log('init socket');
+
+        const newSocket = new WebSocket(HOST);
+
+        newSocket.addEventListener('message',handleMessage);
+        
+        newSocket.addEventListener('close',()=>{
+            
+        });
+
+        newSocket.addEventListener('open',e => {
+            
+
+        });
+
+        return newSocket;
+    }
+
+    /**
+     * The main state of the game, has 3 fields, game,user,socket
+     */
+    const [gameState,setGameState] = useReducer(stateReducer,
+                                        {
+                                            socket : null,
+                                            user : {ID:'',name:''},
+                                            game : defaultGameState,
+                                            alerts : []});
+    
+    if(gameState.socket === null)
+    {
+        setGameState({
+            type : 'socket',
+            data : initSocket()
+        })
+    }
+
+    /**
+     * True if game rounds array isn't empty
+     */                                        
+    const gameHasRounds = useMemo(()=>{ return gameState.game.rounds.length > 0;},[gameState.game]);
+    
+    /**
+     * Whether or not the game is currently running.
+     */
+    const gameIsRunning = useMemo(()=>{return gameState.game.ID !== '';},[gameState.game]);
+    
+    /**
+     * Takes an array of user iDs and returns an array of user objects
+     * @param {String[]} users  an array of user IDs for which to get full user info
+     * @param {Object} game [default gameState] the game in which the users exist
+     * @returns {Object[]}
+     */
+    const getUserInfo = (users,game=gameState.game) => game.users.filter(u=>users.includes(u.ID));
+                            
+    /**
+     * Finds a user in the game b
+     * @param {Object} game the game to search
+     * @param {String} userID the ID of the user to return
+     * @returns {Object|undefined} returns the user, or undefined if not found
+     */
+    const getUserByID = (userID,game=gameState.game) => game.users.find(u => u.ID === userID);
+
+    /**
+     * Sets the user's game and user ids in local storage
+     * @param {*} gameID 
+     * @param {*} userID 
+     */
     const setLocalCredentials = (gameID,userID) => {
 
         window.localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify({
@@ -322,26 +380,83 @@ export const GameController = () => {
         }));
     }
 
+    /**
+     * Clears the user's credentials from local storage
+     */
     const clearLocalCredentials = () => {
 
         window.localStorage.removeItem(LOCAL_STORAGE_KEY);
     }
 
+    /**
+     * Get's the users credentials from local storage
+     * @returns {Object|null} returns the credentials object with gameID and 
+     *                          userID or null if it doesnt exist
+     */
     const getLocalCredentials = () => {
         const creds = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
         return creds === null ? null : JSON.parse(creds);
     }
 
-    const getQuestionByID = id => {
+    /**
+     * Check if the given user is on a team in the game
+     * @param {String} userID the user ID to check
+     * @param {Object} game [default gameState] the game to check
+     */
+    const userHasTeam = (userID,game=gameState) => game.teams.map(t => t.players).flat().includes(userID);
 
-        const matches = allQuestions.filter(q=>q.ID === id);
+    const currentUserHasTeam = ()=>{
 
-        return matches.length > 0 ? matches[0] : null;
+        const {user,game} = gameState;
+
+        return userHasTeam(user.ID,game);
+    }
+    /**
+     * Whether or not the current user in state is the host of the 
+     * game in state
+     */
+    const currentUserIsHost = ()=>{
+
+        const {user,game} = gameState;
+
+        return user.ID !== '' && user.ID === game.hostID; 
+
+    }
+    /**
+     * Whether the user is allowed to see the game board
+     */
+    const userCanSeeGameBoard = ()=>{
+
+        
+        const {user,game} = gameState;
+
+        //console.log('setting user can see game board',user,game);
+
+        return (user.ID !== '' &&
+                game.ID !== '') && (currentUserIsHost() || currentUserHasTeam())
+
     }
 
+    /**
+     * Creates a new game
+     * @param {String} playerName name of the host
+     */
+    const createGame = playerName => {
+
+        sendMessage('create-game',playerName);
+    }
+
+    /**
+     * Takes a game ID and an array of questions and passes them to the server 
+     * to generate the game rounds
+     * @param {String} gameID 
+     * @param {Object[]} questions 
+     */
     const setGameRounds = (gameID,questions) => {
 
+        //console.log(gameID,questions);
+        
         sendMessage('set-game-rounds',{
             questions,
             gameID
@@ -349,36 +464,64 @@ export const GameController = () => {
     }
 
     /**
-     * Takes an array of user iDs and returns an array of user objects
-     * @param {String[]} users  an array of user IDs for which to get full user info
-     * @param {Object} game [default gameState] the game in which the users exist
-     * @returns {Object[]}
+     * Whether or not the current user is in the current game
+     * @returns {Boolean}
      */
-    const getUserInfo = (users,game=gameState) => game.users.filter(u=>users.includes(u.ID));
+    const currentUserInGame = () => {
+        
+        const {game,user} = gameState;
 
+        return game.users.find(u=>u.ID === user.ID) !== undefined;
+    }    
+    const setAlerts = alerts => {
+
+        setGameState({
+            type : 'alerts',
+            data : alerts
+        });
+    }
+
+    /**
+     * The team with the smaller size. If equal, returns -1
+     */
+    const smallestTeam = useMemo(()=>{
+
+        if(gameState.game.teams[0].length < gameState.game.teams[1].length)
+        {
+            return 0;
+        }
+        else if(gameState.game.teams[0].length > gameState.game.teams[1].length)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
+
+    },[gameState.updated]);
+    
     return {
         gameState,
-        setGameState,
         gameIsRunning,
-        createGame,
-        joinGame,
         setLocalCredentials,
         getLocalCredentials,
         clearLocalCredentials,
-        currentUser,
-        allQuestions,
-        getQuestionByID,
-        setGameRounds,
-        getCurrentRound,
-        userIsHost,
-        currentUserIsHost,
-        alerts,
-        setAlerts,
-        createAlert,
-        showTeamPicker,
-        suggestedTeam,
-        joinTeam,
         userCanSeeGameBoard,
-        getUserInfo
+        createGame,
+        joinGame,
+        currentUserHasTeam,
+        currentUserIsHost,
+        currentUserInGame,
+        getCurrentRound,
+        getCurrentRoundStage,
+        getUserInfo,
+        setGameRounds,
+        gameHasRounds,
+        updated,
+        createAlert,
+        setAlerts,
+        smallestTeam,
+        joinTeam
     };
 }

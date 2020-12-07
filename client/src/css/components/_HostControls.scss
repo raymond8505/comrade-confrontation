@@ -1,0 +1,12 @@
+.HostControls > *
+{
+    display: block;
+    font-variant: normal;
+    text-transform: uppercase;
+    font-size: .9em;
+}
+.HostControls
+{
+    padding-left: 1em;
+    border-left: 2px solid $yellow;
+}

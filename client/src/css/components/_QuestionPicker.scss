@@ -1,26 +1,3 @@
-.QuestionPicker
-{
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: rgba(black,.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.QuestionPicker__inner
-{
-    max-width: calc(100% - 4em);
-    max-height: calc(100% - 4em);
-    background: $red;
-    border: 2px solid $yellow;
-    padding: 2em;
-    width: 80%;
-}
 .QuestionPicker__questions
 {
     padding: 0;
@@ -34,7 +11,8 @@
 }
 .QuestionPicker__Question
 {
-    background: $red_dark;
+    background: $red;
+    color: $yellow;
     padding: .3em .8em;
     margin-bottom: .2em;
 }

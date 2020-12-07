@@ -1,3 +1,4 @@
 {
-    "HOST" : ":8080"
+    "HOST" : ":8080",
+    "LOCAL_STORAGE_KEY" : "cc-creds"
 }

@@ -7,4 +7,11 @@
     text-transform: none;
     font-weight: $fw_medium;
     padding-top: 2em;
+    flex-shrink: 1;
+}
+.PlayerList__player--current,
+.GameBoard--host .PlayerList__player--buzzed
+{
+    color: $yellow;
+    font-weight: $fw_bold;
 }

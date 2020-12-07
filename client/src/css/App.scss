@@ -22,7 +22,10 @@ body
 }
 
 @import './forms';
+@import './modal';
 @import './components/Alert';
+@import './components/PassOrPlay';
+@import './components/HostControls';
 @import './components/StrikeBoxes';
 @import './components/PlayerList';
 @import './components/TeamPicker';

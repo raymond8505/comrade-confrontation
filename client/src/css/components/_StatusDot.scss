@@ -5,8 +5,12 @@
     border-radius: 50%;
     background: rgba(white,.5);
     margin-right: .4em;
+    border: 3px solid darken($red_dark,10%);
+    //box-shadow: 0 0 .5em 0 rgba(black,.4);
 }
 .StatusDot--on
 {
     background: $yellow;
+    box-shadow: 0 0 .5em .1em rgba($yellow,1);
+    border-color: $red_dark;
 }

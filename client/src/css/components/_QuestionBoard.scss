@@ -120,11 +120,24 @@
 }
 .QuestionBoard__question
 {
-    margin-bottom: 2em;
+    width: 70%;
+    margin: 0 1em 0 0;
+}
+.QuestionBoard__question-and-controls
+{
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 1em 0;
 }
 .QuestionBoard
 {
     margin: 1em 0;
+
+    @media (max-width: $small_break)
+    {
+        font-size: .75em;
+    }
 }
 .QuestionBoard__answer--revealed
 {
@@ -142,4 +155,9 @@
         align-items: center;
         padding: 1rem;
     }
+}
+.QuestionBoard__answer--disabled,
+.GameBoard--host .QuestionBoard__answer--answered
+{
+    opacity: .35;
 }
