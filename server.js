@@ -27,7 +27,7 @@ const handleMessage = (msg,sender) => {
 
     console.log('handling message',msg);
 
-    let game;
+    let game,round;
 
     switch(msg.action)
     {
@@ -168,12 +168,12 @@ const handleMessage = (msg,sender) => {
             if(game !== undefined && game.rounds[roundIndex] !== undefined)
             {
                 
-                game.rounds[game.currentRound - 1].started = msg.action === 'start-round';
-                game.rounds[game.currentRound - 1].currentStage = 0;
+                game.rounds[game.currentRound].started = msg.action === 'start-round';
+                game.rounds[game.currentRound].currentStage = 0;
 
                 game.activeTeam = -1;
 
-                console.log(game.rounds[game.currentRound - 1]);
+                console.log(game.rounds[game.currentRound]);
 
                 if(msg.action === 'start-round')
                 {
@@ -204,6 +204,14 @@ const handleMessage = (msg,sender) => {
             }
 
             break;
+        case 'wrong-answer' :
+
+            game = getGameByID(msg.data.gameID);
+            round = game.rounds[game.currentRound];
+
+            console.log(game,round);
+
+        break;
 
         case 'correct-answer' :
 
@@ -212,11 +220,11 @@ const handleMessage = (msg,sender) => {
             game = gameManager.getGameByID(msg.data.gameID);
 
             const index = msg.data.answerIndex;
-            const {currentStage,answerToBeat} = game.rounds[game.currentRound - 1];
+            const {currentStage,answerToBeat} = game.rounds[game.currentRound];
 
             console.log('current stage is',currentStage);
 
-            game.rounds[game.currentRound - 1].question.answers[index].answered = true;
+            game.rounds[game.currentRound].question.answers[index].answered = true;
 
             //switch-ception seems like a code smell. maybe definitely refactor.
             switch(currentStage)
@@ -230,8 +238,8 @@ const handleMessage = (msg,sender) => {
                     if(index > answerToBeat)
                     {
                         console.log('answer was ',index,', answer to beat was',answerToBeat,'flipping activeTeam and moving to stage 1');
-                        game.rounds[game.currentRound - 1].currentStage = 1;
-                        game.rounds[game.currentRound - 1].answerToBeat = index;
+                        game.rounds[game.currentRound].currentStage = 1;
+                        game.rounds[game.currentRound].answerToBeat = index;
 
                         //switch the active team to steal
                         game.activeTeam = game.activeTeam == 0 ? 1 : 0;
@@ -241,7 +249,7 @@ const handleMessage = (msg,sender) => {
                     else
                     {
                         console.log('answer was',index,', beating',answerToBeat,'- moving to stage 2');
-                        game.rounds[game.currentRound - 1].currentStage = 2;
+                        game.rounds[game.currentRound].currentStage = 2;
                         game.activeTeam = -1;
                     }
 
@@ -255,7 +263,7 @@ const handleMessage = (msg,sender) => {
                     //the round was won or not
                     
                     //if the question still has unanswered questions
-                    const questionsRemaining = game.rounds[game.currentRound - 1].question.answers.filter(a=>!a.answered);
+                    const questionsRemaining = game.rounds[game.currentRound].question.answers.filter(a=>!a.answered);
 
                     if(questionsRemaining.length > 0)
                     {
@@ -317,7 +325,7 @@ const handleMessage = (msg,sender) => {
 
 const advanceRound = game => {
 
-    game.rounds[game.currentRound - 1].started = false;
+    game.rounds[game.currentRound].started = false;
     game.activeTeam = -1;
     game.currentRound++;
     game.currentStage = 4;
@@ -347,7 +355,7 @@ const getRoundPoints = (round,all = false) => {
  * @param {Boolean} all [default false] whether to get all points, or just answered points
  * @returns {Int}
  */
-const getCurrentRoundPoints = (game,all = false) => getRoundPoints(game.rounds[game.currentRound - 1],all);
+const getCurrentRoundPoints = (game,all = false) => getRoundPoints(game.rounds[game.currentRound],all);
 /**
  * Takes a game, message and data and sends it out to all 
  * the players in the given game

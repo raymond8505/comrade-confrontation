@@ -1,4 +1,4 @@
-import React,{useReducer,useMemo,setImmediate,useState, useEffect} from 'react';
+import React,{useReducer,useState,useEffect} from 'react';
 import defaultGameState from '../schema/defaultGameState.json';
 
 import soundManager from '../soundManager';
@@ -68,12 +68,17 @@ export const GameController = () => {
 
             break;
 
+            case 'round-started' :
+            case 'round-stopped' :
+                setLastBuzz(undefined);
+
             case 'round-stage-changed' :
             case 'round-team-chosen':
             case 'game-rounds-set' :
             case 'answers-updated' :
             case 'round-changed':
             case 'team-joined' :
+            
                 updateGameState(msg.data.game);
             break;
 
@@ -82,6 +87,53 @@ export const GameController = () => {
                     type : 'alerts',
                     data : msg.data
                 });
+            break;
+
+            case 'buzz-registered' :
+
+                playSound('buzzer');
+                
+                //updateGameState(msg.data.game);
+                setGameState({
+                    type : ['lastBuzz','game'],
+                    data : [msg.data.userID,msg.data.game]
+                });
+                
+            break;
+        }
+    }
+
+    /**
+     * Wrapper for setting the current sound in state
+     * @param {String} mp3 
+     */
+    const setCurrentSound = mp3 => {
+        setGameState({
+            type : 'currentSound',
+            data : mp3
+        });
+    }
+
+    /**
+     * sets the current sound in state to undefined
+     */
+    const clearCurrentSound = () => {
+
+        setCurrentSound(undefined);
+    }
+
+    /**
+     * Gets the mp3 for the given slug in the soundManager and 
+     * sets it in state for the SoundPlayer to use
+     * @param {String} slug 
+     */
+    const playSound = slug => {
+
+        const mp3 = soundManager[slug];
+
+        if(mp3 !== undefined)
+        {
+            setCurrentSound(mp3);
         }
     }
 
@@ -254,7 +306,7 @@ export const GameController = () => {
 
         if(typeof type === 'string')
         {
-            console.log('changing',type,'from',state[type],'to',data);
+            //console.log('changing',type,'from',state[type],'to',data);
 
             copy[type] = data;
         }
@@ -262,7 +314,7 @@ export const GameController = () => {
         {
             type.forEach((t,i)=>{
 
-                console.log('changing',t,'from',state[t],'to',data[i]);
+                //console.log('changing',t,'from',state[t],'to',data[i]);
 
                 copy[t] = data[i];
             });
@@ -329,27 +381,42 @@ export const GameController = () => {
     const [gameState,setGameState] = useReducer(stateReducer,
                                         {
                                             socket : null,
+                                            currentSound : undefined,
+                                            lastBuzz : undefined,
                                             user : {ID:'',name:''},
                                             game : defaultGameState,
-                                            alerts : []});
+                                            alerts : []}
+                                        );
     
     if(gameState.socket === null)
     {
         setGameState({
             type : 'socket',
             data : initSocket()
+        });
+    }
+
+    /**
+     * Sets the state field 'lastBuzz'
+     * @param {String} userID 
+     */
+    const setLastBuzz = userID => {
+
+        setGameState({
+            type : 'lastBuzz',
+            data : userID
         })
     }
 
     /**
      * True if game rounds array isn't empty
      */                                        
-    const gameHasRounds = useMemo(()=>{ return gameState.game.rounds.length > 0;},[gameState.game]);
+    const gameHasRounds = gameState.game.rounds.length > 0;
     
     /**
      * Whether or not the game is currently running.
      */
-    const gameIsRunning = useMemo(()=>{return gameState.game.ID !== '';},[gameState.game]);
+    const gameIsRunning = gameState.game.ID !== '';
     
     /**
      * Takes an array of user iDs and returns an array of user objects
@@ -484,7 +551,7 @@ export const GameController = () => {
     /**
      * The team with the smaller size. If equal, returns -1
      */
-    const smallestTeam = useMemo(()=>{
+    const smallestTeam = ()=>{
 
         if(gameState.game.teams[0].length < gameState.game.teams[1].length)
         {
@@ -498,9 +565,83 @@ export const GameController = () => {
         {
             return -1;
         }
+    }
 
-    },[gameState.updated]);
+    /**
+     * Starts the current round by sending the command to the server
+     * @param {Object} game 
+     * @param {Int} roundNum 
+     */
+    const startRound = (game=gameState.game,roundIndex=gameState.game.currentRound) => {
+
+        sendMessage('start-round',{
+            gameID : game.ID,
+            roundIndex
+        });
+    }
     
+    /**
+     * Starts the current round by sending the command to the server
+     * @param {Object} game 
+     * @param {Int} roundNum 
+     */
+    const stopRound = (game=gameState.game,roundIndex=gameState.game.currentRound) => {
+
+        sendMessage('stop-round',{
+            gameID : game.ID,
+            roundIndex
+        });
+    }
+
+    /**
+     * Sends a buzz attempt to the server
+     * @param {String} gameID 
+     * @param {String} userID 
+     */
+    const sendBuzz = (gameID,userID) => {
+
+        const teamIndex = getUserTeamIndex(userID);
+
+        sendMessage('register-buzz',{gameID,userID,teamIndex});
+    }
+
+    /**
+     * Gets the team index of the given user. Returns undefined if user doesn't have a team
+     * @param {String} userID 
+     * @returns {Int|undefined}
+     */
+    const getUserTeamIndex = (userID=gameState.user.ID,
+                                game=gameState.game) => 
+    {
+
+        let teamIndex = undefined;
+
+        game.teams.forEach((t,i) => {
+
+            if(t.players.includes(userID))
+            {
+                teamIndex = i;
+                return;
+            }
+        });
+
+        return teamIndex;
+    }
+
+    const registerStrike = () => {
+
+        sendMessage('wrong-answer',{gameID:gameState.game.ID});
+    }
+    
+    /**
+     * A number of things need to be in a certain state for the current user to be able to buzz
+     */
+    const currentUserCanBuzz = getCurrentRound() !== undefined &&
+                                getCurrentRound().currentStage === 0 &&
+                                getCurrentRound().started && 
+                                gameState.game.activeTeam == -1 && 
+                                !currentUserIsHost() &&
+                                currentUserHasTeam();
     return {
         gameState,
         gameIsRunning,
@@ -513,6 +654,7 @@ export const GameController = () => {
         currentUserHasTeam,
         currentUserIsHost,
         currentUserInGame,
+        currentUserCanBuzz,
         getCurrentRound,
         getCurrentRoundStage,
         getUserInfo,
@@ -522,6 +664,13 @@ export const GameController = () => {
         createAlert,
         setAlerts,
         smallestTeam,
-        joinTeam
+        joinTeam,
+        startRound,
+        stopRound,
+        sendBuzz,
+        getUserTeamIndex,
+        playSound,
+        clearCurrentSound,
+        registerStrike
     };
 }

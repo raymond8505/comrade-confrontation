@@ -32,11 +32,12 @@
 }
 .GameBoard__game-code
 {
+    font-family: 'Courier New', Courier, monospace;
     font-variant: normal;
     text-transform: uppercase;
-    font-size: .9em;
+    //font-size: .9em;
     letter-spacing: .1em;
-    font-weight: $fw_medium;
+    font-weight: bold;
     text-align: center;
     border: 3px solid rgba($yellow,.65);
     border-radius: .5em;
@@ -44,6 +45,7 @@
     background: $red_dark;
     display: inline-block;
     line-height: 1;
+
     
 }
 .GameBoard__round-number

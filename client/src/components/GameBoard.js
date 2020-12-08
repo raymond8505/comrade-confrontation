@@ -10,26 +10,30 @@ import SoundPlayer from './SoundPlayer';
 import PassOrPlay from './PassOrPlay';
 
 const GameBoard = ({}) => {
-
+    
     const {gameState,
             getUserInfo,
             getCurrentRound,
             currentUserIsHost,
             currentUserHasTeam,
             clearLocalCredentials,
-            currentUser,
+            currentUserCanBuzz,
             sendBuzz,
             currentSound,
             getCurrentRoundStage,
             gameHasRounds} = useContext(GameContext);
     
     const {game} = gameState;
+
+    const currentUser = gameState.user;
     
     const handleLogout = e => {
 
         clearLocalCredentials();
         window.location.reload();
     }
+
+    //console.log(getCurrentRound(),game.rounds[game.currentRound]);
 
     /**
      * tags on which handleKeys should ignore key events 
@@ -43,29 +47,13 @@ const GameBoard = ({}) => {
         e.preventDefault();
         e.stopPropagation();
 
-        console.log(e.which,'pressed');
-
         switch(e.which)
         {
             case 32: //space, head to head buzzer
 
-            console.log(
-                getCurrentRoundStage(),
-                getCurrentRound().started,
-                game.activeTeam == -1, 
-                !currentUserIsHost,
-                currentUserHasTeam);
-
-            //the round is started
-            //nobody has buzzed in yet
-            //the user isn't a host
-            //the user is on a team
-            if(getCurrentRound().currentStage === 0,
-                getCurrentRound().started && 
-                game.activeTeam == -1 && 
-                !currentUserIsHost &&
-                currentUserHasTeam)
+            if(currentUserCanBuzz)
             {
+
                 sendBuzz(game.ID,currentUser.ID);
             }
         }
@@ -78,7 +66,7 @@ const GameBoard = ({}) => {
             window.removeEventListener('keyup',handleKeys);
         }
 
-    },[]);
+    },[gameState.game]);
 
     return (<div 
         className={`GameBoard${currentUserIsHost ? ' GameBoard--host' : ''}

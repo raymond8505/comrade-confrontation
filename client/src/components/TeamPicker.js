@@ -9,7 +9,7 @@ const TeamPicker = ({suggestedTeam}) => {
 
     if(st === undefined)
     {
-        st = smallestTeam === -1 ? 0 : smallestTeam;
+        st = smallestTeam() === -1 ? 0 : smallestTeam;
     }
 
     const [chosenTeam,setChosenTeam] = useState(st);
