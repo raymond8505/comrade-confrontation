@@ -1,0 +1,24 @@
+{
+    "number" : "Rapid Rubles",
+    "type" : "fast-money",
+    "started" : false,
+    "currentStage" : 0,
+    "answerToBeat" : 0,
+    "questions" : [
+        {
+            "ID" : -1,
+            "question" : "",
+            "answers" : [
+                {
+                    "answer" : "",
+                    "points" : 0,
+                    "answered" : false
+                }
+            ],
+            "playerAnswers" : [
+                [],
+                []
+            ]
+        }
+    ]
+}

@@ -263,13 +263,14 @@ const handleMessage = (msg,sender) => {
 
             game = getGameByID(msg.data.gameID);
 
-            if(game.currentRound < 3)
+            if(game.currentRound < 2)
             {
                 nextRound(game);
             }
             else
             {
                 console.log('fast money!');
+                nextRound(game);
             }
         break;
 

@@ -26,7 +26,7 @@ const generateRounds = questions => {
 
     questions.forEach((q,i) => {
 
-        const round = {...roundSchema};
+        const round = cloneDeep({...roundSchema},true);
             round.number = i + 1;
             round.question = q;
 

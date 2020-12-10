@@ -120,7 +120,7 @@ const GameBoard = ({}) => {
         <div className="GameBoard__row">
             <PlayerList players={getUserInfo(game.teams[0].players)} />
 
-            {gameHasRounds ? (<div className="GameBoard__questions-wrapper">
+            {gameHasRounds && getCurrentRound() != undefined ? (<div className="GameBoard__questions-wrapper">
                     <QuestionBoard question={getCurrentRound().question} />
                     <StrikeBoxes strikes={getCurrentRound().strikes} />
                 </div>) : null}
@@ -128,7 +128,8 @@ const GameBoard = ({}) => {
             <PlayerList players={getUserInfo(game.teams[1].players)} />
         </div>
         
-        {game.rounds.length === 0 && currentUserIsHost() ? <QuestionPicker /> : null}
+        {currentUserIsHost() && (game.rounds.length === 0 || (game.currentRound === 3 && game.rounds[3] == undefined)) ? 
+        <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
         {game.rounds.length > 0 && game.activeTeam === -1 && getCurrentRoundStage() === 2 ? <PassOrPlay round={game.currentRound} /> : null}
         
         <BigStrikeBoxes />

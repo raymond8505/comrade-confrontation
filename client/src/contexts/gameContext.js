@@ -187,7 +187,9 @@ export const GameController = () => {
      */
     const getCurrentRoundStage = (game=gameState.game) => {
 
-        return getCurrentRound(game).currentStage;
+        const round = getCurrentRound(game);
+
+        return round === undefined ? undefined : round.currentStage;
     }
 
     /**

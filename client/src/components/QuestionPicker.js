@@ -3,7 +3,7 @@ import { GameContext } from "../contexts/gameContext";
 import {fillArrayUnique} from '../helpers';
 import allQuestions from '../data/sample-questions.json';
 
-const QuestionPicker = ({questions = null,openOnInit}) => {
+const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
 
     const [open,setOpen] = useState(openOnInit);
     const {gameState,setGameRounds} = useContext(GameContext);
@@ -16,8 +16,10 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
     const [chosenQuestions,setChosenQuestions] = useState([]);
     const [allQuestionsChosen,setAllQuestionsChosen] = useState(false);
 
+    console.log(numQuestions);
+
     const getQuestionOptions = numQuestions => {
-        const indexes = fillArrayUnique(0,questions.length - 1,4,chosenQuestions);
+        const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,chosenQuestions);
 
         return indexes.map(i => questions[i]);
     }
@@ -54,8 +56,6 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
     }
 
     const onConfirmQuestionsClick = e => {
-
-        //console.log(gameState);
         setGameRounds(gameID,chosenQuestions);
     }
 
@@ -66,14 +66,14 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
 
     useEffect(()=>{
 
-        setQuestionOptions(getQuestionOptions(4));
+        setQuestionOptions(getQuestionOptions(numQuestions));
 
         return ()=>{}
 
     },[questions]);
 
     useEffect(()=>{
-        setAllQuestionsChosen(chosenQuestions.length === 4);
+        setAllQuestionsChosen(chosenQuestions.length === numQuestions);
 
     },[chosenQuestions.length]);
 
@@ -88,7 +88,7 @@ const QuestionPicker = ({questions = null,openOnInit}) => {
             <ul className="QuestionPicker__questions QuestionPicker__questions--to-choose">
                 {renderQuestions(questionOptions,chooseQuestion)}
             </ul>
-            <button ref={randomizeOptionsBtn} onClick={e=>setQuestionOptions(getQuestionOptions(4))}>4 More Options</button>
+            <button ref={randomizeOptionsBtn} onClick={e=>setQuestionOptions(getQuestionOptions(numQuestions))}>{numQuestions} More Options</button>
             {allQuestionsChosen ? 
                 <button onClick={onConfirmQuestionsClick} className="cta">Confirm Choices</button> : null
             }

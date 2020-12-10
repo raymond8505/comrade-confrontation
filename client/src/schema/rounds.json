@@ -1,6 +1,7 @@
 {
     "number" : -1,
     "strikes" : 0,
+    "type" : "regular",
     "started" : false,
     "currentStage" : 0,
     "answerToBeat" : 0,

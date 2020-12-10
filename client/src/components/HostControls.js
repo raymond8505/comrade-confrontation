@@ -32,7 +32,7 @@ const HostControls = ({}) => {
                 {getCurrentRound().started ? 'Stop Round' : 'Start Round'}
         </button> : null}
 
-        {getCurrentRound().currentStage === 4 ? <button type="button" class="HostControls__next-round-btn" onClick={handleNextRoundClick}>Next Round</button> : null}
+        {getCurrentRound().currentStage === 4 ? <button type="button" className="HostControls__next-round-btn" onClick={handleNextRoundClick}>Next Round</button> : null}
     </div>);
 }
 
