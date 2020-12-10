@@ -71,7 +71,6 @@ export const GameController = () => {
             case 'round-started' :
             case 'round-stopped' :
                 setLastBuzz(undefined);
-
             case 'round-stage-changed' :
             case 'round-team-chosen':
             case 'game-rounds-set' :
@@ -80,6 +79,22 @@ export const GameController = () => {
             case 'team-joined' :
             
                 updateGameState(msg.data.game);
+
+            break;
+
+            case 'wrong-answer' :
+
+                if(getCurrentRound(msg.data.game) !== undefined)
+                {
+                    showWrongAnswerAnimation(getCurrentRoundStage(msg.data.game) <= 1 ? 1 : getCurrentRound(msg.data.game).strikes);
+                }
+                
+                //setTimeout(()=>{
+                    playSound('wrong');
+                //},100)
+
+                updateGameState(msg.data.game);
+
             break;
 
             case 'error' :
@@ -300,6 +315,7 @@ export const GameController = () => {
      */
     const stateReducer = (state,action) => {
 
+        if(action.type === 'clear-all') return defaultState;
         let {type,data} = action;
         const copy = {...state};
         copy.updated = new Date().getTime();
@@ -375,17 +391,20 @@ export const GameController = () => {
         return newSocket;
     }
 
+    const defaultState = {
+        strikesToShow : 0,
+        socket : null,
+        currentSound : undefined,
+        lastBuzz : undefined,
+        user : {ID:'',name:''},
+        game : defaultGameState,
+        alerts : []
+    };
     /**
      * The main state of the game, has 3 fields, game,user,socket
      */
     const [gameState,setGameState] = useReducer(stateReducer,
-                                        {
-                                            socket : null,
-                                            currentSound : undefined,
-                                            lastBuzz : undefined,
-                                            user : {ID:'',name:''},
-                                            game : defaultGameState,
-                                            alerts : []}
+                                        defaultState
                                         );
     
     if(gameState.socket === null)
@@ -394,6 +413,19 @@ export const GameController = () => {
             type : 'socket',
             data : initSocket()
         });
+    }
+
+    const showWrongAnswerAnimation = num => {
+
+        setGameState({
+            type : 'strikesToShow',
+            data : num
+        });
+
+        setImmediate(()=>{
+
+            console.log('stop animation');
+        })
     }
 
     /**
@@ -628,11 +660,60 @@ export const GameController = () => {
         return teamIndex;
     }
 
+    /**
+     * Sends a wrong answer message to the server
+     */
     const registerStrike = () => {
 
         sendMessage('wrong-answer',{gameID:gameState.game.ID});
     }
-    
+
+    const clearStrikesToShow = () => {
+        setGameState({
+            type : 'strikesToShow',
+            data : 0
+        });
+    }
+
+    /**
+     * Sends a correct-answer message to the server along with the answer that was correct.
+     * @param {Int} answerIndex 
+     */
+    const sendCorrectAnswer = answerIndex => {
+
+        const gameID = gameState.game.ID;
+        
+        sendMessage('correct-answer',{
+            gameID,
+            answerIndex
+        });
+    }
+
+    /**
+     * Choose which team will play the current round
+     * @param {Int} i 
+     */
+    const chooseTeamForRound = i => {
+
+        sendMessage('choose-current-round-team',{
+            gameID : gameState.game.ID,
+            teamIndex : i
+        });
+    }
+
+    /**
+     * Resets the whole game state
+     */
+    const clearGameState = () => {
+        setGameState({
+            type : 'clear-all'
+        });
+    }
+
+    const gotoNextRound = () => {
+
+        sendMessage('next-round',{gameID : gameState.game.ID});
+    }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
      */
@@ -671,6 +752,11 @@ export const GameController = () => {
         getUserTeamIndex,
         playSound,
         clearCurrentSound,
-        registerStrike
+        registerStrike,
+        clearStrikesToShow,
+        sendCorrectAnswer,
+        chooseTeamForRound,
+        clearGameState,
+        gotoNextRound
     };
 }

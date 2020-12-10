@@ -8,6 +8,7 @@ import StrikeBoxes from "./StrikeBoxes";
 import TeamStats from "./TeamStats";
 import SoundPlayer from './SoundPlayer';
 import PassOrPlay from './PassOrPlay';
+import BigStrikeBoxes from "./BigStrikeBoxes";
 
 const GameBoard = ({}) => {
     
@@ -15,12 +16,12 @@ const GameBoard = ({}) => {
             getUserInfo,
             getCurrentRound,
             currentUserIsHost,
-            currentUserHasTeam,
             clearLocalCredentials,
             currentUserCanBuzz,
             sendBuzz,
             currentSound,
             getCurrentRoundStage,
+            clearGameState,
             gameHasRounds} = useContext(GameContext);
     
     const {game} = gameState;
@@ -30,6 +31,7 @@ const GameBoard = ({}) => {
     const handleLogout = e => {
 
         clearLocalCredentials();
+        clearGameState();
         window.location.reload();
     }
 
@@ -69,7 +71,7 @@ const GameBoard = ({}) => {
     },[gameState.game]);
 
     return (<div 
-        className={`GameBoard${currentUserIsHost ? ' GameBoard--host' : ''}
+        className={`GameBoard${currentUserIsHost() ? ' GameBoard--host' : ''}
         ${getCurrentRound() !== undefined && getCurrentRound().started ? ' GameBoard--round-started' : ''}`}>
 
             <SoundPlayer sound={currentSound} />
@@ -129,6 +131,7 @@ const GameBoard = ({}) => {
         {game.rounds.length === 0 && currentUserIsHost() ? <QuestionPicker /> : null}
         {game.rounds.length > 0 && game.activeTeam === -1 && getCurrentRoundStage() === 2 ? <PassOrPlay round={game.currentRound} /> : null}
         
+        <BigStrikeBoxes />
     </div>);
 }
 

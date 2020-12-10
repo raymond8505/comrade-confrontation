@@ -21,6 +21,18 @@ socketManager.server.on('connection',serverSocket => {
 
 });
 
+const nextRound = game => {
+
+    advanceRound(game);
+    updateGame(game);
+    broadcastToGame(game,'round-changed',{game});
+}
+
+/**
+ * 
+ * @param {Object} msg 
+ * @param {WebSocket} sender 
+ */
 const handleMessage = (msg,sender) => {
     
     msg = JSON.parse(msg);
@@ -173,7 +185,7 @@ const handleMessage = (msg,sender) => {
 
                 game.activeTeam = -1;
 
-                console.log(game.rounds[game.currentRound]);
+                //console.log(game.rounds[game.currentRound]);
 
                 if(msg.action === 'start-round')
                 {
@@ -209,20 +221,70 @@ const handleMessage = (msg,sender) => {
             game = getGameByID(msg.data.gameID);
             round = game.rounds[game.currentRound];
 
-            console.log(game,round);
+            switch(round.currentStage)
+            {
+                //team that won H2H answers wrong, swap the activeTeam and push the stage to 1
+                //continue switching active team til someone answers right.
+                case 0 :
+                case 1 :
+                    game.activeTeam = game.activeTeam == 0 ? 1 : 0;
+                    round.currentStage = 1;
+                    
+                    break;
 
+                //the active team is attempting to answer all the round's questions    
+                case 2:
+                    
+                    round.strikes++;
+                    //third strike! Switch teams and move to stage 3- "the stealin stage" as the kids are calling it
+                    
+                    if(round.strikes === 3)
+                    {
+                        round.currentStage = 3;
+                        game.activeTeam = game.activeTeam == 0 ? 1 : 0;
+                    }
+
+                    break;
+                //steal failed! Award points to original team, move to stage 4- the post round answer reading stage
+                case 3:
+                    game.activeTeam = game.activeTeam == 0 ? 1 : 0;
+                    round.currentStage = 4;
+
+                    game.teams[game.activeTeam].score += getCurrentRoundPoints(game);
+                break;
+            }
+
+            updateGame(game);
+            broadcastToGame(game,'wrong-answer',{game});
+
+        break;
+        
+        case 'next-round':
+
+            game = getGameByID(msg.data.gameID);
+
+            if(game.currentRound < 3)
+            {
+                nextRound(game);
+            }
+            else
+            {
+                console.log('fast money!');
+            }
         break;
 
         case 'correct-answer' :
 
-            console.log('question',msg.data.answerIndex,' marked correct');
+            console.log(msg.data);
             
             game = gameManager.getGameByID(msg.data.gameID);
+
+            //console.log(game);
 
             const index = msg.data.answerIndex;
             const {currentStage,answerToBeat} = game.rounds[game.currentRound];
 
-            console.log('current stage is',currentStage);
+            //console.log('current stage is',currentStage);
 
             game.rounds[game.currentRound].question.answers[index].answered = true;
 
@@ -299,9 +361,9 @@ const handleMessage = (msg,sender) => {
                         }
                         else
                         {
-                            advanceRound(game);
+                            game.rounds[game.currentRound].currentStage = 4;
                             updateGame(game);
-                            broadcastToGame(game,'round-changed',{game});
+                            broadcastToGame(game,'round-stage-changed',{game});
                         }
             }
 

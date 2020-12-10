@@ -3,10 +3,10 @@ import { GameContext } from "../contexts/gameContext";
 
 const HostControls = ({}) => {
 
-    const {gameState,
-            getCurrentRound,
+    const {getCurrentRound,
             startRound,
-            stopRound} = useContext(GameContext);
+            stopRound,
+            gotoNextRound} = useContext(GameContext);
 
     const handleStartRoundClick = e => {
 
@@ -20,12 +20,19 @@ const HostControls = ({}) => {
         }
     }
 
+    const handleNextRoundClick = e => {
+
+        gotoNextRound();
+    }
+
     return (<div className="HostControls">
-        <button type="button" 
+        {getCurrentRound().currentStage !== 4 ? <button type="button" 
             className="HostControls__HostControl HostControls__HostControl--start-round"
             onClick={handleStartRoundClick}>
                 {getCurrentRound().started ? 'Stop Round' : 'Start Round'}
-        </button>  
+        </button> : null}
+
+        {getCurrentRound().currentStage === 4 ? <button type="button" class="HostControls__next-round-btn" onClick={handleNextRoundClick}>Next Round</button> : null}
     </div>);
 }
 

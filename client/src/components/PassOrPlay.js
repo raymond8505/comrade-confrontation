@@ -5,7 +5,7 @@ const PassOrPlay = ({round}) => {
     
     const {gameState,
             currentUserIsHost,
-            chooseTeamForRound} = useContext(GameContext);
+            chooseTeamForRound,} = useContext(GameContext);
 
     const handleTeamClick = i => {
 
@@ -22,9 +22,9 @@ const PassOrPlay = ({round}) => {
     return (<dialog className="PassOrPlay modal" open>
         <div className="PassOrPlay__inner modal__inner">
             <h2 className="PassOrPlay__title">Pass or Play</h2>
-<h3>Which team will play round {round}</h3>
+            <h3>Which team will play round {gameState.game.rounds[round].number}</h3>
 
-            {gameState.teams.map((t,i)=>{
+            {gameState.game.teams.map((t,i)=>{
                 return (<button 
                             type="button" 
                             key={`team_${i}`} 

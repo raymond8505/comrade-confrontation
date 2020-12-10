@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "cd client && npm start",
-    "build": "cd client && npm run build", 
-    "devserver" : "nodemon server.js --ignore *.json --ignore client/*",
-    "prodserver" : "node server.js",
+    "build": "cd client && npm run build",
+    "devserver": "nodemon server.js --ignore *.json --ignore client/*",
+    "prodserver": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sampleqs": "node generate-questions.js"
   },
@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "lodash": "^4.17.20",
     "lorem-ipsum": "^2.0.3",
     "ws": "^7.4.0"
   }

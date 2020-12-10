@@ -1,4 +1,5 @@
 const helpers = require('./helpers');
+const cloneDeep = require('lodash/cloneDeep');
 
 const updateGame = game => {
 
@@ -76,7 +77,10 @@ const findGame = ID => {
 const createGame = () => {
     console.log('Creating Game');
 
-    const game = {...defaultGameState};
+        const game = cloneDeep(require('./client/src/schema/defaultGameState.json'),true);
+
+        console.log(game.teams);
+
         game.ID = helpers.generateID(games);
         game.modified = new Date().getTime();
 

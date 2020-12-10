@@ -6,7 +6,8 @@ const QuestionBoard = ({question}) => {
 
     const {
         currentUserIsHost,
-        sendCorrectAnswer} = useContext(GameContext);
+        sendCorrectAnswer,
+        getCurrentRoundStage} = useContext(GameContext);
     
     const handleAnswerClick = (e,index) => {
         
@@ -24,10 +25,11 @@ const QuestionBoard = ({question}) => {
             const answer = question.answers[i];
             const answerKey = `question_${question.ID}_answer_${i}`;
             const revealed = 
-                answer !== undefined && (currentUserIsHost() || answer.answered)
+                answer !== undefined && (currentUserIsHost() || answer.answered) ||
+                getCurrentRoundStage() === 4;
 
             toRet.push(<li className={`QuestionBoard__answer${
-                                revealed ? ' QuestionBoard__answer--revealed' : ''}${
+                                revealed && answer !== undefined  ? ' QuestionBoard__answer--revealed' : ''}${
                                     (answer != undefined && answer.answered) ? ' QuestionBoard__answer--answered' : ''
                                 }${answer === undefined ? ' QuestionBoard__answer--disabled' : ''}`} 
                             key={answerKey}

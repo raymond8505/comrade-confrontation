@@ -1,0 +1,59 @@
+.BigStrikeBoxes
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    .StrikeBoxes__box
+    {
+        width: 1vmin;//25vmin;
+        height: 1vmin; //25vmin;
+        border: 30px solid $red;
+        transition: all .3s $ease-in-out-back;
+
+        //box-shadow: 0 0 1em 1em black;
+
+        &,
+        &:before,
+        &:after
+        {
+            box-shadow: 0 0 1em .4em rgba(black,.8);
+            opacity: 0;
+            
+        }
+
+        &:before,
+        &:after
+        {
+            background: $red;
+            height: 40px;
+            top: 40%;
+            left: -3%;
+            width: 110%;
+        }
+
+        &--show
+        {
+            width: 25vmin;//25vmin;
+            height: 25vmin; //25vmin;
+
+            &,
+            &:before,
+            &:after
+            {
+                opacity: 1;
+            }
+        }
+        
+        &:nth-child(2)
+        {
+            margin: 0 3vw;
+        }
+    }
+}
