@@ -1,0 +1,76 @@
+.FastMoneyBoard .QuestionBoard
+{
+    width: 33%;
+    font-size: .6em;
+
+    .QuestionBoard__question-and-controls
+    {
+        display: none;
+    }
+
+    .QuestionBoard__answers
+    {
+        display: block;
+    }
+
+    .QuestionBoard__answer--disabled
+    {
+        display: none;
+    }
+
+    .QuestionBoard__answer:nth-child(1)
+    {
+        border-top-right-radius: .5em;
+    }
+
+    .QuestionBoard__answer:nth-child(4),
+    .QuestionBoard__answer:nth-child(5)
+    {
+        border-radius: 0;
+    }
+}
+.FastMoneyBoard__question-and-controls
+{
+    display: flex;
+    width: 100%;
+}
+.FastMoneyBoard__question
+{
+    padding: 0 1em;
+    flex-grow: 1;
+    font-size: 1.5em;
+}
+.FastMoneyBoard__answers,
+.FastMoneyBoard__player-answers
+{
+    display: flex;
+    justify-content: space-between;
+}
+.FastMoneyBoard__player-answers
+{
+    border: 4px solid $yellow;
+    background: $red_dark;
+    width: 100%;
+    
+    .GameBoard--host &
+    {
+        width: calc(67% - 1em);
+    }
+    
+    border-radius: 1em;
+    margin: .5em 0;
+    padding: 1em;
+    flex-wrap: wrap;
+    box-shadow: $board_glow;
+}
+.FastMoneyBoard__answers .FastMoneyAnswers
+{
+    width: calc(50% - .5em);
+}
+.FastMoneyBoard__timer-wrapper
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

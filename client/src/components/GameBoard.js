@@ -9,6 +9,7 @@ import TeamStats from "./TeamStats";
 import SoundPlayer from './SoundPlayer';
 import PassOrPlay from './PassOrPlay';
 import BigStrikeBoxes from "./BigStrikeBoxes";
+import FastMoneyBoard from './FastMoneyBoard';
 
 const GameBoard = ({}) => {
     
@@ -71,8 +72,10 @@ const GameBoard = ({}) => {
     },[gameState.game]);
 
     return (<div 
-        className={`GameBoard${currentUserIsHost() ? ' GameBoard--host' : ''}
-        ${getCurrentRound() !== undefined && getCurrentRound().started ? ' GameBoard--round-started' : ''}`}>
+        className={`GameBoard${currentUserIsHost() ? ' GameBoard--host' : ''}` +
+        `${getCurrentRound() !== undefined && getCurrentRound().started ? ' GameBoard--round-started' : ''}` +
+        `${getCurrentRound() !== undefined && getCurrentRound().type === 'fast-money' ? ' GameBoard--fast-money' : ''}`
+        }>
 
             <SoundPlayer sound={currentSound} />
         <div className="GameBoard__row GameBoard__row--top">
@@ -121,15 +124,22 @@ const GameBoard = ({}) => {
             <PlayerList players={getUserInfo(game.teams[0].players)} />
 
             {gameHasRounds && getCurrentRound() != undefined ? (<div className="GameBoard__questions-wrapper">
-                    <QuestionBoard question={getCurrentRound().question} />
-                    <StrikeBoxes strikes={getCurrentRound().strikes} />
+                    {game.currentRound < 3 ? <QuestionBoard question={getCurrentRound().question} /> : <FastMoneyBoard questions={getCurrentRound().questions} />}
+                    {game.currentRound < 3 ? <StrikeBoxes strikes={getCurrentRound().strikes} /> : null}
                 </div>) : null}
 
             <PlayerList players={getUserInfo(game.teams[1].players)} />
         </div>
         
-        {currentUserIsHost() && (game.rounds.length === 0 || (game.currentRound === 3 && game.rounds[3] == undefined)) ? 
-        <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
+        {
+            //show the question picker if we don't have any game rounds yet
+            currentUserIsHost() && (game.rounds.length === 0 || 
+            
+            //or it's round 3 and the round hasn't been defined yet
+            (game.currentRound === 3 && game.rounds[3] == undefined)) ? 
+
+            <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
+        
         {game.rounds.length > 0 && game.activeTeam === -1 && getCurrentRoundStage() === 2 ? <PassOrPlay round={game.currentRound} /> : null}
         
         <BigStrikeBoxes />

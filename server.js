@@ -7,6 +7,7 @@ const helpers = require('./helpers');
 //const { createUser, getGameByID, userExists } = require('./game-manager');
 const { generateID } = require('./helpers');
 const { updateGame, getGameByID, games } = require('./game-manager');
+const { cloneDeep } = require('lodash');
 
 //console.log(games);
 
@@ -181,9 +182,12 @@ const handleMessage = (msg,sender) => {
             {
                 
                 game.rounds[game.currentRound].started = msg.action === 'start-round';
-                game.rounds[game.currentRound].currentStage = 0;
-
-                game.activeTeam = -1;
+                
+                if(game.currentRound < 3)
+                {
+                    game.rounds[game.currentRound].currentStage = 0;
+                    game.activeTeam = -1;
+                }
 
                 //console.log(game.rounds[game.currentRound]);
 
@@ -269,7 +273,7 @@ const handleMessage = (msg,sender) => {
             }
             else
             {
-                console.log('fast money!');
+                console.log('fast money!'); 
                 nextRound(game);
             }
         break;
@@ -368,19 +372,66 @@ const handleMessage = (msg,sender) => {
                         }
             }
 
-            break;
+        break;
 
-            case 'choose-current-round-team' : 
+        case 'choose-current-round-team' : 
 
-                game = getGameByID(msg.data.gameID);
-                console.log('host has chosen the team to play the current round. Setting activeTeam to',msg.data.teamIndex);
-                game.activeTeam = msg.data.teamIndex;
+            game = getGameByID(msg.data.gameID);
+            console.log('host has chosen the team to play the current round. Setting activeTeam to',msg.data.teamIndex);
+            game.activeTeam = msg.data.teamIndex;
+            updateGame(game);
+
+            broadcastToGame(game,'round-team-chosen',{game});
+
+        break;
+
+        case 'set-fast-money-questions' :
+            game = getGameByID(msg.data.gameID);
+
+            round = cloneDeep(require('./client/src/schema/fastMoneyRound.json'));
+
+            round.questions = msg.data.questions;
+            
+            game.rounds[3] = round;
+            game.currentRound = 3;
+            game.activeTeam = game.teams[0].score >= game.teams[1].score ? 0 : 1;
+            
+            updateGame(game);
+
+            broadcastToGame(game,'fast-money-questions-set',{
+                game
+            });
+            
+        break;
+            
+        case 'set-fast-money-answers':
+            game = getGameByID(msg.data.gameID);
+            round = game.rounds[3];
+            const {playerIndex,answers} = msg.data;
+
+            round.currentStage = playerIndex + 1;
+            round.playerAnswers[playerIndex] = answers;
+            round.started = false;
+
+            updateGame(game);
+
+            console.log(round);
+            broadcastToGame(game,'fast-money-answers-set',{game});
+        break;
+
+        case 'toggle-fast-money-answer' :
+            game = getGameByID(msg.data.gameID);
+            round = game.rounds[3];
+
+            if(round.playerAnswers[msg.data.playerIndex].length > 0)
+            {
+                round.playerAnswers[msg.data.playerIndex][msg.data.answerIndex].revealed =
+                    !round.playerAnswers[msg.data.playerIndex][msg.data.answerIndex].revealed;
+
                 updateGame(game);
-
-                broadcastToGame(game,'round-team-chosen',{game});
-
-            break;
-
+                broadcastToGame(game,'fast-money-answer-toggled',{game});
+            }
+        break;
             
 
     }

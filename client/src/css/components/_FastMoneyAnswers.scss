@@ -1,0 +1,100 @@
+.FastMoneyAnswers
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 1.5em;
+}
+.FastMoneyAnswers__answer,
+.FastMoneyAnswers__total
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    margin-bottom: .5em;
+}
+.FastMoneyAnswers__answer-text,
+.FastMoneyAnswers__answer-points
+{
+    background: rgba(black,.3);
+    border: 1px solid rgba($red_light,.75);
+    border-radius: 4px;
+}
+.FastMoneyAnswers__answer-text
+{
+    flex-grow: 1;
+    margin-right: .5em;
+    width:90%;
+}
+@include players-only
+{
+    .FastMoneyAnswers__answer
+    {
+        font-size: .9em;
+    }
+}
+
+.FastMoneyAnswers__answer-points
+{
+    width: calc(5ch + 1em);
+
+    .GameBoard:not(.GameBoard--host) &
+    {
+        padding-right: .5em;
+    }
+
+    &,input
+    {
+        text-align: right;
+    }
+}
+.FastMoneyAnswers__total
+{
+    justify-content: flex-end;
+    .FastMoneyAnswers__answer-text
+    {
+        text-align: right;
+        //background: transparent;
+        //border: none;
+        margin-right: 0;
+        border-right: none;
+        flex-grow: 0;
+        padding-left: .25em;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .FastMoneyAnswers__answer-points
+    {
+        border-left: 0;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        padding-right: .5em;
+    }
+}
+.FastMoneyAnswers__answer input
+{
+    width: 100%;
+    background: transparent;
+    border: none;
+    display: block;
+    color: white;
+    padding: .25em;
+    margin: 0;
+}
+.FastMoneyAnswers__submit-btn
+{
+    font-size: .7em;
+    margin-right: .5em;
+    flex-grow: 1;
+}
+.FastMoneyAnswer__toggle-answer-reveal
+{
+    @include no-button-style;
+    color: $yellow;
+    padding: 0;
+    margin: 0;
+    margin-left: .5em;
+    box-shadow: none;
+    font-size: .8em;
+}

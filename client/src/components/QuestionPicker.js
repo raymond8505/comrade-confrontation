@@ -6,20 +6,26 @@ import allQuestions from '../data/sample-questions.json';
 const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
 
     const [open,setOpen] = useState(openOnInit);
-    const {gameState,setGameRounds} = useContext(GameContext);
+    
+    const {gameState,setGameRounds,setFastMoneyQuestions,getGameQuestions} = useContext(GameContext);
 
-    const gameID = gameState.game.ID;
+    const {game} = gameState;
+
+    const gameID = game.ID;
 
     const randomizeOptionsBtn = useRef(null);
 
     const [questionOptions,setQuestionOptions] = useState([]);
     const [chosenQuestions,setChosenQuestions] = useState([]);
     const [allQuestionsChosen,setAllQuestionsChosen] = useState(false);
-
-    console.log(numQuestions);
+    
+    const gameIDs = game.currentRound === 3 ? getGameQuestions().map(q=>q.ID) : [];
 
     const getQuestionOptions = numQuestions => {
-        const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,chosenQuestions);
+        const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,[
+            ...chosenQuestions,
+            ...gameIDs //if we're picking for fast money, exclude the game questions
+        ]);
 
         return indexes.map(i => questions[i]);
     }
@@ -56,7 +62,16 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
     }
 
     const onConfirmQuestionsClick = e => {
-        setGameRounds(gameID,chosenQuestions);
+
+        //round 3 = fast money / rapid rubles
+        if(game.currentRound === 3)
+        {
+            setFastMoneyQuestions(gameID,chosenQuestions);
+        }
+        else
+        {
+            setGameRounds(gameID,chosenQuestions);
+        }
     }
 
     if(questions === null)

@@ -2,6 +2,8 @@ $red : #ed1b24;
 
 $red_dark : darken($red,10%);
 
+$red_light : lighten($red,30%);
+
 $white : #f7f5e6;// #faeff0;
 
 $yellow : #fee60d;
@@ -19,3 +21,21 @@ $dots_bg : $red_dark $dots repeat top left;
 $mobile_break : 500px;
 
 $small_break : 1000px;
+
+$board_glow : 0 0 3em 0 rgba($yellow,.4);
+
+@mixin players-only
+{
+    .GameBoard:not(.GameBoard--host)
+    {
+        @content;
+    }
+}
+
+@mixin host-only
+{
+    .GameBoard--host
+    {
+        @content;
+    }
+}

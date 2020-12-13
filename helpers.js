@@ -29,7 +29,10 @@ const IDExists = (id,items) => {
     return items.find(item => item.id === id) !== undefined;
 }
 
+const nbsp = '\u00A0';
+
 module.exports = {
     generateID,
-    IDExists
+    IDExists,
+    nbsp
 }

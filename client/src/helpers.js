@@ -39,3 +39,5 @@ export const fillArrayUnique = (min,max,num,except = []) => {
         console.log(except);
     }
 };
+
+export const nbsp = '\u00A0';

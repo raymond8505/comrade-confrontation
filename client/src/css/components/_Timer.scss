@@ -1,0 +1,23 @@
+.Timer
+{
+    font-size: 2.5em;
+    font-weight: $fw_bold;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    background: rgba(black,.25);
+    border-radius: 50%;
+    border: 3px solid rgba(black,.25);
+
+    &,*
+    {
+        line-height: 1;
+    }
+}
+.Timer__time
+{
+    transform: translateY(.075em);
+}

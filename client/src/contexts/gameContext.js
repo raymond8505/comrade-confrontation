@@ -77,6 +77,8 @@ export const GameController = () => {
             case 'answers-updated' :
             case 'round-changed':
             case 'team-joined' :
+            case 'fast-money-answers-set' :
+            case 'fast-money-answer-toggled' :
             
                 updateGameState(msg.data.game);
 
@@ -114,6 +116,12 @@ export const GameController = () => {
                     data : [msg.data.userID,msg.data.game]
                 });
                 
+            break;
+
+            case 'fast-money-questions-set':
+                const game = msg.data.game;
+
+                updateGameState(game);
             break;
         }
     }
@@ -400,7 +408,9 @@ export const GameController = () => {
         lastBuzz : undefined,
         user : {ID:'',name:''},
         game : defaultGameState,
-        alerts : []
+        alerts : [],
+        currentFastMoneyQuestion : 0,
+        currentFastMoneyPreview : 0
     };
     /**
      * The main state of the game, has 3 fields, game,user,socket
@@ -417,6 +427,16 @@ export const GameController = () => {
         });
     }
 
+    const setCurrentFastMoneyPreview = num => {
+        setGameState({
+            type : 'currentFastMoneyPreview',
+            data : num
+        })
+    }
+    /**
+     * animates the big strike Xs
+     * @param {Int} num 
+     */
     const showWrongAnswerAnimation = num => {
 
         setGameState({
@@ -424,10 +444,6 @@ export const GameController = () => {
             data : num
         });
 
-        setImmediate(()=>{
-
-            console.log('stop animation');
-        })
     }
 
     /**
@@ -559,6 +575,18 @@ export const GameController = () => {
         //console.log(gameID,questions);
         
         sendMessage('set-game-rounds',{
+            questions,
+            gameID
+        });
+    }
+
+    /**
+     * Passed the chosen questions to the server to generate the fast money round
+     * @param {String} gameID 
+     * @param {Object[]} questions 
+     */
+    const setFastMoneyQuestions = (gameID,questions) => {
+        sendMessage('set-fast-money-questions',{
             questions,
             gameID
         });
@@ -712,9 +740,37 @@ export const GameController = () => {
         });
     }
 
+    /**
+     * Loops over the game rounds and returns the question object of each round if it exists
+     * @param {Object} game a game object with rounds and questions 
+     * @returns {Object[]} an array of questions
+     */
+    const getGameQuestions = (game=gameState.game) => game.rounds.filter(r=>r.question !== undefined).map(r=>r.question);
+    
+    /**
+     * Tells the server to advance to the next round
+     */
     const gotoNextRound = () => {
 
         sendMessage('next-round',{gameID : gameState.game.ID});
+    }
+
+    const setFastMoneyAnswers = (gameID,answers,playerIndex) => {
+
+        sendMessage('set-fast-money-answers',{
+            gameID,
+            answers,
+            playerIndex
+        });
+    }
+
+    const toggleFastMoneyAnswer = (answerIndex,playerIndex) => 
+    {
+        sendMessage('toggle-fast-money-answer',{
+            gameID : gameState.game.ID,
+            answerIndex,
+            playerIndex
+        });
     }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
@@ -742,6 +798,7 @@ export const GameController = () => {
         getCurrentRoundStage,
         getUserInfo,
         setGameRounds,
+        setFastMoneyQuestions,
         gameHasRounds,
         updated,
         createAlert,
@@ -759,6 +816,10 @@ export const GameController = () => {
         sendCorrectAnswer,
         chooseTeamForRound,
         clearGameState,
-        gotoNextRound
+        gotoNextRound,
+        getGameQuestions,
+        setCurrentFastMoneyPreview,
+        setFastMoneyAnswers,
+        toggleFastMoneyAnswer
     };
 }
