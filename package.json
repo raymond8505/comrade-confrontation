@@ -9,14 +9,17 @@
     "devserver": "nodemon server.js --ignore *.json --ignore client/*",
     "prodserver": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sampleqs": "node generate-questions.js"
+    "sampleqs": "node generate-questions.js",
+    "realqs": "node get-real-questions.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.21.0",
     "lodash": "^4.17.20",
     "lorem-ipsum": "^2.0.3",
+    "node-html-parser": "^2.0.0",
     "ws": "^7.4.0"
   }
 }

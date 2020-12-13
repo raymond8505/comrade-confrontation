@@ -5,7 +5,8 @@
         {
             "answer" : "",
             "points" : 0,
-            "answered" : false
+            "answered" : false,
+            "revealed" : false
         }
     ]
 }

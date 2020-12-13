@@ -43,7 +43,7 @@ const FastMoneyAnswers = ({answers,index}) => {
         {
             const answer = answers[i];
 
-            if(answers !== undefined)
+            if(answer !== undefined)
                 console.log(i,answer.revealed);
 
             toRet.push(<li key={`answer_${i}`} className={`FastMoneyAnswers__answer ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer' : ''}`}>

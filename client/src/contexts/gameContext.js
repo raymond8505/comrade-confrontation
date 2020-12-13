@@ -5,7 +5,7 @@ import soundManager from '../soundManager';
 
 export const GameContext = React.createContext();
 
-const {HOST,LOCAL_STORAGE_KEY} = require('../config.json')
+const {HOST,LOCAL_STORAGE_KEY} = window.location.host.indexOf('localhost') > -1 ? require('../config.json') : require('../config-remote.json');
 
 export const GameController = () => {
 
