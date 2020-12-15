@@ -106,7 +106,7 @@ const handleMessage = (msg,sender) => {
                  
                 game = gameManager.joinGame(msg.data.gameID,
                                 sender,
-                                msg.data.userID,
+                                msg.data.userID
                                 );
 
                 socketManager.addSocket(msg.data.userID,sender);
@@ -280,9 +280,11 @@ const handleMessage = (msg,sender) => {
 
         case 'correct-answer' :
 
-            console.log(msg.data);
-            
             game = gameManager.getGameByID(msg.data.gameID);
+
+            broadcastToGame(game,'correct-answer',{});
+            
+            
 
             //console.log(game);
 
@@ -460,7 +462,9 @@ const getRoundPoints = (round,all = false) => {
         if(all || answer.answered) tot += answer.points;
     });
 
-    return tot;
+    const multiplier = parseInt(round.number) !== NaN ? Number(round.number) : 1;
+
+    return tot * multiplier ;
 }
 
 /**
