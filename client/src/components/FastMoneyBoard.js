@@ -4,6 +4,7 @@ import FastMoneyAnswers from "./FastMoneyAnswers";
 import HostControls from "./HostControls";
 import QuestionBoard from "./QuestionBoard";
 import Timer from "./Timer";
+import config from "../config.json"
 
 const FastMoneyBoard = ({questions}) => {
 
@@ -25,11 +26,14 @@ const FastMoneyBoard = ({questions}) => {
             {currentUserIsHost() ? <QuestionBoard question={question} /> : null}
 
             <div className="FastMoneyBoard__player-answers">
-                <FastMoneyAnswers answers={round.playerAnswers[0]} index={0} />
+                <FastMoneyAnswers 
+                    answers={round.playerAnswers[0]} 
+                    index={0}
+                    focusFirstOnStart={true} />
                 <FastMoneyAnswers answers={round.playerAnswers[1]} index={1} />
 
                 <div className="FastMoneyBoard__timer-wrapper">
-                    {round.started ? <Timer time={round.currentStage === 0 ? 20 : 25} /> : null}
+                    {round.started ? <Timer time={config.FAST_MONEY.TIMERS[round.currentStage]} /> : null}
                 </div>
             </div>
         </div>

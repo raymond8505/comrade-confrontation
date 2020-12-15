@@ -43,7 +43,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
             return <li key={`qpq_${question.ID}`} 
                        className="QuestionPicker__Question QuestionPicker__Question--option"
                        onClick={e => onClick(question)}>
-                {question.question}
+                {question.question} <span className="QuestionPicker__Question-answer-count">({question.answers.length})</span>
             </li>
         })
     }

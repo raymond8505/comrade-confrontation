@@ -19,9 +19,9 @@ const PassOrPlay = ({round}) => {
         }
     }
 
-    return (<dialog className="PassOrPlay modal" open>
-        <div className="PassOrPlay__inner modal__inner">
-            <h2 className="PassOrPlay__title">Pass or Play</h2>
+    return (<dialog className={`PassOrPlay${currentUserIsHost() ? ' modal' : ''}`} open>
+        <div className={`PassOrPlay__inner${currentUserIsHost() ? ' modal__inner' : ''}`}>
+            <h2 className="PassOrPlay__title">Pass or Play?</h2>
             <h3>Which team will play round {gameState.game.rounds[round].number}</h3>
 
             {gameState.game.teams.map((t,i)=>{

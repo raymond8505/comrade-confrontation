@@ -1,16 +1,27 @@
-import React,{useContext, useRef} from "react";
+import { indexOf } from "lodash";
+import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import { nbsp } from "../helpers";
 
-const FastMoneyAnswers = ({answers,index}) => {
+const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false}) => {
 
     const {setCurrentFastMoneyPreview,
             currentUserIsHost,
+            getCurrentRound,
             gameState,
             setFastMoneyAnswers,
             toggleFastMoneyAnswer} = useContext(GameContext);
              
     const answersShell = useRef(null);
+
+    useEffect(()=>{
+
+        if(focusFirstOnStart && currentUserIsHost() && getCurrentRound().started)
+        {
+            answersShell.current.querySelectorAll('input[type="text"]')[0].focus();
+        }
+
+    },[gameState.game.rounds[gameState.game.currentRound].started]);
 
     const onAnswerFocus = i => {
         setCurrentFastMoneyPreview(i);

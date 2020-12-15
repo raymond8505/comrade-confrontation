@@ -1,6 +1,6 @@
 .PassOrPlay
 {
-    
+    font-size: 1rem;
 }
 .PassOrPlay__inner
 {
@@ -17,9 +17,29 @@
     cursor: pointer;
 }
 
-.GameBoard:not(.GameBoard--host) .PassOrPlay button
+@include players-only
 {
-    @include no-button-style;
-    color: white;
-    box-shadow: none;
+    .PassOrPlay button
+    {
+        display: none;
+    }
+    .PassOrPlay
+    {
+        background: transparent;
+        position: relative;
+        border: 0;
+        line-height: 1;
+        color: white;
+
+        h3
+        {
+            display: none;
+        }
+    }
+
+    .PassOrPlay__title
+    {
+        margin: 0;
+        padding: 0;
+    }
 }

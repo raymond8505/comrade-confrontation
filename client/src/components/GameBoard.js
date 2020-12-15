@@ -103,7 +103,7 @@ const GameBoard = ({}) => {
                 <div className="GameBoard__round-info">
 
                     <div className="GameBoard__round-number">
-                        {getCurrentRound() !== undefined ? getCurrentRound().number : ''}
+                        {game.rounds.length > 0 && game.activeTeam === -1 && getCurrentRoundStage() === 2 ? <PassOrPlay round={game.currentRound} /> : (getCurrentRound() !== undefined ? getCurrentRound().number : '')}
                     </div>
                 </div>
 
@@ -139,8 +139,6 @@ const GameBoard = ({}) => {
             (game.currentRound === 3 && game.rounds[3] == undefined)) ? 
 
             <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
-        
-        {game.rounds.length > 0 && game.activeTeam === -1 && getCurrentRoundStage() === 2 ? <PassOrPlay round={game.currentRound} /> : null}
         
         <BigStrikeBoxes />
     </div>);

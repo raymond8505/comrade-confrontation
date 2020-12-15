@@ -61,9 +61,8 @@ const SignIn = ({}) => {
             <div className="SignIn__form">
                 
                 <input type="text" 
-                        placeholder="Your Name" 
+                        placeholder="Your Name"
                         ref={hostNameField}
-                        defaultValue="player 1"
                         disabled={showTeamPicker} />
                 <button type="button" 
                         className="cta" 
@@ -71,7 +70,7 @@ const SignIn = ({}) => {
                         disabled={showTeamPicker}>Host Game</button>
 
                 <input type="text" 
-                        placeholder="Game Code, ex: SPQR" 
+                        placeholder="Game Code, ex: USSR" 
                         ref={gameCodeField}
                         className="Alert__code-field"
                         //defaultValue="MSGJ"

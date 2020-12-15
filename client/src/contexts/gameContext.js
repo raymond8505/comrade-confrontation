@@ -83,6 +83,10 @@ export const GameController = () => {
                 updateGameState(msg.data.game);
 
             break;
+            case 'correct-answer' :
+                //updateGameState(msg.data.game);
+                playSound('correct');
+                break;
 
             case 'wrong-answer' :
 
