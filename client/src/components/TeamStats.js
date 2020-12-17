@@ -4,10 +4,21 @@ import StatusDot from "./StatusDot";
 
 const TeamStats = ({team,enableDot = false}) => {
 
+    const {toggleTeams,
+        currentUserIsHost} = useContext(GameContext);
+
+    const handleDotClick = e => {
+        
+        if(currentUserIsHost())
+        {
+            toggleTeams();
+        }
+    }
+
     return (<div className="TeamStats">
         
         <h2 className="TeamStats__name">
-            <StatusDot on={enableDot} />
+            <div onClick={handleDotClick}><StatusDot on={enableDot}  /></div>
             <div className="TeamStats__name-label">{team.name}</div>
         </h2>
 

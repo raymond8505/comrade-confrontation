@@ -1,13 +1,19 @@
 const helpers = require('./helpers');
 const cloneDeep = require('lodash/cloneDeep');
 
-const updateGame = game => {
+/**
+ * Updates a game's modified time and optionally saves the games array to file
+ * @param {Object} game a game object to update
+ * @param {Boolean} andSave  [default true] whether to save immediately after update
+ */
+const updateGame = (game,andSave=true) => {
 
     game.modified = new Date().getTime();
     
     games[getGameIndex(game)] = game;
     
-    saveGames(games);
+    if(andSave)
+        saveGames(games);
 }
 
 const IDLength = 4;
@@ -36,9 +42,12 @@ const generateRounds = questions => {
     return rounds;
 }
 
+
+
 const defaultGameState = require('./client/src/schema/defaultGameState.json');
 
 const roundSchema = require('./client/src/schema/rounds.json');
+const { sockets } = require('./socket-manager');
 
 const SAVE_PATH = './games.json';
 
@@ -174,6 +183,59 @@ const addUserToTeam = (game,userID,teamIndex) => {
     saveGames();
 }
 
+const getRandomQuestion = (src = 'real-qeustions.json') => {
+
+    const questions = require(`./client/src/data/${src}`);
+
+    console.log(helpers);
+
+    return questions[helpers.between(0,questions.length - 1)];
+}
+
+/**
+ * Removes a player from a game
+ * @param {Object} game a game to remove the player from 
+ * @param {String} userID id of the user to remove
+ */
+const removePlayer = (game,userID) => {
+    game.teams.forEach(team => {
+
+        const playerIndex = team.players.indexOf(userID);
+
+        if(playerIndex > -1)
+        {
+            team.players.splice(playerIndex,1);
+        }
+    });
+}
+
+/**
+ * Takes a user ID and returns the first game it finds containing that user
+ * @param {*} userID a user ID to search for
+ * @returns {Object|undefined} the matching game or undefined if no matches
+ */
+const getUserGame = userID => {
+
+    return games.find(game=>{
+        return game.users.findIndex(u => u.ID === userID) > -1;
+    })
+}
+/**
+ * Takes a user ID and removes the player from any teams in any games they might be in
+ * @param {String} userID 
+ */
+const removePlayerEverywhere = userID => {
+
+    games.forEach(game => {
+
+        removePlayer(game,userID);
+
+        updateGame(game,false);
+    });
+
+    saveGames();
+}
+
 module.exports = {
     updateGame,
     getGameByID,
@@ -189,5 +251,9 @@ module.exports = {
     createUser,
     addHost,
     suggestTeam,
-    userExists
+    userExists,
+    roundSchema,
+    getRandomQuestion,
+    removePlayer,
+    getUserGame
 }

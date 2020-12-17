@@ -29,10 +29,13 @@ const IDExists = (id,items) => {
     return items.find(item => item.id === id) !== undefined;
 }
 
+const between = (min, max) => Math.floor(Math.random() * (max - min) + min);
+
 const nbsp = '\u00A0';
 
 module.exports = {
     generateID,
     IDExists,
-    nbsp
+    nbsp,
+    between
 }

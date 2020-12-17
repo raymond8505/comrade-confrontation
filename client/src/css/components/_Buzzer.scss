@@ -1,0 +1,51 @@
+.Buzzer
+{
+    position: fixed;
+    right: 3vmin;
+    bottom: 3vmin;
+    width: 25vmin;
+    height: 25vmin;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(146deg, $yellow 0%, darken($yellow,20%) 100%);
+    padding: 1vmin;
+}
+.Buzzer__btn
+{
+    @include no-button-style;
+    @include animated($speed : .1s);
+    color: $red;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle, lighten($red,5%) 0%, darken($red,15%) 100%);
+    border: 2px solid white;
+    color: white;
+    font-weight: $fw_black;
+    text-shadow: 0 0 4px black;
+    font-size: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover,
+    &:focus
+    {
+        border-color: $red;
+        box-shadow: 0 0 2vw 0 black;
+    }
+
+    &:active
+    {
+        background: radial-gradient(circle, darken($red,15%) 0%, lighten($red,5%) 100%);
+        font-size: 1.85em;
+    }
+
+    span
+    {
+        line-height: 1;
+        text-align: center;
+    }
+
+}

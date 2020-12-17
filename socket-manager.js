@@ -24,6 +24,16 @@ const addSocket = (ID,socket) => {
     }
 }
 
+const removeSocket = userID => {
+
+    const userIndex = sockets.findIndex(u=>u.ID === userID);
+
+    if(userIndex > -1)
+    {
+        sockets.splice(userIndex,1);
+    }
+}
+
 const socketExists = id => sockets.filter(s=>s.ID === id).length > 0;
 
 /**
@@ -63,6 +73,17 @@ const broadcast = (userIDs,action,data = null,except = []) => {
 }
 
 /**
+ * Takes a socket and returns the first associated ID it finds
+ * @param {WebSocket} socket the socket of the user to find
+ * @returns {String|undefined} the user ID or undefined if nothing found
+ */
+const getUserID = socket => {
+
+    const matches = sockets.filter(s=>s.socket == socket);
+
+    return matches.length > 0 ? matches[0].ID : undefined;
+}
+/**
  * Gets an array of socket objects for the given user ids
  * @param {String[]} ids an array of user IDs
  * @returns {WebSocket[]} an array of corresponding web sockets for the given users
@@ -76,5 +97,7 @@ module.exports = {
     send,
     sockets,
     server,
-    addSocket
+    addSocket,
+    getUserID,
+    removeSocket
 };

@@ -1,7 +1,0 @@
-{
-    "HOST" : "ws://162.252.83.130:8080",
-    "LOCAL_STORAGE_KEY" : "cc-creds",
-    "FAST_MONEY" : {
-        "TIMERS" : [40,50]
-    }
-}

@@ -26,7 +26,7 @@ export const GameController = () => {
 
                 console.log('Game Created',msg.data);
 
-                setLocalCredentials(msg.data.game.ID,msg.data.user.ID);
+                setLocalCredentials(msg.data.game.ID,msg.data.user.ID,msg.data.user.name);
 
                 setGameState({
                     type : ['game','user'],
@@ -57,7 +57,7 @@ export const GameController = () => {
 
             case 'team-selection-request' :
 
-                setLocalCredentials(msg.data.game.ID,msg.data.userID);
+                setLocalCredentials(msg.data.game.ID,msg.data.userID,msg.data.playerName);
 
                 setGameState({
                     type : ['game','user'],
@@ -76,9 +76,12 @@ export const GameController = () => {
             case 'game-rounds-set' :
             case 'answers-updated' :
             case 'round-changed':
+            case 'round-updated':
             case 'team-joined' :
             case 'fast-money-answers-set' :
             case 'fast-money-answer-toggled' :
+            case 'teams-toggled' :
+            case 'user-disconnect':
             
                 updateGameState(msg.data.game);
 
@@ -423,6 +426,7 @@ export const GameController = () => {
                                         defaultState
                                         );
     
+    
     if(gameState.socket === null)
     {
         setGameState({
@@ -471,6 +475,11 @@ export const GameController = () => {
      * Whether or not the game is currently running.
      */
     const gameIsRunning = gameState.game.ID !== '';
+
+    /**
+     * A shortcut for getting the game ID
+     */
+    const gameID = gameIsRunning ? gameState.game.ID : '';
     
     /**
      * Takes an array of user iDs and returns an array of user objects
@@ -493,11 +502,14 @@ export const GameController = () => {
      * @param {*} gameID 
      * @param {*} userID 
      */
-    const setLocalCredentials = (gameID,userID) => {
+    const setLocalCredentials = (gameID,userID,name = '') => {
+        
+        console.log(gameState.game);
 
         window.localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify({
             gameID,
-            userID
+            userID,
+            name,
         }));
     }
 
@@ -506,7 +518,8 @@ export const GameController = () => {
      */
     const clearLocalCredentials = () => {
 
-        window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+        const creds = getLocalCredentials();
+        setLocalCredentials(undefined,undefined,creds.name);
     }
 
     /**
@@ -709,6 +722,8 @@ export const GameController = () => {
         });
     }
 
+    
+
     /**
      * Sends a correct-answer message to the server along with the answer that was correct.
      * @param {Int} answerIndex 
@@ -776,6 +791,27 @@ export const GameController = () => {
             playerIndex
         });
     }
+
+    const replaceQuestion = i => {
+
+        sendMessage('replace-question',{
+            gameID,
+            round : i,
+            host : window.location.host
+        });
+    }
+    /**
+     * Tell the server to toggle the active team. Used by the host to fix user errors.
+     */
+    const toggleTeams = () => {
+
+        if(gameIsRunning)
+        {
+            sendMessage('toggle-teams',{
+                gameID : gameState.game.ID
+            });
+        }
+    }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
      */
@@ -824,6 +860,8 @@ export const GameController = () => {
         getGameQuestions,
         setCurrentFastMoneyPreview,
         setFastMoneyAnswers,
-        toggleFastMoneyAnswer
+        toggleFastMoneyAnswer,
+        toggleTeams,
+        replaceQuestion
     };
 }

@@ -16,7 +16,8 @@ const SignIn = ({}) => {
             createAlert,
             gameState,
             currentUserHasTeam,
-            currentUserInGame
+            currentUserInGame,
+            getLocalCredentials,
         } = useContext(GameContext);
 
     const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
@@ -54,6 +55,9 @@ const SignIn = ({}) => {
         }
     }
 
+    const creds = getLocalCredentials();
+    const name = creds === null ? '' : creds.name
+
     return (<div className="SignIn">
         <div className="SignIn__inner">
             <img src={logo} alt="Comrade Confrontation" className="SignIn__logo" />
@@ -63,7 +67,8 @@ const SignIn = ({}) => {
                 <input type="text" 
                         placeholder="Your Name"
                         ref={hostNameField}
-                        disabled={showTeamPicker} />
+                        disabled={showTeamPicker}
+                        defaultValue={name} />
                 <button type="button" 
                         className="cta" 
                         onClick={handleCreateGame}

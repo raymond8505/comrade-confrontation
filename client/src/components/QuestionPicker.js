@@ -2,7 +2,7 @@ import React,{useContext,useState,useRef, useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import {fillArrayUnique} from '../helpers';
 
-//import allQuestions from '../data/sample-questions.json';
+import sampleQuestions from '../data/sample-questions.json';
 import allQuestions from '../data/real-questions.json';
 
 const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
@@ -78,7 +78,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
 
     if(questions === null)
     {
-        questions = allQuestions;
+        questions = window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
     }
 
     useEffect(()=>{

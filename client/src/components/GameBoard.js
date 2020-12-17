@@ -5,6 +5,7 @@ import PlayerList from "./PlayerList";
 import QuestionBoard from "./QuestionBoard";
 import QuestionPicker from "./QuestionPicker";
 import StrikeBoxes from "./StrikeBoxes";
+import Buzzer from "./Buzzer";
 import TeamStats from "./TeamStats";
 import SoundPlayer from './SoundPlayer';
 import PassOrPlay from './PassOrPlay';
@@ -20,6 +21,7 @@ const GameBoard = ({}) => {
             clearLocalCredentials,
             currentUserCanBuzz,
             sendBuzz,
+            playSound,
             currentSound,
             getCurrentRoundStage,
             clearGameState,
@@ -54,12 +56,23 @@ const GameBoard = ({}) => {
         {
             case 32: //space, head to head buzzer
 
-            if(currentUserCanBuzz)
-            {
-
-                sendBuzz(game.ID,currentUser.ID);
-            }
+            maybeBuzz();
         }
+    }
+
+    const maybeBuzz = () => {
+        if(currentUserCanBuzz)
+        {
+            sendBuzz(game.ID,currentUser.ID);
+        }
+        else
+        {
+            playSound('wrong');
+        }
+    }
+
+    const handleBuzzerClick = e => {
+        maybeBuzz();
     }
 
     useEffect(()=>{
@@ -141,6 +154,7 @@ const GameBoard = ({}) => {
             <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
         
         <BigStrikeBoxes />
+        {currentUserIsHost() ? null : <Buzzer onClick={handleBuzzerClick} />}
     </div>);
 }
 

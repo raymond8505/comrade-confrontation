@@ -7,7 +7,7 @@ const helpers = require('./helpers');
 //const { createUser, getGameByID, userExists } = require('./game-manager');
 const { generateID } = require('./helpers');
 const { updateGame, getGameByID, games } = require('./game-manager');
-const { cloneDeep } = require('lodash');
+const { cloneDeep, update } = require('lodash');
 
 //console.log(games);
 
@@ -17,8 +17,30 @@ socketManager.server.on('connection',serverSocket => {
     console.log('new connection');
 
     serverSocket.on('message',msg => {
-        handleMessage(msg,serverSocket)
+        handleMessage(msg,serverSocket);
     });
+
+    serverSocket.on('close',(code,reason)=>{
+        
+        const userID = socketManager.getUserID(serverSocket);
+
+        socketManager.removeSocket(userID);
+
+        const game = gameManager.getUserGame(userID);
+
+        if(game != undefined)
+        {
+            gameManager.removePlayer(
+                game,
+                userID);
+
+            broadcastToGame(game,'user-disconnect',{
+                game
+            });
+        }
+        
+        
+    })
 
 });
 
@@ -47,7 +69,11 @@ const handleMessage = (msg,sender) => {
         //expects msg.data to be the a string - the name of the host user
         case 'create-game' :
 
-            const host = gameManager.createUser(helpers.generateID(),msg.data.name);
+            gameManager.pruneOldGames();
+
+            const host = gameManager.createUser(helpers.generateID(),msg.data);
+
+            console.log(host);
 
             game = gameManager.createGame();
 
@@ -95,7 +121,8 @@ const handleMessage = (msg,sender) => {
                     socketManager.send(sender,'team-selection-request',{
                         userID : userObj.ID,
                         game,
-                        suggestedTeam
+                        suggestedTeam,
+                        playerName : userObj.name
                     });
                 }
                 
@@ -284,8 +311,6 @@ const handleMessage = (msg,sender) => {
 
             broadcastToGame(game,'correct-answer',{});
             
-            
-
             //console.log(game);
 
             const index = msg.data.answerIndex;
@@ -304,6 +329,7 @@ const handleMessage = (msg,sender) => {
 
                     //winner correctly guessed an answer that WASNT #1
                     //so move to stage 1 and switch the active team
+                    
                     if(index > answerToBeat)
                     {
                         console.log('answer was ',index,', answer to beat was',answerToBeat,'flipping activeTeam and moving to stage 1');
@@ -435,6 +461,34 @@ const handleMessage = (msg,sender) => {
             }
         break;
             
+        case 'toggle-teams':
+
+            game = getGameByID(msg.data.gameID);
+            game.activeTeam = game.activeTeam == 0 ? 1 : 0;
+
+            updateGame(game);
+            broadcastToGame(game,'teams-toggled',{
+                game
+            });
+
+        break;
+        case 'replace-question':
+
+            game = getGameByID(msg.data.gameID);
+
+            const newRound = cloneDeep(gameManager.roundSchema,true);
+            const oldRound = game.rounds[msg.data.round];
+            
+            newRound.number = oldRound.number;
+            newRound.question = gameManager.getRandomQuestion(msg.data.host.indexOf('localhost') > -1 ? 'sample-questions.json' : 'real-questions.json');
+            game.rounds[msg.data.round] = newRound;
+
+            updateGame(game);
+            broadcastToGame(game,'round-updated',{
+                game
+            });
+
+        break;
 
     }
 }
