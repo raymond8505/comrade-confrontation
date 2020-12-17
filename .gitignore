@@ -2,3 +2,4 @@ node_modules/
 test-client/
 config.json
 config-remote.json
+server-config.json

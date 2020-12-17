@@ -69,7 +69,7 @@ const handleMessage = (msg,sender) => {
         //expects msg.data to be the a string - the name of the host user
         case 'create-game' :
 
-            gameManager.pruneOldGames();
+            gameManager.pruneGames();
 
             const host = gameManager.createUser(helpers.generateID(),msg.data);
 

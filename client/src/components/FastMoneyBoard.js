@@ -1,4 +1,4 @@
-import React,{useRef,useContext} from "react";
+import React,{useState,useContext} from "react";
 import { GameContext } from "../contexts/gameContext";
 import FastMoneyAnswers from "./FastMoneyAnswers";
 import HostControls from "./HostControls";
@@ -13,7 +13,21 @@ const FastMoneyBoard = ({questions}) => {
     const round = getCurrentRound();
     const question = questions[currentFastMoneyPreview];
 
-    console.log(round.currentStage);
+    const onQBAnswerClick = answer => {
+
+        console.log(answer);
+
+        if(lastFocusedPlayerAnswer !== null)
+        {
+            lastFocusedPlayerAnswer.value = answer.points;
+        }
+    }
+
+    const [lastFocusedPlayerAnswer,setLastFocusedPlayerAnswer] = useState(null);
+    
+    const onPlayerAnswerPointsFocus = e => {
+        setLastFocusedPlayerAnswer(e.currentTarget);
+    }
 
     return (<div className="FastMoneyBoard">
         
@@ -23,14 +37,18 @@ const FastMoneyBoard = ({questions}) => {
         </div> : null}
 
         <div className="FastMoneyBoard__answers">
-            {currentUserIsHost() ? <QuestionBoard question={question} /> : null}
+            {currentUserIsHost() ? <QuestionBoard question={question} onAnswerClick={onQBAnswerClick} /> : null}
 
             <div className="FastMoneyBoard__player-answers">
                 <FastMoneyAnswers 
                     answers={round.playerAnswers[0]} 
                     index={0}
-                    focusFirstOnStart={true} />
-                <FastMoneyAnswers answers={round.playerAnswers[1]} index={1} />
+                    focusFirstOnStart={true}
+                    onPointsFocus={onPlayerAnswerPointsFocus} />
+                <FastMoneyAnswers 
+                    answers={round.playerAnswers[1]} 
+                    index={1}
+                    onPointsFocus={onPlayerAnswerPointsFocus} />
 
                 <div className="FastMoneyBoard__timer-wrapper">
                     {round.started ? <Timer time={config.FAST_MONEY.TIMERS[round.currentStage]} /> : null}

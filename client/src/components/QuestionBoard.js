@@ -2,7 +2,7 @@ import React,{useContext, useEffect, useState} from "react";
 import { GameContext } from "../contexts/gameContext";
 import HostControls from './HostControls';
 
-const QuestionBoard = ({question}) => {
+const QuestionBoard = ({question,onAnswerClick}) => {
 
     const {
         currentUserIsHost,
@@ -10,15 +10,20 @@ const QuestionBoard = ({question}) => {
         getCurrentRoundStage,
         getCurrentRound,
         gameState} = useContext(GameContext);
-    
-    const handleAnswerClick = (e,index) => {
-        
+
+    const handleAnswerClick = (e,index,answer) => {
+
         //only send correct answers in regular rounds
         //in fast money it's just for the host's reference
         //when reading the questions
         if(gameState.game.currentRound < 3 && getCurrentRound().started)
         {
             sendCorrectAnswer(index);
+        }
+
+        if(onAnswerClick !== undefined)
+        {
+            onAnswerClick(answer);
         }
     }
 
@@ -43,7 +48,7 @@ const QuestionBoard = ({question}) => {
                             key={answerKey}
                             onClick={(e)=>{
                                 if(answer !== undefined && currentUserIsHost()) {
-                                    handleAnswerClick(e,i);
+                                    handleAnswerClick(e,i,answer);
                                     }
                                 }
                             }>

@@ -1,6 +1,6 @@
 const helpers = require('./helpers');
 const cloneDeep = require('lodash/cloneDeep');
-
+const config = require('./server-config.json');
 /**
  * Updates a game's modified time and optionally saves the games array to file
  * @param {Object} game a game object to update
@@ -71,7 +71,7 @@ const loadGames = () => {
     }
 }
 
-const games = loadGames();
+let games = loadGames();
 
 const findGame = ID => {
     
@@ -236,6 +236,20 @@ const removePlayerEverywhere = userID => {
     saveGames();
 }
 
+const pruneGames = (olderThan = config.GAME_MANAGER.GAME_EXPIRY) =>
+{
+    console.log(olderThan);
+
+    const expiry = new Date().getTime() - olderThan;
+    const expiredGames = games.filter(game => {
+        return game.modified < expiry;
+    });
+
+    games = games.filter(g=>g.modified > expiry);
+
+    saveGames();
+}
+
 module.exports = {
     updateGame,
     getGameByID,
@@ -255,5 +269,6 @@ module.exports = {
     roundSchema,
     getRandomQuestion,
     removePlayer,
-    getUserGame
+    getUserGame,
+    pruneGames
 }

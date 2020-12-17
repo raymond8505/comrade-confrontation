@@ -3,7 +3,7 @@ import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import { nbsp } from "../helpers";
 
-const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false}) => {
+const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus}) => {
 
     const {setCurrentFastMoneyPreview,
             currentUserIsHost,
@@ -42,7 +42,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false}) => {
     {
         const text = answer === undefined || (!currentUserIsHost() && !answer.revealed) ? nbsp : answer.points;
 
-        return currentUserIsHost() ? makeInput(text,i,'number') : text;
+        return currentUserIsHost() ? makeInput(text,i,'number',()=>{},onPointsFocus) : text;
     }
     
     const renderAnswers = answers => {
@@ -79,11 +79,18 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false}) => {
         return toRet;
     }
 
-    const makeInput = (val,questionIndex,type="text",onBlur=()=>{}) => <input 
+    const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => <input 
                                                                             type={type} 
                                                                             defaultValue={val} 
-                                                                            onFocus={e=>onAnswerFocus(questionIndex)}
                                                                             onBlur={onBlur}
+                                                                            onFocus={e=>{
+                                                                                onAnswerFocus(questionIndex)
+                                                                                if(onFocus !== undefined)
+                                                                                {
+                                                                                    //console.log(onFocus);
+                                                                                    onFocus(e);
+                                                                                }
+                                                                            }}
                                                                             readOnly={!currentUserIsHost()} />
 
     const calculateTotal = answers => {
