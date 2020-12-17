@@ -14,7 +14,7 @@ WiP
 
 - login now remembers your last username
 - host control added to change the current round's answer mid round and reset the round in case of liquor related host uh ohs
-- question picker at start of round now show's number of answers for each question
+- question picker at start of round now shows number of answers for each question
 - Round number is now a multiplier for round points in regular rounds
 - Clicking the buzzer dot beside either team toggles the active team
 - Rapid Rubles timers set to 40s and 50s. Subject to change again after some testing.
