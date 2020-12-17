@@ -238,15 +238,18 @@ const removePlayerEverywhere = userID => {
 
 const pruneGames = (olderThan = config.GAME_MANAGER.GAME_EXPIRY) =>
 {
-    console.log(olderThan);
+
 
     const expiry = new Date().getTime() - olderThan;
     const expiredGames = games.filter(game => {
         return game.modified < expiry;
     });
 
+    const prevNum = games.length;
+
     games = games.filter(g=>g.modified > expiry);
 
+    console.log('Pruning',games.length - prevNum,'games');
     saveGames();
 }
 
