@@ -1,4 +1,4 @@
-import React,{useContext,useEffect} from "react";
+import React,{useContext,useEffect,useState} from "react";
 import {GameContext} from '../contexts/gameContext';
 import logo from '../img/logo.png';
 import PlayerList from "./PlayerList";
@@ -11,6 +11,8 @@ import SoundPlayer from './SoundPlayer';
 import PassOrPlay from './PassOrPlay';
 import BigStrikeBoxes from "./BigStrikeBoxes";
 import FastMoneyBoard from './FastMoneyBoard';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import MuteButton from "./MuteButton";
 
 const GameBoard = ({}) => {
     
@@ -30,6 +32,19 @@ const GameBoard = ({}) => {
     const {game} = gameState;
 
     const currentUser = gameState.user;
+
+    const [codeCopied,setCodeCopied] = useState(false);
+
+    useEffect(()=>{
+
+        if(codeCopied)
+        {
+            setTimeout(()=>{
+                setCodeCopied(false)
+            },500);
+        }
+
+    },[codeCopied]);
     
     const handleLogout = e => {
 
@@ -93,17 +108,23 @@ const GameBoard = ({}) => {
             <SoundPlayer sound={currentSound} />
         <div className="GameBoard__row GameBoard__row--top">
             <div className="GameBoard__team-1">
-            <TeamStats 
-                team={game.teams[0]}
-                enableDot = {game.activeTeam === 0} 
-            />
-
-            
+                <TeamStats 
+                    team={game.teams[0]}
+                    enableDot = {game.activeTeam === 0} 
+                />
             </div>
             <div className="GameBoard__game-stats">
                 <div className="GameBoard__top-controls">
                     
-                    {gameHasRounds ? <span className="GameBoard__game-code">{game.ID}</span> : null}
+                    {gameHasRounds ? <span className={`GameBoard__game-code${codeCopied ? ' GameBoard__game-code--copied' : ''}`}>
+                        <CopyToClipboard text={`${window.location.host}?code=${game.ID}`} onCopy={()=>{
+                            console.log('copied');
+
+                            setCodeCopied(true);
+                        }}>
+                            <span>{game.ID}</span>
+                        </CopyToClipboard>
+                    </span> : null}
                     
                     <button 
                         type="button" 
@@ -155,6 +176,7 @@ const GameBoard = ({}) => {
         
         <BigStrikeBoxes />
         {currentUserIsHost() ? null : <Buzzer onClick={handleBuzzerClick} />}
+        <MuteButton />
     </div>);
 }
 

@@ -45,7 +45,29 @@
     background: $red_dark;
     display: inline-block;
     line-height: 1;
+    cursor: pointer;
+    transition: background .15s $ease-in-out-quad,
+                color .15s $ease-in-out-quad,
+                border-color .15s $ease-in-out-quad;
 
+    &.GameBoard__game-code--copied
+    {
+        color: white;
+        border-color: white;
+        background: white;
+        font-size: 0;
+
+        span:after
+        {
+            font-size: .95rem;
+            display:  block;
+            content: 'copied';
+            color: $red;
+            font-weight: bold;
+            font-family: $body_font;
+            padding: .43em .6em .25em;
+        }
+    }
     
 }
 .GameBoard__round-number
@@ -74,7 +96,7 @@
             flex-grow: 1;
         }
 
-        &:nth-child(3)
+        &.GameBoard__team-2
         {
             &, .TeamStats__name
             {
@@ -91,9 +113,14 @@
                 padding-right: .25em;
             }
 
-            .StatusDot
+            .TeamStats__name div:first-child
             {
                 order: 3;
+                
+            }
+
+            .StatusDot
+            {
                 margin: 0 0 0 .4em;
             }
         }

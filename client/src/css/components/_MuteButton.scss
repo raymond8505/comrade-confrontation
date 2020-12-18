@@ -1,0 +1,16 @@
+.MuteButton
+{
+    @include no-button-style;
+    position: fixed;
+    left: 2vmin;
+    bottom: 2vmin;    
+    color: $yellow;
+    font-size: 2em;
+    width: 2em;
+    height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: $red;
+}

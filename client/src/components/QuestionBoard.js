@@ -8,7 +8,9 @@ const QuestionBoard = ({question,onAnswerClick}) => {
         currentUserIsHost,
         sendCorrectAnswer,
         getCurrentRoundStage,
+        getCurrentRoundPoints,
         getCurrentRound,
+        revealAnswer,
         gameState} = useContext(GameContext);
 
     const handleAnswerClick = (e,index,answer) => {
@@ -18,7 +20,15 @@ const QuestionBoard = ({question,onAnswerClick}) => {
         //when reading the questions
         if(gameState.game.currentRound < 3 && getCurrentRound().started)
         {
-            sendCorrectAnswer(index);
+            
+            if(getCurrentRoundStage() < 4)
+            {
+                sendCorrectAnswer(index);
+            }
+            else
+            {
+                revealAnswer(gameState.game.ID,gameState.game.currentRound,index);
+            }
         }
 
         if(onAnswerClick !== undefined)
@@ -38,8 +48,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
             const answer = question.answers[i];
             const answerKey = `question_${question.ID}_answer_${i}`;
             const revealed = 
-                answer !== undefined && (currentUserIsHost() || answer.answered) ||
-                getCurrentRoundStage() === 4;
+                answer !== undefined && (currentUserIsHost() || answer.answered || answer.revealed)
 
             toRet.push(<li className={`QuestionBoard__answer${
                                 revealed && answer !== undefined  ? ' QuestionBoard__answer--revealed' : ''}${
@@ -76,6 +85,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
                 <h2 className="QuestionBoard__question">{question.question}</h2>
                 <HostControls />
             </div>) : null}
+        {getCurrentRound().type !== 'fast-money' ? <div className="QuestionBoard__board-score">{getCurrentRoundPoints()}</div> : null}
         <ul className="QuestionBoard__answers">
             {renderAnswers()}
         </ul>

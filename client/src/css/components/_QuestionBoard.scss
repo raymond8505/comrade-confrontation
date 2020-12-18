@@ -1,7 +1,7 @@
 .QuestionBoard__answers
 {
     $gap : .5em;
-    border: 4px solid $yellow;
+    
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: repeat(4,3.25em);
@@ -11,9 +11,27 @@
     margin: 0;
     list-style: none;
     font-size: 1.5em;
+}
+
+.QuestionBoard__board-score,
+.QuestionBoard__answers
+{
     background: darken($red_dark,15%);
     box-shadow: $board_glow;
-    border-radius: 1em;
+    border-radius: 1.5rem;
+    border: 4px solid $yellow;
+}
+
+.QuestionBoard__board-score
+{
+    display: inline-block;
+    font-size: 2.5em;
+    font-weight: $fw_black;
+    padding: .5em 1em 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    transform: translateY(4px);
+    border-bottom: none;
 }
 
 .QuestionBoard__answer
@@ -157,7 +175,7 @@
     }
 }
 .QuestionBoard__answer--disabled,
-.GameBoard--host .QuestionBoard__answer--answered
+.GameBoard--host .QuestionBoard__answer--answered,
 {
     opacity: .35;
 }

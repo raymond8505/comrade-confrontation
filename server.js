@@ -89,6 +89,15 @@ const handleMessage = (msg,sender) => {
         //expects msg.data to be an object {gameID,userID}
         case 'join-game' :
 
+            game = gameManager.getGameByID(msg.data.gameID);
+
+            if(game === null)
+            {
+                socketManager.send(sender,'non-exsitent-game',{
+                    gameID : msg.data.gameID
+                })
+            }
+
             //user is sending a playerName instead of a userID
             //this mean's they're not associated with a game
             //yet
@@ -487,6 +496,19 @@ const handleMessage = (msg,sender) => {
             broadcastToGame(game,'round-updated',{
                 game
             });
+
+        break;
+
+        case 'reveal-answer' :
+            game = getGameByID(msg.data.gameID);
+
+            if(game !== null)
+            {
+                game.rounds[msg.data.roundIndex].question.answers[msg.data.answerIndex].revealed = true;
+    
+                updateGame(game);
+                broadcastToGame(game,'answer-revealed',{game});
+            }
 
         break;
 

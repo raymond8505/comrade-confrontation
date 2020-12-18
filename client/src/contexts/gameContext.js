@@ -10,6 +10,7 @@ const {HOST,LOCAL_STORAGE_KEY} = window.location.host.indexOf('localhost') > -1 
 export const GameController = () => {
 
     const [updated,setUpdated] = useState(0);
+    const [muted,setMuted] = useState(false);
     /**
      * The central handler for all messages coming from the server
      * @param {Object} msg 
@@ -82,14 +83,25 @@ export const GameController = () => {
             case 'fast-money-answer-toggled' :
             case 'teams-toggled' :
             case 'user-disconnect':
+            case 'fast-money-questions-set':
             
                 updateGameState(msg.data.game);
 
             break;
+
+            case 'non-exsitent-game':
+                clearLocalCredentials();
+            break;
+
             case 'correct-answer' :
                 //updateGameState(msg.data.game);
                 playSound('correct');
-                break;
+            break;
+
+            case 'answer-revealed' :
+                updateGameState(msg.data.game);
+                playSound('reveal');
+            break;
 
             case 'wrong-answer' :
 
@@ -124,12 +136,6 @@ export const GameController = () => {
                 });
                 
             break;
-
-            case 'fast-money-questions-set':
-                const game = msg.data.game;
-
-                updateGameState(game);
-            break;
         }
     }
 
@@ -138,6 +144,7 @@ export const GameController = () => {
      * @param {String} mp3 
      */
     const setCurrentSound = mp3 => {
+
         setGameState({
             type : 'currentSound',
             data : mp3
@@ -161,7 +168,8 @@ export const GameController = () => {
 
         const mp3 = soundManager[slug];
 
-        if(mp3 !== undefined)
+        console.log('MUTED',muted);
+        if(mp3 !== undefined && !muted)
         {
             setCurrentSound(mp3);
         }
@@ -207,6 +215,33 @@ export const GameController = () => {
         return round === undefined ? undefined : round.currentStage;
     }
 
+    /**
+ * Gets all the round question's answer points. By default only collects answered question points
+ * @param {Object} round a round object
+ * @param {Boolean} all [default false] whether to get all questions' points or just answered ones
+ * @returns {Int}
+ */
+const getRoundPoints = (round,all = false) => {
+
+    let tot = 0;
+
+    round.question.answers.forEach(answer => {
+
+        if(all || answer.answered) tot += answer.points;
+    });
+
+    const multiplier = parseInt(round.number) !== NaN ? Number(round.number) : 1;
+
+    return tot * multiplier ;
+}
+
+/**
+ * Calls getRoundPoints, passing in the game's current round
+ * @param {Object} game a game with at least one active current round
+ * @param {Boolean} all [default false] whether to get all points, or just answered points
+ * @returns {Int}
+ */
+const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoints(game.rounds[game.currentRound],all);
     /**
      * Updates the user field in the state object with the given user
      * @param {Object} user 
@@ -331,6 +366,9 @@ export const GameController = () => {
      * @param {*} action 
      */
     const stateReducer = (state,action) => {
+
+        //not sure why playSound doesn't respect this shit.
+        if(muted && action.type === 'currentSound') return state;
 
         if(action.type === 'clear-all') return defaultState;
         let {type,data} = action;
@@ -812,6 +850,33 @@ export const GameController = () => {
             });
         }
     }
+
+    const revealAnswer = (gameID,roundIndex,answerIndex) => {
+
+        sendMessage('reveal-answer',{
+            gameID,
+            roundIndex,
+            answerIndex
+        });
+    }
+
+    /**
+     * format's the location.search into a key=val pair object
+     * @returns {Object}
+     */
+    const getURLParams = () => {
+        const urlParamsStrs = window.location.search.replace(/^\?/,'').split('&');
+        const urlParams = {};
+
+        urlParamsStrs.forEach(str => {
+            
+            const param = str.split('=');
+
+            urlParams[param[0]] = param[1];
+        })
+
+        return urlParams;
+    }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
      */
@@ -862,6 +927,11 @@ export const GameController = () => {
         setFastMoneyAnswers,
         toggleFastMoneyAnswer,
         toggleTeams,
-        replaceQuestion
+        replaceQuestion,
+        getURLParams,
+        muted,
+        setMuted,
+        getCurrentRoundPoints,
+        revealAnswer
     };
 }

@@ -5,7 +5,7 @@ const SoundPlayer = () => {
 
     const player = useRef(null);
 
-    const {gameState,clearCurrentSound} = useContext(GameContext);
+    const {gameState,clearCurrentSound,muted} = useContext(GameContext);
 
     const {currentSound} = gameState;
 
@@ -43,7 +43,8 @@ const SoundPlayer = () => {
 
     return (<audio className="SoundPlayer" 
                     src={currentSound !== undefined ? currentSound : null}
-                    ref={player}>
+                    ref={player}
+                    muted={muted}>
     </audio>);
 }
 

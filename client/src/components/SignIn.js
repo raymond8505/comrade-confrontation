@@ -18,6 +18,7 @@ const SignIn = ({}) => {
             currentUserHasTeam,
             currentUserInGame,
             getLocalCredentials,
+            getURLParams
         } = useContext(GameContext);
 
     const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
@@ -54,6 +55,20 @@ const SignIn = ({}) => {
                     hostNameField.current.value);
         }
     }
+
+    useEffect(()=>{
+
+        const urlParams = getURLParams();
+        
+        if(urlParams.code !== undefined)
+        {
+            gameCodeField.current.value = urlParams.code;
+            hostNameField.current.focus();
+            
+        }
+
+        return ()=>{}
+    },[]);
 
     const creds = getLocalCredentials();
     const name = creds === null ? '' : creds.name
