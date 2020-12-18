@@ -12,7 +12,7 @@ WiP
 
 ### 1.2.0
 
-- Host can now reveal answers individually after a regular round completes. "reveal" sound will play for each reveal
+- Host can now reveal answers individually after a regular round completes. "reveal" sound will play for each reveal and the answer will fade for the host
 - Clicking the game code at the top of the board will copy a share link to your clip board to share with friends to join the game
 - The current score tally for the round is now displayed on the question board during regular rounds
 - Fixed issue of auto joining non-existent games

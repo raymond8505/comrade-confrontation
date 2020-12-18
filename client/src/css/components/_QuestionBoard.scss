@@ -157,13 +157,17 @@
         font-size: .75em;
     }
 }
-.QuestionBoard__answer--revealed
+.QuestionBoard__answer--revealed,
+.QuestionBoard__answer--answered,
+.GameBoard--host .QuestionBoard__answer:not(.QuestionBoard__answer--disabled)
 {
     padding: 0;
+    
 
     .QuestionBoard__answer-details
     {
         align-items: stretch;
+        width: 100%;
     }
 
     .QuestionBoard__answer-text,
@@ -176,6 +180,7 @@
 }
 .QuestionBoard__answer--disabled,
 .GameBoard--host .QuestionBoard__answer--answered,
+.GameBoard--host .QuestionBoard__answer--revealed
 {
     opacity: .35;
 }

@@ -47,13 +47,13 @@ const QuestionBoard = ({question,onAnswerClick}) => {
         {   
             const answer = question.answers[i];
             const answerKey = `question_${question.ID}_answer_${i}`;
-            const revealed = 
-                answer !== undefined && (currentUserIsHost() || answer.answered || answer.revealed)
+            const exists = answer !== undefined;
+            const revealed = exists && answer.revealed === true;
+            const answered = exists && answer.answered;
 
             toRet.push(<li className={`QuestionBoard__answer${
-                                revealed && answer !== undefined  ? ' QuestionBoard__answer--revealed' : ''}${
-                                    (answer != undefined && answer.answered) ? ' QuestionBoard__answer--answered' : ''
-                                }${answer === undefined ? ' QuestionBoard__answer--disabled' : ''}`} 
+                            revealed ? ' QuestionBoard__answer--revealed' : ''}${
+                            answered ? ' QuestionBoard__answer--answered' : ''}`}
                             key={answerKey}
                             onClick={(e)=>{
                                 if(answer !== undefined && currentUserIsHost()) {
@@ -62,7 +62,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
                                 }
                             }>
                     {
-                        answer !== undefined && revealed ? 
+                        (exists && (currentUserIsHost() || answered || revealed)) ? 
                             <div className="QuestionBoard__answer-details">
                                 <span className="QuestionBoard__answer-text">
                                     <span>{answer.answer}</span>
