@@ -49,7 +49,7 @@
         text-align: right;
     }
 }
-.FastMoneyAnswers__total
+%FastMoneyAnswers__total
 {
     justify-content: flex-end;
     .FastMoneyAnswers__answer-text
@@ -71,6 +71,10 @@
         border-bottom-left-radius: 0;
         padding-right: .5em;
     }
+}
+.FastMoneyAnswers__total
+{
+    @extend  %FastMoneyAnswers__total;
 }
 .FastMoneyAnswers__answer input
 {

@@ -67,10 +67,26 @@
 {
     width: calc(50% - .5em);
 }
-.FastMoneyBoard__timer-wrapper
+.FastMoneyBoard__footer
 {
     width: 100%;
     display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.FastMoneyBoard__combined-total
+{
+    background: rgba(black,.3);
+    border: 1px solid rgba($red_light,.75);
+    border-radius: 4px;
+    font-size: 2em;
+    font-weight: bold;
+    padding: 0 .3em;
+    display: flex;
     align-items: center;
-    justify-content: center;
+    line-height: 1;
+}
+.FastMoneyBoard__combined-total-label
+{
+    margin-right: .3em;
 }

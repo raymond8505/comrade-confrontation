@@ -53,7 +53,8 @@ const QuestionBoard = ({question,onAnswerClick}) => {
 
             toRet.push(<li className={`QuestionBoard__answer${
                             revealed ? ' QuestionBoard__answer--revealed' : ''}${
-                            answered ? ' QuestionBoard__answer--answered' : ''}`}
+                            answered ? ' QuestionBoard__answer--answered' : ''}${
+                            !exists  ? ' QuestionBoard__answer--disabled' : ''}`}
                             key={answerKey}
                             onClick={(e)=>{
                                 if(answer !== undefined && currentUserIsHost()) {

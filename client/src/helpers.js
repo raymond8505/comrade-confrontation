@@ -40,4 +40,24 @@ export const fillArrayUnique = (min,max,num,except = []) => {
     }
 };
 
+/**
+ * Takes a collection of fast money player answers and returns their total based on their state
+ * @param {Object[]} answers 
+ * @returns {Int}
+ */
+export const calculateFastMoneyTotal = (answers,currentUserIsHost) => {
+
+    if(answers.length > 0)
+    {
+        const tot = answers.reduce((runningTot,a)=>{
+
+            return a.revealed || currentUserIsHost() ? a.points + runningTot : runningTot;
+        },0);
+
+        return tot;
+    }
+    
+    return nbsp;
+}
+
 export const nbsp = '\u00A0';

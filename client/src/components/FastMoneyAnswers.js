@@ -1,7 +1,7 @@
 import { indexOf } from "lodash";
 import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
-import { nbsp } from "../helpers";
+import { nbsp,calculateFastMoneyTotal } from "../helpers";
 
 const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus}) => {
 
@@ -93,20 +93,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
                                                                             }}
                                                                             readOnly={!currentUserIsHost()} />
 
-    const calculateTotal = answers => {
-
-        if(answers.length > 0)
-        {
-            const tot = answers.reduce((runningTot,a)=>{
-
-                return a.revealed || currentUserIsHost() ? a.points + runningTot : runningTot;
-            },0);
-
-            return tot;
-        }
-        
-        return nbsp;
-    }
+    
 
     const onSubmitClick = e => {
         
@@ -145,7 +132,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
                 Total:
             </span>
             <span className="FastMoneyAnswers__answer-points FastMoneyAnswers__answer-points--total">
-                {calculateTotal(answers)}
+                {calculateFastMoneyTotal(answers,currentUserIsHost)}
             </span>
         </li>
     </ul>);

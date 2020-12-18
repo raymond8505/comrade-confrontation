@@ -5,6 +5,7 @@ import HostControls from "./HostControls";
 import QuestionBoard from "./QuestionBoard";
 import Timer from "./Timer";
 import config from "../config.json"
+import { calculateFastMoneyTotal } from "../helpers";
 
 const FastMoneyBoard = ({questions}) => {
 
@@ -50,8 +51,18 @@ const FastMoneyBoard = ({questions}) => {
                     index={1}
                     onPointsFocus={onPlayerAnswerPointsFocus} />
 
-                <div className="FastMoneyBoard__timer-wrapper">
+                <div className="FastMoneyBoard__footer">
                     {round.started ? <Timer time={config.FAST_MONEY.TIMERS[round.currentStage]} /> : null}
+                    
+                    <div className="FastMoneyBoard__combined-total">
+                        <span className="FastMoneyBoard__combined-total-label">Total:</span>
+                        <span className="FastMoneyBoard__combined-total-amount">{
+                            calculateFastMoneyTotal([
+                                ...round.playerAnswers[0],
+                                ...round.playerAnswers[1]
+                            ],currentUserIsHost)
+                        }</span>
+                    </div>
                 </div>
             </div>
         </div>
