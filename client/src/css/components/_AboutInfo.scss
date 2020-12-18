@@ -1,0 +1,50 @@
+.AboutInfo__btn
+{
+    position: fixed;
+    top: 2vmin;
+    right: 2vmin;
+    @include no-button-style;
+    box-shadow: none;
+    color: white;
+    cursor: pointer;
+    font-size: .8em;
+
+    &:hover
+    {
+        color: $yellow;
+    }
+}
+
+.AboutInfo dialog:not([open])
+{
+    display: none;
+}
+
+.AboutInfo:not(.AboutInfo--show)
+{
+   // display: none;
+}
+.AboutInfo__inner
+{
+    font-variant: normal;
+    overflow: auto;
+    color: #333;
+    background: #efefef;
+    border: none;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $red_dark;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent; 
+    }
+}
+.AboutInfo__close-modal
+{
+    float: right;
+}

@@ -2,6 +2,7 @@ import React,{useContext,useEffect} from "react";
 import {GameContext} from '../contexts/gameContext';
 import SignIn from "./SignIn";
 import GameBoard from './GameBoard';
+import AboutInfo from './AboutInfo';
 
 const MainView = ({}) => {
 
@@ -15,7 +16,7 @@ const MainView = ({}) => {
 
     return (<div className="MainView">
         
-        {userCanSeeGameBoard() ? <GameBoard /> : <SignIn />}
+        {userCanSeeGameBoard() ? <GameBoard /> : [<AboutInfo key="1" />,<SignIn key="2" />]}
 
     </div>);
 }

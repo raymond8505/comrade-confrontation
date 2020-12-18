@@ -1,6 +1,7 @@
 import React,{useReducer,useState,useEffect} from 'react';
 import defaultGameState from '../schema/defaultGameState.json';
-
+import {markdown} from 'markdown-js';
+import readmePath from '../README.md';
 import soundManager from '../soundManager';
 
 export const GameContext = React.createContext();
@@ -9,8 +10,19 @@ const {HOST,LOCAL_STORAGE_KEY} = window.location.host.indexOf('localhost') > -1 
 
 export const GameController = () => {
 
+    
     const [updated,setUpdated] = useState(0);
     const [muted,setMuted] = useState(false);
+    const [versionInfo,setVersionInfo] = useState(null);
+
+    useEffect(()=>{
+
+        fetch(readmePath).then(resp=>resp.text()).then(data=>{
+            setVersionInfo(markdown(data).replace('class=','className='));
+        });
+
+    },[]);
+
     /**
      * The central handler for all messages coming from the server
      * @param {Object} msg 
@@ -932,6 +944,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         muted,
         setMuted,
         getCurrentRoundPoints,
-        revealAnswer
+        revealAnswer,
+        versionInfo
     };
 }

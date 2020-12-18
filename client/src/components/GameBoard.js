@@ -104,7 +104,7 @@ const GameBoard = ({}) => {
         `${getCurrentRound() !== undefined && getCurrentRound().started ? ' GameBoard--round-started' : ''}` +
         `${getCurrentRound() !== undefined && getCurrentRound().type === 'fast-money' ? ' GameBoard--fast-money' : ''}`
         }>
-
+            
             <SoundPlayer sound={currentSound} />
         <div className="GameBoard__row GameBoard__row--top">
             <div className="GameBoard__team-1">
