@@ -92,7 +92,7 @@ export const GameController = () => {
             case 'round-updated':
             case 'team-joined' :
             case 'fast-money-answers-set' :
-            case 'fast-money-answer-toggled' :
+            case 'game-settings-set' :
             case 'teams-toggled' :
             case 'user-disconnect':
             case 'fast-money-questions-set':
@@ -100,6 +100,10 @@ export const GameController = () => {
                 updateGameState(msg.data.game);
 
             break;
+
+            case 'fast-money-answer-toggled' :
+                updateGameState(msg.data.game);
+                playSound('fm-reveal');
 
             case 'non-exsitent-game':
                 clearLocalCredentials();
@@ -384,7 +388,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
 
         if(action.type === 'clear-all') return defaultState;
         let {type,data} = action;
-        const copy = {...state};
+        const copy = state;
         copy.updated = new Date().getTime();
 
         if(typeof type === 'string')
@@ -438,11 +442,11 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         return newSocket;
     }
 
-    const initSocket = () => {
+    const initSocket = (cb) => {
 
         console.log('init socket');
 
-        const newSocket = new WebSocket(HOST);
+        const newSocket = new WebSocket(HOST,[window.location.host.replace(/:[\d]+/,'')]);
 
         newSocket.addEventListener('message',handleMessage);
         
@@ -452,7 +456,6 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
 
         newSocket.addEventListener('open',e => {
             
-
         });
 
         return newSocket;
@@ -476,14 +479,20 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
                                         defaultState
                                         );
     
+    useEffect(()=>{
+        if(gameState.socket === null)
+        {
+            setGameState({
+                type : 'socket',
+                data : initSocket()
+            });
+        }
+
+        return ()=>{
+            gameState.socket.close();
+        }
+    },[]);
     
-    if(gameState.socket === null)
-    {
-        setGameState({
-            type : 'socket',
-            data : initSocket()
-        });
-    }
 
     const setCurrentFastMoneyPreview = num => {
         setGameState({
@@ -889,6 +898,36 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
 
         return urlParams;
     }
+
+    const setGameSettings = (team1,team2,stakes,questions) => {
+
+        sendMessage('set-game-settings',{
+            gameID,
+            team1,
+            team2,
+            stakes,
+            questions
+        });
+    }
+
+    /**
+     * Gets the currently leading team
+     * @param {Int} returnOnTie the index of the team to return in event of a tie
+     * @returns {Object}
+     */
+    const getLeadingTeam = (returnOnTie = 0) => {
+
+        if(gameState.game.teams[0].score > gameState.game.teams[1].score)
+        {
+            return gameState.game.teams[0]; 
+        }
+        else if(gameState.game.teams[0].score > gameState.game.teams[1].score)
+        {
+            return gameState.game.teams[1];    
+        }
+
+        return gameState.game.teams[returnOnTie];
+    }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
      */
@@ -945,6 +984,8 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         setMuted,
         getCurrentRoundPoints,
         revealAnswer,
-        versionInfo
+        versionInfo,
+        setGameSettings,
+        getLeadingTeam
     };
 }

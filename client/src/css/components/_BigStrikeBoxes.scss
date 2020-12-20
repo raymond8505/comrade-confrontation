@@ -12,9 +12,20 @@
 
     .StrikeBoxes__box
     {
-        width: 1vmin;//25vmin;
-        height: 1vmin; //25vmin;
+        width: 1vmin;
+        height: 1vmin; 
         border: 30px solid $red;
+
+        @include small-only
+        {
+            border-width: 20px;
+        }
+
+        @include phone-only
+        {
+            border-width: 5px;
+        }
+
         transition: all .3s $ease-in-out-back;
 
         //box-shadow: 0 0 1em 1em black;
@@ -36,6 +47,17 @@
             top: 40%;
             left: -3%;
             width: 110%;
+
+            @include small-only
+            {
+                height: 30px;
+            }
+
+            @include phone-only
+            {
+                height: 10px;
+                top: 45%;
+            }
         }
 
         &--show

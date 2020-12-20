@@ -2,6 +2,7 @@
     "ID" : "",
     "users" : [],
     "hostID" : -1,
+    "fastMoneyStakes" : "",
     "teams" : [
         {
             "name" : "Team 1",

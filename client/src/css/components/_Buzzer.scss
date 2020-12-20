@@ -29,6 +29,11 @@
     align-items: center;
     justify-content: center;
 
+    @include phone-only
+    {
+        font-size: 1em;
+    }
+
     &:hover,
     &:focus
     {

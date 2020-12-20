@@ -1,4 +1,4 @@
-import React,{useContext,useRef,useEffect} from "react";
+import React,{useContext,useRef,useEffect, useState} from "react";
 import logo from '../img/logo.png';
 import {GameContext} from '../contexts/gameContext';
 import Alert from "./Alert";
@@ -20,6 +20,41 @@ const SignIn = ({}) => {
             getLocalCredentials,
             getURLParams
         } = useContext(GameContext);
+    
+    const [gameCodeEntered,setGameCodeEntered] = useState(false);
+
+    useEffect(()=>{
+
+        console.log(gameCodeField.current.value);
+        setGameCodeEntered(gameCodeField.current.value !== '');
+
+        return ()=>{};
+    },[gameCodeField.current]);
+
+    useEffect(()=>{
+
+        const urlParams = getURLParams();
+        
+        if(urlParams.code !== undefined)
+        {
+            gameCodeField.current.value = urlParams.code;
+            hostNameField.current.focus();
+            
+        }
+
+        const localCreds = getLocalCredentials();
+
+        console.log(localCreds);
+
+        if(localCreds !== null)
+        {
+            if(localCreds.gameID !== undefined &&
+                localCreds.userID !== undefined)
+                {
+                    joinGame(localCreds.gameID,localCreds.userID);
+                }
+        }
+    },[]);
 
     const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
 
@@ -56,19 +91,12 @@ const SignIn = ({}) => {
         }
     }
 
-    useEffect(()=>{
+    
 
-        const urlParams = getURLParams();
-        
-        if(urlParams.code !== undefined)
-        {
-            gameCodeField.current.value = urlParams.code;
-            hostNameField.current.focus();
-            
-        }
+    const onCodeFieldChange = e => {
 
-        return ()=>{}
-    },[]);
+        setGameCodeEntered(e.target.value !== '');
+    }
 
     const creds = getLocalCredentials();
     const name = creds === null ? '' : creds.name
@@ -87,14 +115,15 @@ const SignIn = ({}) => {
                 <button type="button" 
                         className="cta" 
                         onClick={handleCreateGame}
-                        disabled={showTeamPicker}>Host Game</button>
+                        disabled={showTeamPicker || gameCodeEntered}>Host Game</button>
 
                 <input type="text" 
                         placeholder="Game Code, ex: USSR" 
                         ref={gameCodeField}
                         className="Alert__code-field"
                         //defaultValue="MSGJ"
-                        disabled={showTeamPicker} />
+                        disabled={showTeamPicker}
+                        onChange={onCodeFieldChange} />
                 <button type="button" 
                         className="cta" 
                         onClick={handleJoinGame}

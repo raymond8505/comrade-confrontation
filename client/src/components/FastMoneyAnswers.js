@@ -54,9 +54,6 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         {
             const answer = answers[i];
 
-            if(answer !== undefined)
-                console.log(i,answer.revealed);
-
             toRet.push(<li key={`answer_${i}`} className={`FastMoneyAnswers__answer ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer' : ''}`}>
                 <span className="FastMoneyAnswers__answer-text">
                     {renderAnswerText(answer,i)}

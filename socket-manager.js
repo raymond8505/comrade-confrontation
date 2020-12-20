@@ -7,6 +7,10 @@ const server = new WebSocket.Server({
 //each key is a game code
 const sockets = [];
 
+const approvedProtocols = ['localhost','ff.raymondselzer.net'];
+
+const auth = socket => approvedProtocols.includes(socket.protocol);
+
 const addSocket = (ID,socket) => {
     
     if(socketExists(ID))
@@ -99,5 +103,6 @@ module.exports = {
     server,
     addSocket,
     getUserID,
-    removeSocket
+    removeSocket,
+    auth
 };

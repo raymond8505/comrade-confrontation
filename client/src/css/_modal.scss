@@ -21,4 +21,17 @@
     padding: 2em;
     width: 80%;
     box-shadow: 0 0 5vw 0 black;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        background: $yellow;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background: transparent; 
+    }
 }

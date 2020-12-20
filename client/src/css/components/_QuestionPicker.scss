@@ -16,3 +16,10 @@
     padding: .3em .8em;
     margin-bottom: .2em;
 }
+@include phone-only
+{
+    .QuestionPicker button
+    {
+        margin-bottom: .4em;
+    }
+}

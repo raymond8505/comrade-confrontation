@@ -18,12 +18,33 @@ $dots : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAA
 
 $dots_bg : $red_dark $dots repeat top left;
 
-$mobile_break : 500px;
+$phone_break : 500px;
 
 $small_break : 1000px;
 
 $board_glow : 0 0 3em 0 rgba($yellow,.4);
 
+@mixin phone-only
+{
+    @media (max-width: $phone_break)
+    {
+        @content;
+    }
+}
+
+@mixin not-phone {
+    @media (min-width: $phone_break + 1) {
+        @content;
+    }
+}
+
+@mixin small-only
+{
+    @media (max-width: $small_break)
+    {
+        @content;
+    }
+}
 @mixin players-only
 {
     .GameBoard:not(.GameBoard--host)

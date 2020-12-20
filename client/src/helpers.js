@@ -60,4 +60,17 @@ export const calculateFastMoneyTotal = (answers,currentUserIsHost) => {
     return nbsp;
 }
 
+/**
+ * Takes an array and picks a random item from it, with an optional second array for items to skip
+ * @param {Any[]} items items to choose from 
+ * @param {Any[]} except items not to choose
+ * @returns Any
+ */
+export const randomItem = (items,except = []) => {
+
+    const name = items[between(0,items.length - 1)];
+
+    return except.includes(name) ? randomItem(except) : name;
+}
+
 export const nbsp = '\u00A0';

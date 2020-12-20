@@ -1,0 +1,67 @@
+.GameSettingsModal .FieldSet:not(:last-child)
+{
+    margin-bottom: 1em;
+}
+
+.GameSettingsModal__team-settings
+{
+    display: flex;
+    justify-content: space-between;
+
+    input
+    {
+        width: calc(50% - 1vmin);
+    }
+}
+
+.GameSettingsModal .QuestionPicker__Question
+{
+    border: 2px solid darken($red_dark,10%);
+    background: rgba($red,.5);
+}
+
+.GameSettingsModal__rr-stakes textarea
+{
+    width: 100%;
+    height: 4em;
+}
+.GameSettingsModal__title
+{
+    margin: 0;
+}
+.GameSettingsModal .QuestionPicker .cta
+{
+    display: none;
+}
+.GameSettingsModal__description--modal-desc
+{
+    margin-bottom: 1.5em;
+    margin-top: 0;
+    font-size: 1.2em;
+}
+.FieldSet .GameSettingsModal__description
+{
+    margin-top: 0;
+}
+.GameSettingsModal__title 
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .cta
+    {
+        font-size: 1rem;
+        position: sticky;
+        display: block;
+        top: 0;
+    }
+}
+.GameSettingsModal__inner > .cta
+{
+    float: right;
+}
+.GameSettingsModal__description strong
+{
+    color: $yellow;
+}

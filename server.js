@@ -6,7 +6,7 @@ const helpers = require('./helpers');
 
 //const { createUser, getGameByID, userExists } = require('./game-manager');
 const { generateID } = require('./helpers');
-const { updateGame, getGameByID, games } = require('./game-manager');
+const { updateGame, getGameByID, games, generateRounds } = require('./game-manager');
 const { cloneDeep, update } = require('lodash');
 
 //console.log(games);
@@ -14,7 +14,12 @@ const { cloneDeep, update } = require('lodash');
 
 socketManager.server.on('connection',serverSocket => {
 
-    console.log('new connection');
+    if(!socketManager.auth(serverSocket))
+    {
+        console.log('not auth');
+        serverSocket.close();
+        return;
+    }
 
     serverSocket.on('message',msg => {
         handleMessage(msg,serverSocket);
@@ -252,7 +257,10 @@ const handleMessage = (msg,sender) => {
                 
                 updateGame(game);
 
-                broadcastToGame(game,'buzz-registered',{game,userID : msg.data.userID});
+                console.log(msg.data.userID);
+
+                broadcastToGame(game,'buzz-registered',{game,
+                                                        userID : msg.data.userID});
             }
 
             break;
@@ -511,6 +519,17 @@ const handleMessage = (msg,sender) => {
             }
 
         break;
+
+        case 'set-game-settings':
+            game = getGameByID(msg.data.gameID);
+
+            game.fastMoneyStakes = msg.data.stakes;
+            game.teams[0].name = msg.data.team1;
+            game.teams[1].name = msg.data.team2;
+            game.rounds = generateRounds(msg.data.questions);
+
+            updateGame(game);
+            broadcastToGame(game,'game-settings-set',{game});
 
     }
 }

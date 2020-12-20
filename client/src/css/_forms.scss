@@ -53,14 +53,18 @@ button
         }
     }
 
-    & + button
+    @include not-phone
     {
-        margin-left: 1em;
+        & + button
+        {
+            margin-left: 1em;
+        }
     }
 
     &[disabled]
     {
         opacity: .6;
         color: black;
+        cursor: not-allowed;
     }
 }

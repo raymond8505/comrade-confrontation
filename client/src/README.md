@@ -10,6 +10,19 @@ WiP
 
 ## Release Notes
 
+### 1.4.0
+
+- Question Picker Modal at start of game replace with Game Settings Modal allowing host to configure options for the game
+- Host can now enter custom team names. If the fields are left blank, the game will randomly assign 2 names
+- Host can now enter stakes for Rapid Rubles. The team who wins the regular 3 rounds moves on to Rapid Rubles. If they score over 200 points combined in Rapid Rubles they decide who the stakes apply to.
+- Host Button disables AND disappears now when the code field on Sign In contains data.
+### 1.3.0
+
+- Rapid Rubles now shows the combined total of both players answering
+- A sound now plays when a Rapid Rubles answer is revealed
+- basic responsive adjustments for phones and tablets. more to come... eventually (you should still host from a computer, for optimal experience)
+- the host game button disables if the code field contains text to prevent accidentally hosting instead of joining a game, especially one shared with you via a share link
+- fixed issue where host couldn't see who buzzed in h2h
 ### 1.2.0
 
 - Host can now reveal answers individually after a regular round completes. "reveal" sound will play for each reveal and the answer will fade for the host

@@ -90,3 +90,21 @@
 {
     margin-right: .3em;
 }
+
+.GameBoard--fast-money.GameBoard--host
+{
+    .StrikeBoxes
+    {
+        display: none;
+    }
+
+    .GameBoard__questions-wrapper
+    {
+        width: 100%;
+    }
+    
+    .GameBoard__row > .PlayerList
+    {
+        display: none;
+    }
+}

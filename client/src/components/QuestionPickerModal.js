@@ -5,7 +5,7 @@ import {fillArrayUnique} from '../helpers';
 import sampleQuestions from '../data/sample-questions.json';
 import allQuestions from '../data/real-questions.json';
 
-const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange = ()=>{}}) => {
+const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
 
     const [open,setOpen] = useState(openOnInit);
     
@@ -22,12 +22,6 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
     const [allQuestionsChosen,setAllQuestionsChosen] = useState(false);
     
     const gameIDs = game.currentRound === 3 ? getGameQuestions().map(q=>q.ID) : [];
-
-    useEffect(()=>{
-
-        onChange(chosenQuestions);
-
-    },[chosenQuestions.length]);
 
     const getQuestionOptions = numQuestions => {
         const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,[
@@ -67,10 +61,6 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     const removeQuestion = question => {
         setChosenQuestions(chosenQuestions.filter(q => q.ID !== question.ID));
-        setQuestionOptions([
-            ...questionOptions,
-            question
-        ]);
     }
 
     const onConfirmQuestionsClick = e => {
@@ -104,8 +94,9 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     },[chosenQuestions.length]);
 
-    return (<div className="QuestionPicker">
-
+    return (<dialog className="QuestionPicker modal" open={open}>
+        <div className="QuestionPicker__inner modal__inner">
+            <h2 className="QuestionPicker__title">Choose the Questions</h2>
             <h3>Chosen Questions</h3>
             <ul className="QuestionPicker__questions QuestionPicker__questions--chosen">
                 {renderQuestions(chosenQuestions,removeQuestion)}
@@ -118,7 +109,8 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
             {allQuestionsChosen ? 
                 <button onClick={onConfirmQuestionsClick} className="cta">Confirm Choices</button> : null
             }
-        </div>);
+        </div>
+    </dialog>);
 }
 
 export default QuestionPicker;

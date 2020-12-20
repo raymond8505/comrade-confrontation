@@ -8,6 +8,11 @@
     font-weight: $fw_medium;
     padding-top: 2em;
     flex-shrink: 1;
+
+    @include phone-only
+    {
+        display: none;
+    }
 }
 .PlayerList__player--current,
 .GameBoard--host .PlayerList__player--buzzed

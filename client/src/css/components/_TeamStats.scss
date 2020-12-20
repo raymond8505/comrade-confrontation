@@ -1,3 +1,10 @@
+@include phone-only
+{
+    .TeamStats
+    {
+        font-size: .5em;
+    }
+}
 .TeamStats__name
 {
     font-size: 3.5em;
@@ -7,6 +14,13 @@
     line-height: 1;
     margin-bottom: 1rem;
 }
+@include phone-only
+    {
+        .TeamStats__name-label
+        {
+            font-size: 1.5rem;
+        }
+    }
 .TeamStats__score
 {
     font-size: 3em;

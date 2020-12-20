@@ -3,7 +3,7 @@ import {GameContext} from '../contexts/gameContext';
 import logo from '../img/logo.png';
 import PlayerList from "./PlayerList";
 import QuestionBoard from "./QuestionBoard";
-import QuestionPicker from "./QuestionPicker";
+import QuestionPickerModal from "./QuestionPickerModal";
 import StrikeBoxes from "./StrikeBoxes";
 import Buzzer from "./Buzzer";
 import TeamStats from "./TeamStats";
@@ -13,6 +13,8 @@ import BigStrikeBoxes from "./BigStrikeBoxes";
 import FastMoneyBoard from './FastMoneyBoard';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import MuteButton from "./MuteButton";
+import GameSettingsModal from "./GameSettingsModal";
+import StakesModal from "./StakesModal";
 
 const GameBoard = ({}) => {
     
@@ -166,13 +168,15 @@ const GameBoard = ({}) => {
         </div>
         
         {
-            //show the question picker if we don't have any game rounds yet
-            currentUserIsHost() && (game.rounds.length === 0 || 
-            
-            //or it's round 3 and the round hasn't been defined yet
-            (game.currentRound === 3 && game.rounds[3] == undefined)) ? 
-
-            <QuestionPicker numQuestions={game.currentRound === 3 ? 5 : 3} /> : null}
+            //show the game settings modal to start the game
+            currentUserIsHost() && game.rounds.length === 0 ? <GameSettingsModal /> : null
+        }
+        {
+            //show just the picker modal for fast money
+            (game.currentRound === 3 && game.rounds[3] == undefined) ? 
+                currentUserIsHost() ? 
+                    <QuestionPickerModal numQuestions={5} /> : <StakesModal /> : null
+        }
         
         <BigStrikeBoxes />
         {currentUserIsHost() ? null : <Buzzer onClick={handleBuzzerClick} />}
