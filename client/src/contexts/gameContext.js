@@ -921,7 +921,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         {
             return gameState.game.teams[0]; 
         }
-        else if(gameState.game.teams[0].score > gameState.game.teams[1].score)
+        else if(gameState.game.teams[1].score > gameState.game.teams[0].score)
         {
             return gameState.game.teams[1];    
         }

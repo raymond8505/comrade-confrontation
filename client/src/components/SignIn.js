@@ -50,20 +50,27 @@ const SignIn = ({}) => {
     useEffect(()=>{
 
         const localCreds = getLocalCredentials();
+        
+        //still gotta put this in a timeout for some reason
+        setTimeout(()=>{
 
-        if(gameState.socket !== null)
-        {
-            console.log(localCreds);
-
-            if(localCreds !== null)
+            if(gameState.socket !== null)
             {
-                if(localCreds.gameID !== undefined &&
-                    localCreds.userID !== undefined)
-                    {
-                        joinGame(localCreds.gameID,localCreds.userID);
-                    }
+                console.log(localCreds);
+
+                if(localCreds !== null)
+                {
+                    if(localCreds.gameID !== undefined &&
+                        localCreds.userID !== undefined)
+                        {
+                            joinGame(localCreds.gameID,localCreds.userID);
+                        }
+                }
             }
-        }
+
+        },50);
+
+        
         
         
     },[gameState.socket]);

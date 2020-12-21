@@ -104,9 +104,12 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     },[chosenQuestions.length]);
 
-    return (<div className="QuestionPicker">
+    console.log(chosenQuestions.length);
 
-            <h3>Chosen Questions</h3>
+    return (<div className="QuestionPicker">
+fdsdf
+            {chosenQuestions.length > 0 ? <h3>Chosen Questions</h3> : null}
+
             <ul className="QuestionPicker__questions QuestionPicker__questions--chosen">
                 {renderQuestions(chosenQuestions,removeQuestion)}
             </ul>

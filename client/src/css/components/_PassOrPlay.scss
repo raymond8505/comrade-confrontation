@@ -11,6 +11,16 @@
     {
         width: 33vw;
     }
+
+    @include phone-only
+    {
+        button
+        {
+            max-width: none;
+            width: 100%;
+            margin-bottom: .5em;
+        }
+    }
 }
 .GameBoard--host .PassOrPlay button
 {

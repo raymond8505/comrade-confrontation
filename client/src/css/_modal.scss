@@ -23,6 +23,13 @@
     box-shadow: 0 0 5vw 0 black;
     overflow: auto;
 
+    @include phone-only
+    {
+        width: 100%;
+        max-width: none;
+        max-height: 98%;   
+    }
+
     &::-webkit-scrollbar {
         width: 5px;
     }
@@ -33,5 +40,15 @@
     
     &::-webkit-scrollbar-track {
         background: transparent; 
+    }
+
+    @include phone-only
+    {
+        button
+        {
+            max-width: calc(50% - .5em);
+            margin: 0 .25em;
+            padding: .25em;
+        }
     }
 }

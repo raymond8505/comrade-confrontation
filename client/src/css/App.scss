@@ -30,6 +30,15 @@ body
     padding: 0;
 }
 
+.placeholder
+{
+    font-size: .9em;
+    border: 1px solid rgba(white,.25);
+    padding: .5em;
+    border-radius: 2px;
+    display: block;
+}
+
 @import './forms';
 @import './modal';
 @import './components/Alert';

@@ -71,9 +71,7 @@ const GameSettingsModal = ({}) => {
                 <input type="text" placeholder="Team 1 Name" ref={team1} />
                 <input type="text" placeholder="Team 2 Name" ref={team2} />
             </FieldSet>
-
             
-
             <FieldSet legend="Rapid Rubles Stakes" extraClasses={['GameSettingsModal__rr-stakes']}>
                 <textarea 
                     placeholder="ex: losing team drinks. If left blank, stakes will be chosen for you at random"

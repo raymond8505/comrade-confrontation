@@ -4,8 +4,9 @@ import {fillArrayUnique} from '../helpers';
 
 import sampleQuestions from '../data/sample-questions.json';
 import allQuestions from '../data/real-questions.json';
+import FieldSet from "./FieldSet";
 
-const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
+const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => {
 
     const [open,setOpen] = useState(openOnInit);
     
@@ -97,7 +98,14 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
     return (<dialog className="QuestionPicker modal" open={open}>
         <div className="QuestionPicker__inner modal__inner">
             <h2 className="QuestionPicker__title">Choose the Questions</h2>
+
+            {gameState.game.fastMoneyStakes === '' ? null : 
+                <FieldSet legend="Stakes" extraClasses={["QuestionPicker__stakes"]}>
+                    {`Stakes: ${gameState.game.fastMoneyStakes}`}</FieldSet>}
+
             <h3>Chosen Questions</h3>
+            {chosenQuestions.length === 0 ? <span className="placeholder">No questions chosen. Click a question below to choose it</span> : null}
+            
             <ul className="QuestionPicker__questions QuestionPicker__questions--chosen">
                 {renderQuestions(chosenQuestions,removeQuestion)}
             </ul>
@@ -113,4 +121,4 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3}) => {
     </dialog>);
 }
 
-export default QuestionPicker;
+export default QuestionPickerModal;
