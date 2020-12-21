@@ -42,19 +42,31 @@ const SignIn = ({}) => {
             
         }
 
+        //we're using setTImeout here to wait a second for the
+        //socket. TODO: do this the right way
+        
+    },[]);
+
+    useEffect(()=>{
+
         const localCreds = getLocalCredentials();
 
-        console.log(localCreds);
-
-        if(localCreds !== null)
+        if(gameState.socket !== null)
         {
-            if(localCreds.gameID !== undefined &&
-                localCreds.userID !== undefined)
-                {
-                    joinGame(localCreds.gameID,localCreds.userID);
-                }
+            console.log(localCreds);
+
+            if(localCreds !== null)
+            {
+                if(localCreds.gameID !== undefined &&
+                    localCreds.userID !== undefined)
+                    {
+                        joinGame(localCreds.gameID,localCreds.userID);
+                    }
+            }
         }
-    },[]);
+        
+        
+    },[gameState.socket]);
 
     const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
 

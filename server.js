@@ -269,14 +269,19 @@ const handleMessage = (msg,sender) => {
             game = getGameByID(msg.data.gameID);
             round = game.rounds[game.currentRound];
 
+
             switch(round.currentStage)
             {
                 //team that won H2H answers wrong, swap the activeTeam and push the stage to 1
                 //continue switching active team til someone answers right.
                 case 0 :
-                case 1 :
                     game.activeTeam = game.activeTeam == 0 ? 1 : 0;
                     round.currentStage = 1;
+                    break;
+                case 1 :
+                    
+                    game.activeTeam = -1;
+                    round.currentStage = 2;
                     
                     break;
 
@@ -346,15 +351,23 @@ const handleMessage = (msg,sender) => {
 
                     //winner correctly guessed an answer that WASNT #1
                     //so move to stage 1 and switch the active team
-                    
                     if(index > answerToBeat)
                     {
                         console.log('answer was ',index,', answer to beat was',answerToBeat,'flipping activeTeam and moving to stage 1');
-                        game.rounds[game.currentRound].currentStage = 1;
+                        
                         game.rounds[game.currentRound].answerToBeat = index;
 
+                        if(game.rounds[game.currentRound].currentStage == 0)
+                        {
+                            game.activeTeam = game.activeTeam == 0 ? 1 : 0;
+                        }
+                        else
+                        {
+                            game.activeTeam = -1;
+                        }
+
+                        game.rounds[game.currentRound].currentStage += 1;
                         //switch the active team to steal
-                        game.activeTeam = game.activeTeam == 0 ? 1 : 0;
                     }
                     //winner guessed the #1 answer, so move straight to stage 2
                     //but activeTeam remains the same

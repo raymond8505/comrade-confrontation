@@ -7,11 +7,18 @@
 {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     input
     {
         width: calc(50% - 1vmin);
     }
+}
+
+.GameSettingsModal__team-instructions
+{
+    width: 100%;
+    margin-top: 0;
 }
 
 .GameSettingsModal .QuestionPicker__Question

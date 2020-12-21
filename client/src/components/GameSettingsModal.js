@@ -47,13 +47,10 @@ const GameSettingsModal = ({}) => {
                 <span>Game Settings</span>
                 <button type="button" className="cta" disabled={!canSubmit} onClick={handleSubmit}>Start Game</button>
             </h2>
+
             <p className="GameSettingsModal__description GameSettingsModal__description--modal-desc">
-                Before we being, we need to set some things up.
+                Before we begin, we need to set some things up.
             </p>
-            <FieldSet legend="Team Settings" extraClasses={['GameSettingsModal__team-settings']}>
-                <input type="text" placeholder="Team 1 Name" ref={team1} />
-                <input type="text" placeholder="Team 2 Name" ref={team2} />
-            </FieldSet>
 
             <FieldSet legend="Regular Round Questions" extraClasses={['GameSettingsModal__questions']}>
                 <p className="GameSettingsModal__description GameSettingsModal__description--rrq">
@@ -66,6 +63,16 @@ const GameSettingsModal = ({}) => {
 
                 <QuestionPicker numQuestions={3} onChange={onQuestionsChange} />
             </FieldSet>
+
+            <FieldSet legend="Team Settings" extraClasses={['GameSettingsModal__team-settings']}>
+                <p className="GameSettingsModal__team-instructions">
+                    Choose Team Names. If left blank, they will be randomly generated.
+                </p>
+                <input type="text" placeholder="Team 1 Name" ref={team1} />
+                <input type="text" placeholder="Team 2 Name" ref={team2} />
+            </FieldSet>
+
+            
 
             <FieldSet legend="Rapid Rubles Stakes" extraClasses={['GameSettingsModal__rr-stakes']}>
                 <textarea 

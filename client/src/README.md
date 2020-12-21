@@ -12,10 +12,10 @@ WiP
 
 ### 1.4.0
 
-- Question Picker Modal at start of game replace with Game Settings Modal allowing host to configure options for the game
+- Question Picker Modal at start of game replaced with Game Settings Modal allowing host to configure options for the game
 - Host can now enter custom team names. If the fields are left blank, the game will randomly assign 2 names
 - Host can now enter stakes for Rapid Rubles. The team who wins the regular 3 rounds moves on to Rapid Rubles. If they score over 200 points combined in Rapid Rubles they decide who the stakes apply to.
-- Host Button disables AND disappears now when the code field on Sign In contains data.
+- Host button disables AND disappears now when the code field on Sign In contains data.
 ### 1.3.0
 
 - Rapid Rubles now shows the combined total of both players answering
