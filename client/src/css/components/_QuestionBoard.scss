@@ -140,6 +140,12 @@
 {
     width: 70%;
     margin: 0 1em 0 0;
+
+    .fa-arrow-right
+    {
+        margin-left: .5em;
+        color: $yellow;
+    }
 }
 .QuestionBoard__question-and-controls
 {

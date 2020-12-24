@@ -183,10 +183,11 @@ const addUserToTeam = (game,userID,teamIndex) => {
     saveGames();
 }
 
-const getRandomQuestion = (src = 'real-qeustions.json') => {
+const getRandomQuestion = (src = 'real-qeustions.json',numAnswers) => {
 
-    const questions = require(`./client/src/data/${src}`);
-
+    const allQuestions = require(`./client/src/data/${src}`);
+    const questions = numAnswers === undefined ? allQuestions : allQuestions.filter(q=>q.answers.length === numAnswers);
+    
     console.log(helpers);
 
     return questions[helpers.between(0,questions.length - 1)];
@@ -273,5 +274,5 @@ module.exports = {
     getRandomQuestion,
     removePlayer,
     getUserGame,
-    pruneGames
+    pruneGames,
 }

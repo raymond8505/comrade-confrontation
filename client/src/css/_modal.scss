@@ -11,9 +11,11 @@
     justify-content: center;
     color: white;
     z-index: 999;
+    pointer-events: none;
 }
 .modal__inner
 {
+    pointer-events: all;
     max-width: calc(100% - 4em);
     max-height: calc(100% - 4em);
     background: $red_dark;

@@ -1,6 +1,6 @@
 import React,{useContext,useState,useRef, useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
-import {fillArrayUnique} from '../helpers';
+import {fillArrayUnique, maybePlural} from '../helpers';
 
 import sampleQuestions from '../data/sample-questions.json';
 import allQuestions from '../data/real-questions.json';
@@ -10,7 +10,7 @@ const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => 
 
     const [open,setOpen] = useState(openOnInit);
     
-    const {gameState,setGameRounds,setFastMoneyQuestions,getGameQuestions} = useContext(GameContext);
+    const {gameState,setGameRounds,setFastMoneyQuestions,getGameQuestions,getLeadingTeam} = useContext(GameContext);
 
     const {game} = gameState;
 
@@ -24,13 +24,18 @@ const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => 
     
     const gameIDs = game.currentRound === 3 ? getGameQuestions().map(q=>q.ID) : [];
 
+    let rrQuestions = [];
+
     const getQuestionOptions = numQuestions => {
-        const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,[
+
+        const qs = gameState.game.currentRound === 3 ? rrQuestions : questions;
+
+        const indexes = fillArrayUnique(0,qs.length - 1,numQuestions,[
             ...chosenQuestions,
             ...gameIDs //if we're picking for fast money, exclude the game questions
         ]);
 
-        return indexes.map(i => questions[i]);
+        return indexes.map(i => qs[i]);
     }
 
     /**
@@ -80,6 +85,13 @@ const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => 
     if(questions === null)
     {
         questions = window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
+
+        //filter to only questions with 3 or 4 answers
+        //for rapid rubles
+        if(gameState.game.currentRound === 3)
+        {
+            rrQuestions = questions.filter(q => q.answers.length <= 4);
+        }
     }
 
     useEffect(()=>{
@@ -117,6 +129,16 @@ const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => 
             {allQuestionsChosen ? 
                 <button onClick={onConfirmQuestionsClick} className="cta">Confirm Choices</button> : null
             }
+
+            {gameState.game.currentRound === 3 ? <div className="QuestionPickerModal__instructions">
+                <h3>Instructions</h3>
+
+                <strong>{getLeadingTeam().name}</strong> Pick{maybePlural(getLeadingTeam().name)} 2 players to play Rapid Rubles. Ensure they know who is going first or second. The person
+                going second should avoid looking at the screen or hearing player 1's answers.
+
+                Pick <strong>5</strong> questions. From above. The questions have been filtered to 3 or 4 answer questions only.
+
+            </div> : null}
         </div>
     </dialog>);
 }

@@ -73,4 +73,9 @@ export const randomItem = (items,except = []) => {
     return except.includes(name) ? randomItem(except) : name;
 }
 
+/**
+ * For making words gramatically correct based on variable data like team names. Returns 's' if the modifier does NOT end it s. Returns '' otherwise
+ */
+export const maybePlural = modifier => modifier.search(/s$/) === -1 ? 's' : '';
+
 export const nbsp = '\u00A0';

@@ -49,6 +49,7 @@ export const GameController = () => {
             break;
             
             case 'game-joined' :
+                
 
                 console.log('Joined Game',msg.data);
 
@@ -81,24 +82,43 @@ export const GameController = () => {
 
             break;
 
+            case 'fast-money-questions-set':
             case 'round-started' :
+                stopCurrentSound();
+                updateGameState(msg.data.game);
+            break;
+            
             case 'round-stopped' :
                 setLastBuzz(undefined);
             case 'round-stage-changed' :
             case 'round-team-chosen':
             case 'game-rounds-set' :
             case 'answers-updated' :
-            case 'round-changed':
+            
             case 'round-updated':
-            case 'team-joined' :
+            
             case 'fast-money-answers-set' :
-            case 'game-settings-set' :
+            
             case 'teams-toggled' :
             case 'user-disconnect':
-            case 'fast-money-questions-set':
+            
             
                 updateGameState(msg.data.game);
 
+            break;
+
+            case 'team-joined' :
+                updateGameState(msg.data.game);
+            break;
+
+            case 'play-theme' : 
+                playSound('theme');
+                break;
+
+            case 'game-settings-set' :
+            case 'round-changed':
+                playSound('theme');
+                updateGameState(msg.data.game);
             break;
 
             case 'fast-money-answer-toggled' :
@@ -155,6 +175,22 @@ export const GameController = () => {
         }
     }
 
+    const stopCurrentSound = () => {
+
+        clearCurrentSound();
+
+        setGameState({
+            type : 'soundCanPlay',
+            data : false
+        });
+    }
+
+    const resetSoundCanPlay = () => {
+        setGameState({
+            type : 'soundCanPlay',
+            data : true
+        });
+    }
     /**
      * Wrapper for setting the current sound in state
      * @param {String} mp3 
@@ -464,6 +500,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
     const defaultState = {
         strikesToShow : 0,
         socket : null,
+        soundCanPlay : true,
         currentSound : undefined,
         lastBuzz : undefined,
         user : {ID:'',name:''},
@@ -986,6 +1023,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         revealAnswer,
         versionInfo,
         setGameSettings,
-        getLeadingTeam
+        getLeadingTeam,
+        resetSoundCanPlay
     };
 }

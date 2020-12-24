@@ -5,7 +5,7 @@ const SoundPlayer = () => {
 
     const player = useRef(null);
 
-    const {gameState,clearCurrentSound,muted} = useContext(GameContext);
+    const {gameState,clearCurrentSound,muted,resetSoundCanPlay} = useContext(GameContext);
 
     const {currentSound} = gameState;
 
@@ -21,6 +21,19 @@ const SoundPlayer = () => {
         console.log('play complete');
         clearCurrentSound();
     }
+
+    useEffect(()=>{
+
+        if(!gameState.soundCanPlay)
+        {
+            console.log('pausing');
+            //player.current.currentTime = 0;
+            player.current.pause();
+            resetSoundCanPlay();
+            
+        }
+
+    },[gameState.soundCanPlay]);
 
     useEffect(()=>{
 

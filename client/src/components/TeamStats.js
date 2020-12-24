@@ -19,7 +19,7 @@ const TeamStats = ({team,enableDot = false}) => {
         
         <h2 className="TeamStats__name">
             <div onClick={handleDotClick}><StatusDot on={enableDot}  /></div>
-            <div className="TeamStats__name-label">{team.name}</div>
+            <div className="TeamStats__name-label">{team.name.substring(0,30)}</div>
         </h2>
 
         <div className="TeamStats__score">

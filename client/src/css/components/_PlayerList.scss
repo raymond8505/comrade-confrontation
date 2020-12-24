@@ -14,9 +14,9 @@
         display: none;
     }
 }
-.PlayerList__player--current,
-.GameBoard--host .PlayerList__player--buzzed
+.PlayerList__player--buzzed
 {
     color: $yellow;
     font-weight: $fw_bold;
 }
+    

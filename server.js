@@ -210,6 +210,7 @@ const handleMessage = (msg,sender) => {
 
                 
                 broadcastToGame(game,'team-joined',{game});
+                socketManager.send(sender,'play-theme',{});
             }
 
             break;
@@ -510,7 +511,7 @@ const handleMessage = (msg,sender) => {
             const oldRound = game.rounds[msg.data.round];
             
             newRound.number = oldRound.number;
-            newRound.question = gameManager.getRandomQuestion(msg.data.host.indexOf('localhost') > -1 ? 'sample-questions.json' : 'real-questions.json');
+            newRound.question = gameManager.getRandomQuestion(msg.data.host.indexOf('localhost') > -1 ? 'sample-questions.json' : 'real-questions.json',oldRound.question.answers.length);
             game.rounds[msg.data.round] = newRound;
 
             updateGame(game);
@@ -518,7 +519,7 @@ const handleMessage = (msg,sender) => {
                 game
             });
 
-        break;
+            break;
 
         case 'reveal-answer' :
             game = getGameByID(msg.data.gameID);

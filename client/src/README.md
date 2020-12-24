@@ -10,6 +10,19 @@ WiP
 
 ## Release Notes
 
+### 1.5.0
+
+- Family Feud theme plays between rounds- is stopped when round starts.
+- Stakes modal now more mobile friendly
+- Rapid Ruble stakes are now shown to the Host while picking questions
+- Rapid Rubles question options now filtered to only 3 and 4 answer questions for more consistent RR difficulty
+- Host question picker for Rapid Rubles now contains instructions
+- Pass or Play modal more mobile friendly
+- Question is hidden from host until round is started to prevent host accidentally reading the question before anyone is able to buzz
+- New Question button now only chooses new questions with the same number of answers as the question to be replaced
+- When a modal is open, user can now interact with things under the modal- namely logout and mute
+- Fixed issue where the game stuck in head 2 head stage until the #1 answer was selected
+
 ### 1.4.0
 
 - Question Picker Modal at start of game replaced with Game Settings Modal allowing host to configure options for the game

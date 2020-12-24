@@ -179,3 +179,21 @@
         font-size: 2em;
     }
 }
+.GameBoard__row--top
+{
+    align-items: stretch;
+}
+
+.GameBoard__team-1,
+.GameBoard__team-2
+{
+    width: 33vw;
+
+    .TeamStats
+    {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+}
