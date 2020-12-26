@@ -78,4 +78,10 @@ export const randomItem = (items,except = []) => {
  */
 export const maybePlural = modifier => modifier.search(/s$/) === -1 ? 's' : '';
 
+/**
+ * Whether or not we're currently on localhost
+ * @returns {Boolean}
+ */
+export const isLocal = () => window.location.host.indexOf('localhost') > -1;
+
 export const nbsp = '\u00A0';

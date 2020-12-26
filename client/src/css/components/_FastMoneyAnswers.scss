@@ -5,6 +5,13 @@
     margin: 0;
     font-size: 1.5em;
 }
+.FastMoneyAnswers__answer:focus-within
+{
+    input
+    {
+        border-color: $yellow;
+    }
+}
 .FastMoneyAnswers__answer,
 .FastMoneyAnswers__total
 {
@@ -80,7 +87,7 @@
 {
     width: 100%;
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     display: block;
     color: white;
     padding: .25em;

@@ -11,6 +11,15 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
             gameState,
             setFastMoneyAnswers,
             toggleFastMoneyAnswer} = useContext(GameContext);
+    
+    const answerFields = [];
+
+    //can't declare hooks in loops :/
+    answerFields[0] = useRef(null);
+    answerFields[1] = useRef(null);
+    answerFields[2] = useRef(null);
+    answerFields[3] = useRef(null);
+    answerFields[4] = useRef(null);
              
     const answersShell = useRef(null);
 
@@ -54,21 +63,21 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         {
             const answer = answers[i];
 
-            toRet.push(<li key={`answer_${i}`} className={`FastMoneyAnswers__answer ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer' : ''}`}>
+            toRet.push(<li key={`answer_${i}`} 
+                            className={`FastMoneyAnswers__answer 
+                            ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer' : ''}`}
+                            ref={answerFields[i]}>
                 <span className="FastMoneyAnswers__answer-text">
                     {renderAnswerText(answer,i)}
                 </span>
                 <span className="FastMoneyAnswers__answer-points">
                     {renderAnswerPoints(answer,i)}
                 </span>
-                {currentUserIsHost() ? <button 
+                {currentUserIsHost() && answer !== undefined ? <button 
                                             tabIndex="-1" 
                                             className={`FastMoneyAnswer__toggle-answer-reveal`}
                                             onClick={e=>onToggleRevealClick(i)}>
-                                            
-                                            {currentUserIsHost() && answer !== undefined ? 
-                                                <i className={`far ${answer.revealed ? 'fa-eye-slash' : 'fa-eye'}`}></i> : 
-                                            null}
+                                                <i className={`far ${answer.revealed ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                                         </button> : null}
             </li>);
         }
@@ -76,10 +85,25 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         return toRet;
     }
 
+    const focusAnswer = i => {
+        answerFields[i].current.querySelector('input[type="text"]').focus();
+    }
+
     const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => <input 
                                                                             type={type} 
                                                                             defaultValue={val} 
                                                                             onBlur={onBlur}
+                                                                            onKeyPress={(e)=>{
+
+                                                                                if(e.which === 13)
+                                                                                {
+                                                                                    
+                                                                                    if(questionIndex < 4)
+                                                                                    {console.log(e);
+                                                                                        focusAnswer(questionIndex + 1);
+                                                                                    }
+                                                                                }
+                                                                            }}
                                                                             onFocus={e=>{
                                                                                 onAnswerFocus(questionIndex)
                                                                                 if(onFocus !== undefined)
@@ -121,6 +145,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         
         {renderAnswers(answers)}
         <li className="FastMoneyAnswers__total">
+            
             {currentUserIsHost() ? 
                 <button tabIndex="-1" type="button" className="FastMoneyAnswers__submit-btn" onClick={onSubmitClick}>Submit</button> :
                 null

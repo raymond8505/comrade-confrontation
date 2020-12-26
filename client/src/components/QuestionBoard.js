@@ -1,6 +1,7 @@
 import React,{useContext, useEffect, useState} from "react";
 import { GameContext } from "../contexts/gameContext";
 import HostControls from './HostControls';
+import {isLocal} from '../helpers';
 
 const QuestionBoard = ({question,onAnswerClick}) => {
 
@@ -57,8 +58,12 @@ const QuestionBoard = ({question,onAnswerClick}) => {
                             !exists  ? ' QuestionBoard__answer--disabled' : ''}`}
                             key={answerKey}
                             onClick={(e)=>{
-                                if(answer !== undefined && currentUserIsHost()) {
-                                    handleAnswerClick(e,i,answer);
+                                if(answer !== undefined //answer exists
+                                    && currentUserIsHost() //and current user is host
+                                    && (gameState.lastBuzz !== undefined || isLocal()) //someone has buzzed or we're on localhost
+                                    ) 
+                                    {
+                                        handleAnswerClick(e,i,answer);
                                     }
                                 }
                             }>
