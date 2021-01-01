@@ -84,6 +84,7 @@ export const GameController = () => {
 
             case 'fast-money-questions-set':
             case 'round-started' :
+                setLastBuzz(undefined);
                 stopCurrentSound();
                 updateGameState(msg.data.game);
             break;

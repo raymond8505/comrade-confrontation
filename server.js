@@ -216,8 +216,8 @@ const handleMessage = (msg,sender) => {
             break;
         case 'start-round' :
         case 'stop-round' :
-
             game = gameManager.getGameByID(msg.data.gameID);
+            
             const {roundIndex} = msg.data;
 
             if(game !== undefined && game.rounds[roundIndex] !== undefined)

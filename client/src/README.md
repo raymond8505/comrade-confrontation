@@ -10,6 +10,12 @@ WiP
 
 ## Release Notes
 
+### 1.6.0
+
+- The player who successfully buzzes will turn yellow for everyone in the player list
+- game theme now plays when you join the game
+- the currently focused answer in Rapid Rubles now highlights yellow for the host
+- when entering rapid rubles answers, the host can press enter to skip to the next answer for faster answer entering
 ### 1.5.0
 
 - Family Feud theme plays between rounds- is stopped when round starts.

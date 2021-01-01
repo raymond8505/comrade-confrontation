@@ -88,7 +88,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     if(questions === null)
     {
-        questions = window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
+        questions = allQuestions; //window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
     }
 
     useEffect(()=>{
