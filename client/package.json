@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.3.6",
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.2.2",
+    "apollo-client": "^2.6.10",
+    "graphql": "^15.4.0",
     "markdown-js": "0.0.4",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",

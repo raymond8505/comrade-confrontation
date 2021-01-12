@@ -89,7 +89,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
         {currentUserIsHost() ? 
             (<div className="QuestionBoard__question-and-controls">
                 <h2 className="QuestionBoard__question">
-                    {getCurrentRound().started ? question.question : <span>Press Start Round to see question<i className="fas fa-arrow-right"></i></span>}
+                    {getCurrentRound().started ? question.question : <span>Press Start Round<i className="fas fa-arrow-right"></i></span>}
                 </h2>
                 <HostControls />
             </div>) : null}

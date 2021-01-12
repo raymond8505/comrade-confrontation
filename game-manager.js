@@ -183,12 +183,16 @@ const addUserToTeam = (game,userID,teamIndex) => {
     saveGames();
 }
 
-const getRandomQuestion = (src = 'real-qeustions.json',numAnswers) => {
+const getRandomQuestion = async (src = 'real-qeustions.json',numAnswers) => {
 
-    const allQuestions = require(`./client/src/data/${src}`);
+    const crud = require('../cc-cms/server/mongo-crud');
+
+    const allQuestions = await crud.queryCollection('questions');
+
+    //const allQuestions = require(`./client/src/data/${src}`);
     const questions = numAnswers === undefined ? allQuestions : allQuestions.filter(q=>q.answers.length === numAnswers);
     
-    console.log(helpers);
+    //console.log(helpers);
 
     return questions[helpers.between(0,questions.length - 1)];
 }

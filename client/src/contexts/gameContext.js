@@ -14,6 +14,7 @@ export const GameController = () => {
     const [updated,setUpdated] = useState(0);
     const [muted,setMuted] = useState(false);
     const [versionInfo,setVersionInfo] = useState(null);
+    const [loadingQuestion,setLoadingQuestion] = useState(false);
 
     useEffect(()=>{
 
@@ -96,18 +97,21 @@ export const GameController = () => {
             case 'game-rounds-set' :
             case 'answers-updated' :
             
-            case 'round-updated':
             
             case 'fast-money-answers-set' :
             
             case 'teams-toggled' :
             case 'user-disconnect':
             
-            
                 updateGameState(msg.data.game);
+                break;
 
-            break;
+            case 'round-updated':
 
+                setLoadingQuestion(false);
+                updateGameState(msg.data.game);
+                break;
+                
             case 'team-joined' :
                 updateGameState(msg.data.game);
             break;
@@ -891,6 +895,8 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
 
     const replaceQuestion = i => {
 
+        setLoadingQuestion(true);
+
         sendMessage('replace-question',{
             gameID,
             round : i,
@@ -1025,6 +1031,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         versionInfo,
         setGameSettings,
         getLeadingTeam,
-        resetSoundCanPlay
+        resetSoundCanPlay,
+        loadingQuestion
     };
 }

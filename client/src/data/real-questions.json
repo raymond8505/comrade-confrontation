@@ -1770,7 +1770,7 @@
          {
             "revealed":false,
             "answered":false,
-            "answer":"Mark Wahlberg",
+            "answer":"Wahlberg",
             "points":25
          },
          {
@@ -3176,19 +3176,25 @@
             "revealed":false,
             "answered":false,
             "answer":"Lawyers",
-            "points":41
+            "points":50
          },
          {
             "revealed":false,
             "answered":false,
-            "answer":"Teachers",
-            "points":4
+            "answer":"Garbage Man",
+            "points":30
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Actors",
-            "points":3
+            "points":15
+         },
+         {
+            "revealed":false,
+            "answered":false,
+            "answer":"Teachers",
+            "points":5
          }
       ]
    },
@@ -3200,31 +3206,31 @@
             "revealed":false,
             "answered":false,
             "answer":"SAT",
-            "points":29
+            "points":34
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Driving",
-            "points":15
+            "points":22
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Math",
-            "points":14
+            "points":18
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"IQ",
-            "points":13
+            "points":15
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Blood",
-            "points":6
+            "points":11
          }
       ]
    },
@@ -3248,19 +3254,19 @@
             "revealed":false,
             "answered":false,
             "answer":"Green",
-            "points":6
+            "points":10
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Dark Blue",
-            "points":5
+            "points":7
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Red",
-            "points":4
+            "points":6
          }
       ]
    },
@@ -3278,31 +3284,31 @@
             "revealed":false,
             "answered":false,
             "answer":"Perfumer",
-            "points":12
+            "points":17
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Undertaker",
-            "points":11
+            "points":16
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Custodian",
-            "points":9
+            "points":14
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Zoo Keeper",
-            "points":8
+            "points":13
          },
          {
             "revealed":false,
             "answered":false,
             "answer":"Farmer",
-            "points":5
+            "points":10
          }
       ]
    },

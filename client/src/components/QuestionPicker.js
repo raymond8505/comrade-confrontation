@@ -1,11 +1,11 @@
 import React,{useContext,useState,useRef, useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import {fillArrayUnique} from '../helpers';
+import Loading from './Loading';
+//import sampleQuestions from '../data/sample-questions.json';
+//import allQuestions from '../data/real-questions.json';
 
-import sampleQuestions from '../data/sample-questions.json';
-import allQuestions from '../data/real-questions.json';
-
-const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange = ()=>{}}) => {
+const QuestionPicker = ({questions = [],openOnInit,numQuestions = 3,onChange = ()=>{}}) => {
 
     const [open,setOpen] = useState(openOnInit);
     
@@ -13,7 +13,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     const {game} = gameState;
 
-    const gameID = game.ID;
+    const gameID = game._id;
 
     const randomizeOptionsBtn = useRef(null);
 
@@ -21,13 +21,16 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
     const [chosenQuestions,setChosenQuestions] = useState([]);
     const [allQuestionsChosen,setAllQuestionsChosen] = useState(false);
     
-    const gameIDs = game.currentRound === 3 ? getGameQuestions().map(q=>q.ID) : [];
+    const gameIDs = game.currentRound === 3 ? getGameQuestions().map(q=>q._id) : [];
 
     useEffect(()=>{
 
+        if(questions.length > 0)
         onChange(chosenQuestions);
 
     },[chosenQuestions.length]);
+
+    
 
     const getQuestionOptions = numQuestions => {
         const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,[
@@ -35,7 +38,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
             ...gameIDs //if we're picking for fast money, exclude the game questions
         ]);
 
-        return indexes.map(i => questions[i]);
+        return questions.length > 0 ? indexes.map(i => questions[i]) : [];
     }
 
     /**
@@ -46,7 +49,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
     const renderQuestions = (questionsToRender,onClick) => {
 
         return questionsToRender.map((question,i) => {
-            return <li key={`qpq_${question.ID}`} 
+            return <li key={`qpq_${question._id}`} 
                        className="QuestionPicker__Question QuestionPicker__Question--option"
                        onClick={e => onClick(question)}>
                 {question.question} <span className="QuestionPicker__Question-answer-count">({question.answers.length})</span>
@@ -56,9 +59,9 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     const chooseQuestion = question => {
         
-        const questionIndex = questionOptions.findIndex(q => q.ID === question.ID);
+        const questionIndex = questionOptions.findIndex(q => q._id === question._id);
 
-        setQuestionOptions(questionOptions.filter(q => q.ID !== question.ID));
+        setQuestionOptions(questionOptions.filter(q => q._id !== question._id));
 
         chosenQuestions.push(question);
 
@@ -66,7 +69,7 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
     }
 
     const removeQuestion = question => {
-        setChosenQuestions(chosenQuestions.filter(q => q.ID !== question.ID));
+        setChosenQuestions(chosenQuestions.filter(q => q._id !== question._id));
         setQuestionOptions([
             ...questionOptions,
             question
@@ -86,10 +89,21 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
         }
     }
 
-    if(questions === null)
-    {
-        questions = allQuestions; //window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
-    }
+    // if(questionsLoading)
+    //     {
+    //         console.log(questionsLoading);
+    //     }
+    //     else
+    //     {
+    //         console.log(allQuestions);
+    //     }
+
+    // if(questions === null)
+    // {
+        
+
+    //     questions = window.location.host.indexOf('localhost') > -1 ? sampleQuestions : allQuestions;
+    // }
 
     useEffect(()=>{
 
@@ -104,7 +118,9 @@ const QuestionPicker = ({questions = null,openOnInit,numQuestions = 3,onChange =
 
     },[chosenQuestions.length]);
 
-    console.log(chosenQuestions.length);
+    //return <Loading text="Loading Questions..." />;
+
+    if(questions.length === 0) return <Loading text="Loading Questions..."/>;
 
     return (<div className="QuestionPicker">
         

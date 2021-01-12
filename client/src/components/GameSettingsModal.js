@@ -1,10 +1,12 @@
-import React,{useContext,useRef,useState} from "react";
+import React,{useContext,useEffect,useRef,useState} from "react";
 import FieldSet from "./FieldSet";
 import QuestionPicker from "./QuestionPicker";
 import defaultStakes from "../data/stakes.json";
 import defaultNames from "../data/team-names.json";
 import {randomItem} from "../helpers";
 import { GameContext } from "../contexts/gameContext";
+import {useQuery} from '@apollo/client';
+import {ALL_QUESTIONS} from '../queries';
 
 const GameSettingsModal = ({}) => {
 
@@ -16,7 +18,18 @@ const GameSettingsModal = ({}) => {
     const rrStakes = useRef(null);
 
     const {setGameSettings} = useContext(GameContext);
+    const [questions,setQuestions] = useState([]);
+    const {loading,data} = useQuery(ALL_QUESTIONS);
 
+    useEffect(()=>{
+        
+        if(!loading)
+        {
+            setQuestions(data.questions);
+        }
+
+    },[loading]);
+        
     /**
      * Called by the question picker every time the chosen questions change
      * @param {Object[]} chosenQuestions an array of the chosen questions
@@ -61,7 +74,7 @@ const GameSettingsModal = ({}) => {
                     Click <strong>3 More Options</strong> for 3 new random options
                 </p>
 
-                <QuestionPicker numQuestions={3} onChange={onQuestionsChange} />
+                <QuestionPicker questions={questions} numQuestions={3} onChange={onQuestionsChange} />
             </FieldSet>
 
             <FieldSet legend="Team Settings" extraClasses={['GameSettingsModal__team-settings']}>

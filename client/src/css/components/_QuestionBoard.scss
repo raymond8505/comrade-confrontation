@@ -138,7 +138,7 @@
 }
 .QuestionBoard__question
 {
-    width: 70%;
+    width: 65%;
     margin: 0 1em 0 0;
 
     .fa-arrow-right
@@ -146,6 +146,10 @@
         margin-left: .5em;
         color: $yellow;
     }
+}
+.QuestionBoard .HostControls
+{
+    width: 35%;
 }
 .QuestionBoard__question-and-controls
 {

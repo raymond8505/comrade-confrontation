@@ -1,5 +1,6 @@
 import React,{useRef,useContext} from "react";
 import { GameContext } from "../contexts/gameContext";
+import Loading from "./Loading";
 
 const HostControls = ({}) => {
 
@@ -8,7 +9,8 @@ const HostControls = ({}) => {
             stopRound,
             gotoNextRound,
             gameState,
-            replaceQuestion} = useContext(GameContext);
+            replaceQuestion,
+            loadingQuestion} = useContext(GameContext);
 
     const {game} = gameState;
 
@@ -41,10 +43,11 @@ const HostControls = ({}) => {
         </button> : null}
 
         {getCurrentRound().currentStage === 4 ? 
-                <button type="button" className="HostControls__next-round-btn" onClick={handleNextRoundClick}>Next Round</button> 
+                <button type="button" className="HostControls__HostControl HostControls__HostControl--next-round" onClick={handleNextRoundClick}>Next Round</button> 
                 : null}
+
         {getCurrentRound().type === 'regular' ? 
-                <button type="button" className="HostControls__new-question" onClick={handleNewQuestionClick}>New Question</button>
+                loadingQuestion ? <Loading /> : <button type="button" className="HostControls__HostControl HostControls__HostControl--new-question" onClick={handleNewQuestionClick}>Replace Question</button>
                 : null}
     </div>);
 }

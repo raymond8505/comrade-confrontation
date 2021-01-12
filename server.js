@@ -1,4 +1,7 @@
 const socketManager = require('./socket-manager');
+const cms = require('../cc-cms/server'); //everything to do with the cms server
+
+cms();
 
 const gameManager = require('./game-manager');
 
@@ -61,7 +64,7 @@ const nextRound = game => {
  * @param {Object} msg 
  * @param {WebSocket} sender 
  */
-const handleMessage = (msg,sender) => {
+const handleMessage = async (msg,sender) => {
     
     msg = JSON.parse(msg);
 
@@ -505,13 +508,15 @@ const handleMessage = (msg,sender) => {
         break;
         case 'replace-question':
 
+            
+
             game = getGameByID(msg.data.gameID);
 
             const newRound = cloneDeep(gameManager.roundSchema,true);
             const oldRound = game.rounds[msg.data.round];
             
             newRound.number = oldRound.number;
-            newRound.question = gameManager.getRandomQuestion(msg.data.host.indexOf('localhost') > -1 ? 'sample-questions.json' : 'real-questions.json',oldRound.question.answers.length);
+            newRound.question = await gameManager.getRandomQuestion(msg.data.host.indexOf('localhost') > -1 ? 'sample-questions.json' : 'real-questions.json',oldRound.question.answers.length);
             game.rounds[msg.data.round] = newRound;
 
             updateGame(game);

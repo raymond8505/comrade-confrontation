@@ -1,10 +1,11 @@
-.HostControls > *
+.HostControls__HostControl
 {
     display: block;
     font-variant: normal;
     text-transform: uppercase;
     font-size: .9em;
     @include margin((horizontal),0);
+    width: 100%;
 
     &:not(:last-child)
     {

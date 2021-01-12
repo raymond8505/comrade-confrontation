@@ -7,7 +7,7 @@ const PlayerList = ({players}) => {
 
     const currentUser = gameState.user;
 
-    console.log(gameState);
+    //console.log(gameState);
 
     return (<ul className="PlayerList">
         {players.map(player=>{
