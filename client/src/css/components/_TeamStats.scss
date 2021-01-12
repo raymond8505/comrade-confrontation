@@ -35,3 +35,15 @@
     text-align: center;
     background: $red_dark;
 }
+.TeamStats__score-field
+{
+    width: auto;
+    max-width: calc(100% - 1em);
+    flex-grow: 1;
+}
+.TeamStats__score
+{
+    display: flex;
+    align-items: center;
+    
+}

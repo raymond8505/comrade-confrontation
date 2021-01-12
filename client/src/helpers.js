@@ -45,13 +45,13 @@ export const fillArrayUnique = (min,max,num,except = []) => {
  * @param {Object[]} answers 
  * @returns {Int}
  */
-export const calculateFastMoneyTotal = (answers,currentUserIsHost) => {
+export const calculateFastMoneyTotal = (answers,includeAll = false) => {
 
     if(answers.length > 0)
     {
         const tot = answers.reduce((runningTot,a)=>{
 
-            return a.revealed || currentUserIsHost() ? a.points + runningTot : runningTot;
+            return a.revealed || includeAll ? a.points + runningTot : runningTot;
         },0);
 
         return tot;

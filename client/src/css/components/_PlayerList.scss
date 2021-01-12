@@ -13,6 +13,11 @@
     {
         display: none;
     }
+
+    &:last-child
+    {
+        text-align: right;
+    }
 }
 .PlayerList__player--buzzed
 {

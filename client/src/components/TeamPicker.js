@@ -40,7 +40,7 @@ const TeamPicker = ({suggestedTeam}) => {
                         value={i} 
                         defaultChecked={i === chosenTeam}
                         onChange={onTeamChange} />
-                    <span>{t.name}</span>
+                    <span>{t.name} ({t.players.length})</span>
                 </label>)
             })}
 

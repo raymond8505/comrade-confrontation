@@ -154,7 +154,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
                 Total:
             </span>
             <span className="FastMoneyAnswers__answer-points FastMoneyAnswers__answer-points--total">
-                {calculateFastMoneyTotal(answers,currentUserIsHost)}
+                {calculateFastMoneyTotal(answers,currentUserIsHost() || index === 0)}
             </span>
         </li>
     </ul>);
