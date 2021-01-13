@@ -1,4 +1,4 @@
-import React,{useState,useContext} from "react";
+import React,{useState,useContext,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import FastMoneyAnswers from "./FastMoneyAnswers";
 import HostControls from "./HostControls";
@@ -9,7 +9,7 @@ import { calculateFastMoneyTotal } from "../helpers";
 
 const FastMoneyBoard = ({questions}) => {
 
-    const {getCurrentRound,gameState,currentUserIsHost} = useContext(GameContext);
+    const {getCurrentRound,gameState,currentUserIsHost,broadcastSound} = useContext(GameContext);
     const {game,currentFastMoneyPreview} = gameState;
     const round = getCurrentRound();
     const question = questions[currentFastMoneyPreview];
@@ -30,6 +30,25 @@ const FastMoneyBoard = ({questions}) => {
         setLastFocusedPlayerAnswer(e.currentTarget);
     }
 
+    const escListener = e => {
+
+        if(e.which === 27 && currentUserIsHost())
+        {
+            e.stopPropagation();
+            e.preventDefault();
+            broadcastSound('wrong');
+        }
+        
+    }
+
+    useEffect(()=>{
+
+        window.addEventListener('keydown',escListener);
+        return ()=>{
+            window.removeEventListener('keydown',escListener)
+        }
+
+    },[]);
     return (<div className="FastMoneyBoard">
         
         {currentUserIsHost() ? <div className="FastMoneyBoard__question-and-controls">

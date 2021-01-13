@@ -112,6 +112,7 @@ const GameBoard = ({}) => {
             <div className="GameBoard__team-1">
                 <TeamStats 
                     team={game.teams[0]}
+                    index={0}
                     enableDot = {game.activeTeam === 0} 
                 />
             </div>
@@ -150,6 +151,7 @@ const GameBoard = ({}) => {
                 <TeamStats 
                     team={game.teams[1]} 
                     enableDot={game.activeTeam === 1} 
+                    index={1}
                 />
 
                 

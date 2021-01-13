@@ -13,6 +13,7 @@
     align-items: flex-end;
     line-height: 1;
     margin-bottom: 1rem;
+    
 }
 .TeamStats__name-label
 {
@@ -28,22 +29,49 @@
 .TeamStats__score
 {
     font-size: 3em;
-    padding-left: .25em;
     font-weight: $fw_bold;
     border: 3px solid $yellow;
     border-radius: .3em;
     text-align: center;
     background: $red_dark;
+    padding: 0 .25em;
 }
 .TeamStats__score-field
 {
-    width: auto;
-    max-width: calc(100% - 1em);
+    width: 2em;
+    text-align: center;
+    background: transparent;
+    color: white;
+    border: none;
+    font-weight: $fw_black;
+    padding: .15em 0 .15em 12px;
+}
+.TeamStats__score--editing
+{
+    background: darken($red,25%);
+
+    &, .fas, .TeamStats__score-field
+    {
+        color: $yellow;
+    }
+}
+
+.TeamStats__score-field,
+.TeamStats__score-wrap
+{
+    min-width: 0;
     flex-grow: 1;
 }
 .TeamStats__score
 {
     display: flex;
     align-items: center;
-    
+}
+.TeamStats__btn
+{
+    @include no-button-style;
+    box-shadow: none;
+    padding: 0;
+    color: white;
+    font-size: 1rem;
 }

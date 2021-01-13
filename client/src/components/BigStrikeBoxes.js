@@ -9,8 +9,6 @@ const BigStrikeBoxes = ({}) => {
 
     const [show,setShow] = useState(false);
 
-    console.log(strikesToShow);
-
     useEffect(()=>{
 
         if(strikesToShow !== undefined && strikesToShow !== 0)

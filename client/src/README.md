@@ -10,6 +10,17 @@ WiP
 
 ## Release Notes
 
+### 1.7.0
+- In Rapid Rubles, the first player's total score is visible on submit, but not the answers
+- In Rapid Rubles, host can press Escape (esc) to sound the 'wrong' buzzer if a player answers a duplicate
+- When asked to pick a team, the current player count of each team is now displayed in brackets
+- minor design tweaks
+- Host can now edit scores at will by clicking the pencil in each score box
+- "New Question" is now "Replace Question" for clarity about its function
+- fixed a bug where question picker options disappeared on click
+- A loading message is now displayed when questsion load in pickers, or by clicking "Replace Question"
+- The Host can now only select a correct answer _after_ someone has buzzed in
+- New questions will be coming on a frequent basis
 ### 1.6.0
 
 - The player who successfully buzzes will turn yellow for everyone in the player list

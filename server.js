@@ -539,6 +539,21 @@ const handleMessage = async (msg,sender) => {
 
         break;
 
+        case 'broadcast-sound' :
+            game = getGameByID(msg.data.gameID);
+            broadcastToGame(game,'play-sound',{
+                sound : msg.data.sound
+            });
+            break;
+        case 'edit-team-score' :
+            game = getGameByID(msg.data.gameID);
+
+            game.teams[msg.data.index].score = msg.data.score;
+
+            updateGame(game);
+            broadcastToGame(game,'team-score-edited',{game});
+
+            break;
         case 'set-game-settings':
             game = getGameByID(msg.data.gameID);
 

@@ -99,7 +99,7 @@ export const GameController = () => {
             
             
             case 'fast-money-answers-set' :
-            
+            case 'team-score-edited':
             case 'teams-toggled' :
             case 'user-disconnect':
             
@@ -119,7 +119,9 @@ export const GameController = () => {
             case 'play-theme' : 
                 playSound('theme');
                 break;
-
+            case 'play-sound' :
+                playSound(msg.data.sound);
+                break;
             case 'game-settings-set' :
             case 'round-changed':
                 playSound('theme');
@@ -190,10 +192,27 @@ export const GameController = () => {
         });
     }
 
+    const editTeamScore = (index,score) => 
+    {
+        sendMessage('edit-team-score',
+        {
+            gameID : gameState.game.ID,
+            index,
+            score
+        });
+    }
+
     const resetSoundCanPlay = () => {
         setGameState({
             type : 'soundCanPlay',
             data : true
+        });
+    }
+
+    const broadcastSound = sound => {
+        sendMessage('broadcast-sound',{
+            gameID : gameState.game.ID,
+            sound
         });
     }
     /**
@@ -1032,6 +1051,8 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         setGameSettings,
         getLeadingTeam,
         resetSoundCanPlay,
-        loadingQuestion
+        loadingQuestion,
+        editTeamScore,
+        broadcastSound
     };
 }
