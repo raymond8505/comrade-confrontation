@@ -6,14 +6,29 @@
     font-size: .9em;
     @include margin((horizontal),0);
     width: 100%;
-
-    &:not(:last-child)
-    {
-        margin-bottom: .5em;
-    }
 }
+.HostControls > *:not(:last-child)
+{
+    margin-bottom: .5em;
+}
+
 .HostControls
 {
     padding-left: 1em;
     border-left: 2px solid $yellow;
+}
+.HostControls__rounds-nav
+{
+    display: flex;
+    justify-content: space-between;
+
+    > div
+    {
+        width: 49.25%;
+    }
+
+    .HostControls__HostControl
+    {
+        font-size: .6em;
+    }
 }

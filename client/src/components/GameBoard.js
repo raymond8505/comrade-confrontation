@@ -15,9 +15,11 @@ import {CopyToClipboard} from 'react-copy-to-clipboard';
 import MuteButton from "./MuteButton";
 import GameSettingsModal from "./GameSettingsModal";
 import StakesModal from "./StakesModal";
+import {phonetics} from '../helpers';
+import ToolTip from 'react-simple-tooltip';
 
 const GameBoard = ({}) => {
-    
+
     const {gameState,
             getUserInfo,
             getCurrentRound,
@@ -119,15 +121,20 @@ const GameBoard = ({}) => {
             <div className="GameBoard__game-stats">
                 <div className="GameBoard__top-controls">
                     
-                    {gameHasRounds ? <span className={`GameBoard__game-code${codeCopied ? ' GameBoard__game-code--copied' : ''}`}>
+                    {gameHasRounds ? <ToolTip 
+                    padding={4}
+                    placement="bottom"
+                    style={{
+                        minWidth : '4em'
+                    }}
+                    content={phonetics(game.ID)}><span className={`GameBoard__game-code${codeCopied ? ' GameBoard__game-code--copied' : ''}`}>
                         <CopyToClipboard text={`${window.location.host}?code=${game.ID}`} onCopy={()=>{
-                            console.log('copied');
 
                             setCodeCopied(true);
                         }}>
                             <span>{game.ID}</span>
                         </CopyToClipboard>
-                    </span> : null}
+                    </span></ToolTip> : null}
                     
                     <button 
                         type="button" 
@@ -183,6 +190,7 @@ const GameBoard = ({}) => {
         <BigStrikeBoxes />
         {currentUserIsHost() ? null : <Buzzer onClick={handleBuzzerClick} />}
         <MuteButton />
+        
     </div>);
 }
 

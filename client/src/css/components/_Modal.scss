@@ -1,0 +1,45 @@
+.Modal
+{
+    display: none;
+    text-align: left;
+
+    &[open]
+    {
+        display: flex;
+    }
+}
+.Modal__close
+{
+    @include no-button-style;
+    color: white;
+    padding: 0;
+    box-shadow: none;
+    float: right;
+    font-size: 2em;
+    font-variant: normal;
+}
+.Modal--black-and-white
+{
+    .Modal__inner
+    {
+        color: $black;
+        background: $white;
+        border-color: $red_dark;
+
+        @include scrollbar-style($bar-color : $red);
+    }
+
+    .Modal__close
+    {
+        color: $red_dark;
+    }
+    .FieldSet
+    {
+        border-color: $red;
+        
+        legend
+        {
+            color: $red_dark;
+        }
+    }
+}

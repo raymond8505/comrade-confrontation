@@ -70,9 +70,6 @@ const SignIn = ({}) => {
 
         },50);
 
-        
-        
-        
     },[gameState.socket]);
 
     const showTeamPicker = currentUserInGame() && !currentUserHasTeam();
@@ -110,11 +107,37 @@ const SignIn = ({}) => {
         }
     }
 
-    
-
     const onCodeFieldChange = e => {
 
         setGameCodeEntered(e.target.value !== '');
+    }
+
+    const joinOrHost = () => {
+
+        if(gameCodeField.current.value === '')
+        {
+            handleCreateGame();
+        }
+        else
+        {
+            handleJoinGame();
+        }
+    }
+
+    const onNameKeyPress = e => {
+        
+        if(e.which === 13)
+        {
+            joinOrHost();
+        }
+    }
+
+    const onCodeKeyPress = e => {
+
+        if(e.which === 13)
+        {
+            joinOrHost();
+        }
     }
 
     const creds = getLocalCredentials();
@@ -130,7 +153,8 @@ const SignIn = ({}) => {
                         placeholder="Your Name"
                         ref={hostNameField}
                         disabled={showTeamPicker}
-                        defaultValue={name} />
+                        defaultValue={name}
+                        onKeyPress={onNameKeyPress} />
                 <button type="button" 
                         className="cta" 
                         onClick={handleCreateGame}
@@ -142,7 +166,8 @@ const SignIn = ({}) => {
                         className="Alert__code-field"
                         //defaultValue="MSGJ"
                         disabled={showTeamPicker}
-                        onChange={onCodeFieldChange} />
+                        onChange={onCodeFieldChange}
+                        onKeyPress={onCodeKeyPress} />
                 <button type="button" 
                         className="cta" 
                         onClick={handleJoinGame}

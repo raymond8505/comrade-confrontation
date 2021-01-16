@@ -16,6 +16,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
 
     const handleAnswerClick = (e,index,answer) => {
 
+        console.log('handle answer click');
         //only send correct answers in regular rounds
         //in fast money it's just for the host's reference
         //when reading the questions
@@ -32,10 +33,7 @@ const QuestionBoard = ({question,onAnswerClick}) => {
             }
         }
 
-        if(onAnswerClick !== undefined)
-        {
-            onAnswerClick(answer);
-        }
+        
     }
 
     const renderAnswers = () => {
@@ -65,7 +63,14 @@ const QuestionBoard = ({question,onAnswerClick}) => {
                                     {
                                         handleAnswerClick(e,i,answer);
                                     }
+
+                                    if(onAnswerClick !== undefined)
+                                    {
+                                        onAnswerClick(answer);
+                                    }
                                 }
+
+                                
                             }>
                     {
                         (exists && (currentUserIsHost() || answered || revealed)) ? 

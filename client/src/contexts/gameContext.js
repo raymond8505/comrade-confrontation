@@ -87,17 +87,24 @@ export const GameController = () => {
             case 'round-started' :
                 setLastBuzz(undefined);
                 stopCurrentSound();
+
+                
+                if(msg.data.game.currentRound === 3)
+                {
+                    console.log(msg.data.game.currentRound);
+                    playSound('fm-bg');
+                }
+
                 updateGameState(msg.data.game);
             break;
             
             case 'round-stopped' :
+                stopCurrentSound();
                 setLastBuzz(undefined);
             case 'round-stage-changed' :
             case 'round-team-chosen':
             case 'game-rounds-set' :
             case 'answers-updated' :
-            
-            
             case 'fast-money-answers-set' :
             case 'team-score-edited':
             case 'teams-toggled' :
@@ -129,8 +136,22 @@ export const GameController = () => {
             break;
 
             case 'fast-money-answer-toggled' :
+                
+                const fmAnswer = gameState.game.rounds[3].playerAnswers[msg.data.playerIndex][msg.data.answerIndex];
+
+                console.log(fmAnswer);
+
                 updateGameState(msg.data.game);
                 playSound('fm-reveal');
+
+                setTimeout(()=>{
+
+                    const answerSound = `fm-reveal-${fmAnswer.points === 0 ? 'wrong' : 'right'}`;
+
+                    playSound(answerSound);
+                },700);
+
+                break;
 
             case 'non-exsitent-game':
                 clearLocalCredentials();
@@ -991,6 +1012,14 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
 
         return gameState.game.teams[returnOnTie];
     }
+
+    const skipToRound = num => {
+
+        sendMessage('skip-to-round',{
+            gameID : gameState.game.ID,
+            round : num
+        });
+    }
     /**
      * A number of things need to be in a certain state for the current user to be able to buzz
      */
@@ -1053,6 +1082,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
         resetSoundCanPlay,
         loadingQuestion,
         editTeamScore,
-        broadcastSound
+        broadcastSound,
+        skipToRound
     };
 }

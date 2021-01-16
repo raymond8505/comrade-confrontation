@@ -86,3 +86,53 @@ export const maybePlural = modifier => modifier.search(/s$/) === -1 ? 's' : '';
 export const isLocal = () => window.location.host.indexOf('localhost') > -1;
 
 export const nbsp = '\u00A0';
+
+export const phonetics = str => {
+
+    const lettersIn = str.split('');
+
+    const pronunciations = [
+      'alpha',
+      'bravo',
+      'charlie',
+      'delta',
+      'echo',
+      'foxtrot',
+      'golf',
+      'hotel',
+      'india',
+      'joker',
+      'kilo',
+      'lima',
+      'mike',
+      'oscar',
+      'papa',
+      'quebec',
+      'romeo',
+      'sierra',
+      'tango',
+      'utah',
+      'victor',
+      'whiskey',
+      'x-ray',
+      'yankee',
+      'zulu'
+    ];
+
+    return lettersIn.map(word => pronunciations.filter(p=>p[0] === word.toLowerCase()[0])[0]).join('-');
+}
+
+/**
+ * Runs up the DOM tree looking for a parent node with the given class
+ * @param {Element} node 
+ * @param {String} className 
+ * @returns {Element}
+ */
+export const getParentWithClass = (node,className) => {
+
+    if(node.tagName === 'BODY') return null;
+
+    const parent = node.parentNode;
+
+    return parent.classList.contains(className) ? parent : getParentWithClass(parent,className);
+}

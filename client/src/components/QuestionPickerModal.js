@@ -136,7 +136,7 @@ const QuestionPickerModal = ({questions = null,openOnInit,numQuestions = 3}) => 
                 <strong>{getLeadingTeam().name}</strong> Pick{maybePlural(getLeadingTeam().name)} 2 players to play Rapid Rubles. Ensure they know who is going first or second. The person
                 going second should avoid looking at the screen or hearing player 1's answers.
 
-                Pick <strong>5</strong> questions. From above. The questions have been filtered to 3 or 4 answer questions only.
+                Pick <strong>5</strong> questions from above. The questions have been filtered to 3 or 4 answer questions only.
 
             </div> : null}
         </div>

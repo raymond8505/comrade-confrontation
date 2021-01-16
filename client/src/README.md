@@ -10,6 +10,15 @@ WiP
 
 ## Release Notes
 
+### 1.8.0
+- Pressing enter in a field on sign in now submits the form
+- The host can see the stakes on the Rapid Rubles board now
+- Pressing up or down arrow on the Rapid Rubles board as host now navigates through the answer fields
+- There's now a help button on the Host Rapid Rubles board that will show instructions and keyboard controls for fast answer entry during Rapid Rubles
+- The reveal of Rapid Rubles answers is now split between answer and points with corresponding sounds for a right answer and wrong answer
+- fixed bug where revealing Rapid Rubles answers logged out the host
+- Tense background music added for the question asking portion of Rapid Rubles
+- Host now has the ability to skip between rounds, back and forth. I added this to speed up testing, but you can use it in conjunction with the replace question button to add extra rounds to your games ;)
 ### 1.7.0
 - In Rapid Rubles, the first player's total score is visible on submit, but not the answers
 - In Rapid Rubles, host can press Escape (esc) to sound the 'wrong' buzzer if a player answers a duplicate

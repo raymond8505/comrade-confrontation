@@ -6,6 +6,8 @@ import QuestionBoard from "./QuestionBoard";
 import Timer from "./Timer";
 import config from "../config.json"
 import { calculateFastMoneyTotal } from "../helpers";
+import FastMoneyInstructionsModal from "./FastMoneyInstructionsModal";
+import FieldSet from './FieldSet';
 
 const FastMoneyBoard = ({questions}) => {
 
@@ -21,12 +23,15 @@ const FastMoneyBoard = ({questions}) => {
         if(lastFocusedPlayerAnswer !== null)
         {
             lastFocusedPlayerAnswer.value = answer.points;
+            lastFocusedPlayerAnswer.focus();
         }
     }
 
     const [lastFocusedPlayerAnswer,setLastFocusedPlayerAnswer] = useState(null);
     
     const onPlayerAnswerPointsFocus = e => {
+
+        console.log(e);
         setLastFocusedPlayerAnswer(e.currentTarget);
     }
 
@@ -45,7 +50,7 @@ const FastMoneyBoard = ({questions}) => {
 
         window.addEventListener('keydown',escListener);
         return ()=>{
-            window.removeEventListener('keydown',escListener)
+            window.removeEventListener('keydown',escListener);
         }
 
     },[]);
@@ -57,7 +62,13 @@ const FastMoneyBoard = ({questions}) => {
         </div> : null}
 
         <div className="FastMoneyBoard__answers">
-            {currentUserIsHost() ? <QuestionBoard question={question} onAnswerClick={onQBAnswerClick} /> : null}
+            {currentUserIsHost() ? <div className="FastMoneyBoard__question-board-wrap">
+                <FieldSet extraClasses={["FastMoneyBoard__stakes"]} legend="Stakes">
+                    {game.fastMoneyStakes}
+                </FieldSet>
+                <QuestionBoard question={question} onAnswerClick={onQBAnswerClick} />
+                <FastMoneyInstructionsModal />
+            </div> : null}
 
             <div className="FastMoneyBoard__player-answers">
                 <FastMoneyAnswers 

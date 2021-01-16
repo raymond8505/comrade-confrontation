@@ -39,6 +39,37 @@
     .FastMoneyAnswers__answer
     {
         font-size: .9em;
+
+        .FastMoneyAnswers__answer-text,
+        .FastMoneyAnswers__answer-points
+        {
+            
+            display: block;
+
+            *
+            {
+                opacity: 0;
+                @include animated;
+                pointer-events: none;
+            }
+        }
+
+        .FastMoneyAnswers__answer-points *
+        {
+            transition-delay: .5s;
+        }
+
+        &--revealed
+        {
+            .FastMoneyAnswers__answer-text,
+            .FastMoneyAnswers__answer-points
+            {
+                *
+                {
+                    opacity: 1;
+                }
+            }
+        }
     }
 }
 

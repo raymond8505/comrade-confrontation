@@ -10,7 +10,8 @@ const HostControls = ({}) => {
             gotoNextRound,
             gameState,
             replaceQuestion,
-            loadingQuestion} = useContext(GameContext);
+            loadingQuestion,
+            skipToRound} = useContext(GameContext);
 
     const {game} = gameState;
 
@@ -35,7 +36,41 @@ const HostControls = ({}) => {
         replaceQuestion(game.currentRound);
     }
 
+    const onNextRoundClick = e => {
+
+        if(game.currentRound === 2)
+        {
+            gotoNextRound();
+        }
+        else
+        {
+            skipToRound(game.currentRound + 1);
+        }
+        
+    }
+
+    const onPrevRoundClick = e => {
+        skipToRound(game.currentRound - 1);
+    }
+
     return (<div className="HostControls">
+        <div className="HostControls__rounds-nav">
+            <div>
+                {game.currentRound > 0 ? <button 
+                    onClick={onPrevRoundClick}
+                    className="HostControls__HostControl HostControls__HostControl--prev-round">
+                    &lt; Prev
+                </button> : null}
+            </div>
+            <div>
+                {game.currentRound < 3 ? 
+                    <button 
+                        onClick={onNextRoundClick}
+                        className="HostControls__HostControl HostControls__HostControl--next-round">
+                    Next &gt;
+                </button> : null}
+            </div>
+        </div>
         {getCurrentRound().currentStage !== 4 ? <button type="button" 
             className="HostControls__HostControl HostControls__HostControl--start-round"
             onClick={handleStartRoundClick}>

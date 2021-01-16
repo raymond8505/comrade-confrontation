@@ -1,7 +1,7 @@
 import { indexOf } from "lodash";
 import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
-import { nbsp,calculateFastMoneyTotal } from "../helpers";
+import { nbsp,calculateFastMoneyTotal,getParentWithClass } from "../helpers";
 
 const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus}) => {
 
@@ -40,16 +40,24 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         toggleFastMoneyAnswer(i,index);
     }
 
+    const getPointsFieldFromAnswerField = answerField => 
+                    getParentWithClass(answerField,'FastMoneyAnswers__answer').querySelector('input[type="number"]');
+
     const renderAnswerText = (answer,i) =>
     {
-        const text = answer === undefined || (!currentUserIsHost() && !answer.revealed) ? nbsp : answer.answer;
+        const text = answer === undefined ? nbsp : answer.answer;
 
-        return currentUserIsHost() ? makeInput(text,i,'text') : text;
+        return currentUserIsHost() ? makeInput(text,i,'text',()=>{},e=>{
+
+            const currentTarget = getPointsFieldFromAnswerField(e.currentTarget);
+
+            onPointsFocus({currentTarget})
+        }) : text;
     }
 
     const renderAnswerPoints = (answer,i) =>
     {
-        const text = answer === undefined || (!currentUserIsHost() && !answer.revealed) ? nbsp : answer.points;
+        const text = answer === undefined ? nbsp : answer.points;
 
         return currentUserIsHost() ? makeInput(text,i,'number',()=>{},onPointsFocus) : text;
     }
@@ -65,13 +73,13 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
 
             toRet.push(<li key={`answer_${i}`} 
                             className={`FastMoneyAnswers__answer 
-                            ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer' : ''}`}
+                            ${answer !== undefined && answer.revealed ? ' FastMoneyAnswers__answer--revealed' : ''}`}
                             ref={answerFields[i]}>
                 <span className="FastMoneyAnswers__answer-text">
-                    {renderAnswerText(answer,i)}
+                    <span>{renderAnswerText(answer,i)}</span>
                 </span>
                 <span className="FastMoneyAnswers__answer-points">
-                    {renderAnswerPoints(answer,i)}
+                    <span>{renderAnswerPoints(answer,i)}</span>
                 </span>
                 {currentUserIsHost() && answer !== undefined ? <button 
                                             tabIndex="-1" 
@@ -89,30 +97,39 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         answerFields[i].current.querySelector('input[type="text"]').focus();
     }
 
-    const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => <input 
-                                                                            type={type} 
-                                                                            defaultValue={val} 
-                                                                            onBlur={onBlur}
-                                                                            onKeyPress={(e)=>{
+    /**
+     * REFACTOR THIS OMG
+     * @param {*} val 
+     * @param {*} questionIndex 
+     * @param {*} type 
+     * @param {*} onBlur 
+     * @param {*} onFocus 
+     */
+    const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => 
+        <input 
+            type={type} 
+            defaultValue={val} 
+            onBlur={onBlur}
+            onKeyDown={(e)=>{
 
-                                                                                if(e.which === 13)
-                                                                                {
-                                                                                    
-                                                                                    if(questionIndex < 4)
-                                                                                    {console.log(e);
-                                                                                        focusAnswer(questionIndex + 1);
-                                                                                    }
-                                                                                }
-                                                                            }}
-                                                                            onFocus={e=>{
-                                                                                onAnswerFocus(questionIndex)
-                                                                                if(onFocus !== undefined)
-                                                                                {
-                                                                                    //console.log(onFocus);
-                                                                                    onFocus(e);
-                                                                                }
-                                                                            }}
-                                                                            readOnly={!currentUserIsHost()} />
+                if((e.which === 13 || e.which === 40) && (questionIndex < 4))
+                {
+                    focusAnswer(questionIndex + 1);
+                }
+                else if(e.which === 38 && (questionIndex > 0))
+                {
+                    focusAnswer(questionIndex - 1);
+                }
+            }}
+            onFocus={e=>{
+                onAnswerFocus(questionIndex)
+                if(onFocus !== undefined)
+                {
+                    //console.log(onFocus);
+                    onFocus(e);
+                }
+            }}
+            readOnly={!currentUserIsHost()} />
 
     
 
