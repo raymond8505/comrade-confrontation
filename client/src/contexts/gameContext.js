@@ -10,9 +10,55 @@ const {HOST,LOCAL_STORAGE_KEY} = window.location.host.indexOf('localhost') > -1 
 
 export const GameController = () => {
 
-    
+    /**
+     * Sets the user's game and user ids in local storage
+     * @param {*} gameID 
+     * @param {*} userID 
+     */
+    const setLocalCredentials = (gameID,userID,name = '',muted = false) => {
+        
+        window.localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify({
+            gameID,
+            userID,
+            name,
+            muted
+        }));
+    }
+
+    /**
+     * Clears the user's credentials from local storage
+     */
+    const clearLocalCredentials = () => {
+
+        const creds = getLocalCredentials();
+        setLocalCredentials(undefined,undefined,creds.name,creds.muted);
+    }
+
+    /**
+     * Get's the users credentials from local storage
+     * @returns {Object|null} returns the credentials object with gameID and 
+     *                          userID or null if it doesnt exist
+     */
+    const getLocalCredentials = () => {
+        const creds = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+
+        return creds === null ? null : JSON.parse(creds);
+    }
+    const muteReducer = (state,newState) => {
+
+        const creds = getLocalCredentials();
+
+        setLocalCredentials(
+            creds.gameID,
+            creds.userID,
+            creds.name,
+            newState
+        );
+
+        return newState;
+    }
     const [updated,setUpdated] = useState(0);
-    const [muted,setMuted] = useState(false);
+    const [muted,setMuted] = useReducer(muteReducer,getLocalCredentials().muted);
     const [versionInfo,setVersionInfo] = useState(null);
     const [loadingQuestion,setLoadingQuestion] = useState(false);
 
@@ -265,7 +311,6 @@ export const GameController = () => {
 
         const mp3 = soundManager[slug];
 
-        console.log('MUTED',muted);
         if(mp3 !== undefined && !muted)
         {
             setCurrentSound(mp3);
@@ -638,41 +683,7 @@ const getCurrentRoundPoints = (all = false,game=gameState.game) => getRoundPoint
      */
     const getUserByID = (userID,game=gameState.game) => game.users.find(u => u.ID === userID);
 
-    /**
-     * Sets the user's game and user ids in local storage
-     * @param {*} gameID 
-     * @param {*} userID 
-     */
-    const setLocalCredentials = (gameID,userID,name = '') => {
-        
-        console.log(gameState.game);
-
-        window.localStorage.setItem(LOCAL_STORAGE_KEY,JSON.stringify({
-            gameID,
-            userID,
-            name,
-        }));
-    }
-
-    /**
-     * Clears the user's credentials from local storage
-     */
-    const clearLocalCredentials = () => {
-
-        const creds = getLocalCredentials();
-        setLocalCredentials(undefined,undefined,creds.name);
-    }
-
-    /**
-     * Get's the users credentials from local storage
-     * @returns {Object|null} returns the credentials object with gameID and 
-     *                          userID or null if it doesnt exist
-     */
-    const getLocalCredentials = () => {
-        const creds = window.localStorage.getItem(LOCAL_STORAGE_KEY);
-
-        return creds === null ? null : JSON.parse(creds);
-    }
+    
 
     /**
      * Check if the given user is on a team in the game

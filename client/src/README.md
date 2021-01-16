@@ -8,6 +8,51 @@ Totally different from Family Feud, I swear it on the grave of Vladimir Lenin. P
 
 WiP
 
+## Game Play
+
+There are 3 regular rounds and 1 Rapid Rubles round. The winner of the game is the team with the most points after 3 regular rounds. Rapid Rubles is an extra round the winning team plays to determine who has control of The Stakes.
+
+### The Stakes
+
+The Stakes is an optional "dare" or some other thing the winning team decides, _if_ they score 200 or more in Rapid Rubles.
+ex: "losing team chugs their beers". The Stakes are decided by The Host during game creation. If The Host leaves The Stakes blank, the game will choose for them at random.
+
+### Regular Rounds
+
+A regular round asks 1 question, with a variable amount of answers. The team who controls the round decides if they want to **play** to try and guess all the question's answers, or **pass** to the other team who will try to guess all the answers.
+
+If the team playing the round guesses wrong 3 times, the round passes to the other team to steal.
+
+#### Head 2 Head
+
+Each regular round starts by having 1 player from each team try to answer the same question. The Host starts the round, then reads the question. The first player to buzz in by clicking the **buzz** button on screen, or pressing their space bar gets to guess an answer. If they guess the #1 answer, they are given control of the round and asked if they want to pass or play.
+
+If the buzzed player guesses wrong, or guesses an answer that isn't #1, the other player is given a chance to guess. If the second player guesses any answer higher than player 1, their team takes control of the round. Otherwise player 1 gets control.
+
+If neither player answers correctly, this continues back and forth until one does.
+
+Once a team is given control of the round, they can choose to **play** the round, or **pass** it to the other team.
+
+#### Answering the Question
+
+Players on the controlling team are asked sequentially to answer the question. If they answer correctly, the host reveals the answer by clicking it. If the player answers incorrectly, the host clicks one of the "wrong" Xs at the bottom of the board. If a team answers incorrectly 3 times, control passes to the other team for a chance to steal the round. If the other team cannot steal, all revealed points multiplied by the round number go to the current team.
+#### The Steal
+
+A team steals the round when they correctly guess one of the remaining hidden answers to a question. If the steal is successful, all revealed points multiplied by the round number are awarded to them, otherwise the points are awarded to the other team.
+
+#### Round Wrap Up
+
+The Host can optionally reveal any unguessed answers once a round's points have been awarded. It's up to The Host what order this occurs in, but standard practice is least to most.
+### Rapid Rubles
+
+In Rapid Rubles, the team who won the regular rounds chooses 2 players to answer 5 questions. The questions are answered in rapid succession within a given time limit.
+
+The second player should mute, or otherwise not listen to the answers given by the first player. Once the first player has answered the questions, or run out of time, The Host tallies and submits their points. The process repeats with the second player.
+
+While answering, if the second player answers the same as the first player, The Host notifies them of their duplicate answer and the player guesses again. The Host can tell the player this verbally, and optionally can press escape (ESC) to sound the 'wrong' buzzer.
+
+After both players' answers are submitted, The Host reveals the answers to the players one at a time. If both players' answers add up to 200 or more, that team controls the stakes. If they did not combine for 200 or more, the losing team controls the stakes.
+
 ## Release Notes
 
 ### 1.8.0

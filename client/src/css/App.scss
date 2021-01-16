@@ -56,6 +56,28 @@ body
     }
   }
 
+dl
+{
+  display: grid;
+  grid-template-columns: .66fr 1.34fr;
+  grid-template-rows: auto;
+
+  dd
+  {
+    margin: 0;
+  }
+
+  dt
+  {
+    font-weight: bold;
+  }
+
+  dd,dt
+  {
+    padding-bottom: .5em;
+  }
+}
+
 @import './forms';
 @import './modal';
 @import './components/Loading';

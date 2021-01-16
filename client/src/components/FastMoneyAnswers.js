@@ -1,4 +1,4 @@
-import { indexOf } from "lodash";
+import { indexOf, round } from "lodash";
 import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import { nbsp,calculateFastMoneyTotal,getParentWithClass } from "../helpers";
@@ -13,6 +13,7 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
             toggleFastMoneyAnswer} = useContext(GameContext);
     
     const answerFields = [];
+    const round = getCurrentRound();
 
     //can't declare hooks in loops :/
     answerFields[0] = useRef(null);
@@ -45,19 +46,20 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
 
     const renderAnswerText = (answer,i) =>
     {
-        const text = answer === undefined ? nbsp : answer.answer;
+        const text = answer === undefined ? '' : answer.answer;
 
         return currentUserIsHost() ? makeInput(text,i,'text',()=>{},e=>{
 
             const currentTarget = getPointsFieldFromAnswerField(e.currentTarget);
 
-            onPointsFocus({currentTarget})
+            onPointsFocus({currentTarget});
+            
         }) : text;
     }
 
     const renderAnswerPoints = (answer,i) =>
     {
-        const text = answer === undefined ? nbsp : answer.points;
+        const text = answer === undefined ? '' : answer.points;
 
         return currentUserIsHost() ? makeInput(text,i,'number',()=>{},onPointsFocus) : text;
     }
@@ -105,8 +107,11 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
      * @param {*} onBlur 
      * @param {*} onFocus 
      */
-    const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => 
-        <input 
+    const makeInput = (val,questionIndex,type="text",onBlur=()=>{},onFocus) => {
+
+        console.log(type,round.started);
+
+        return <input 
             type={type} 
             defaultValue={val} 
             onBlur={onBlur}
@@ -129,9 +134,12 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
                     onFocus(e);
                 }
             }}
-            readOnly={!currentUserIsHost()} />
+            disabled={type === 'number' && round.started}
+            readOnly={!currentUserIsHost()}
+            className={`FastMoneyAsnwers__input FastMoneyAsnwers__input--${type === 'text' ? 'answer' : 'points'}`} />
+        }
 
-    
+            
 
     const onSubmitClick = e => {
         

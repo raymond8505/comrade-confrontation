@@ -76,9 +76,11 @@ const QuestionBoard = ({question,onAnswerClick}) => {
                         (exists && (currentUserIsHost() || answered || revealed)) ? 
                             <div className="QuestionBoard__answer-details">
                                 <span className="QuestionBoard__answer-text">
+                                    <span className="QuestionBoard__answer-num">{i + 1}</span>
                                     <span>{answer.answer}</span>
                                 </span>
                                 <span className="QuestionBoard__answer-points">
+                                
                                     <span>{answer.points}</span>
                                 </span>
                             </div> 

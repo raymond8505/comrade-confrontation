@@ -13,7 +13,7 @@ const QuestionPicker = ({questions = [],openOnInit,numQuestions = 3,onChange = (
 
     const {game} = gameState;
 
-    const gameID = game._id;
+    const gameID = game.ID;
 
     const randomizeOptionsBtn = useRef(null);
 
@@ -29,8 +29,6 @@ const QuestionPicker = ({questions = [],openOnInit,numQuestions = 3,onChange = (
         onChange(chosenQuestions);
 
     },[chosenQuestions.length]);
-
-    
 
     const getQuestionOptions = numQuestions => {
         const indexes = fillArrayUnique(0,questions.length - 1,numQuestions,[

@@ -54,6 +54,9 @@ const GameSettingsModal = ({}) => {
         setGameSettings(team1Name,team2Name,stakes,chosenQuestions);
     }
 
+    const pickteamName = (except = []) => randomItem(defaultNames,except);
+    
+    
     return (<dialog className="GameSettingsModal modal" open>
         <div className="modal__inner GameSettingsModal__inner">
             <h2 className="GameSettingsModal__title">
@@ -81,8 +84,26 @@ const GameSettingsModal = ({}) => {
                 <p className="GameSettingsModal__team-instructions">
                     Choose Team Names. If left blank, they will be randomly generated.
                 </p>
-                <input type="text" placeholder="Team 1 Name" ref={team1} />
-                <input type="text" placeholder="Team 2 Name" ref={team2} />
+
+                <div className="GameSettingsModal__team-settings-controls">
+                    <input type="text" placeholder="Team 1 Name" ref={team1} />
+
+                    <button className="GameSettingsModal__generate-team GameSettingsModal__generate-team--1" 
+                            onClick={e=>{
+                                team1.current.value = pickteamName([team1.current.value,team2.current.value]);
+                            }}>
+                        <i className="fas fa-random"></i>
+                    </button>
+
+                    <input type="text" placeholder="Team 2 Name" ref={team2} />
+
+                    <button className="GameSettingsModal__generate-team GameSettingsModal__generate-team--2" 
+                            onClick={e=>{
+                                team2.current.value = pickteamName([team1.current.value,team2.current.value]);
+                            }}>
+                        <i className="fas fa-random"></i>
+                    </button>
+                </div>
             </FieldSet>
             
             <FieldSet legend="Rapid Rubles Stakes" extraClasses={['GameSettingsModal__rr-stakes']}>
@@ -90,6 +111,12 @@ const GameSettingsModal = ({}) => {
                     placeholder="ex: losing team drinks. If left blank, stakes will be chosen for you at random"
                     ref={rrStakes}
                 ></textarea>
+                <button className="GameSettingsModal__generate-stakes" 
+                            onClick={e=>{
+                                rrStakes.current.value = randomItem(defaultStakes)
+                            }}>
+                        <i className="fas fa-random"></i>
+                    </button>
             </FieldSet>
 
             <button type="button" className="cta" disabled={!canSubmit} onClick={handleSubmit}>Start Game</button>

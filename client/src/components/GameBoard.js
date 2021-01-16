@@ -17,6 +17,7 @@ import GameSettingsModal from "./GameSettingsModal";
 import StakesModal from "./StakesModal";
 import {phonetics} from '../helpers';
 import ToolTip from 'react-simple-tooltip';
+import AboutInfo from './AboutInfo';
 
 const GameBoard = ({}) => {
 
@@ -25,6 +26,7 @@ const GameBoard = ({}) => {
             getCurrentRound,
             currentUserIsHost,
             clearLocalCredentials,
+            getLocalCredentials,
             currentUserCanBuzz,
             sendBuzz,
             playSound,
@@ -108,7 +110,7 @@ const GameBoard = ({}) => {
         `${getCurrentRound() !== undefined && getCurrentRound().started ? ' GameBoard--round-started' : ''}` +
         `${getCurrentRound() !== undefined && getCurrentRound().type === 'fast-money' ? ' GameBoard--fast-money' : ''}`
         }>
-            
+            <AboutInfo />
             <SoundPlayer sound={currentSound} />
         <div className="GameBoard__row GameBoard__row--top">
             <div className="GameBoard__team-1">
@@ -184,7 +186,7 @@ const GameBoard = ({}) => {
             //show just the picker modal for fast money
             (game.currentRound === 3 && game.rounds[3] == undefined) ? 
                 currentUserIsHost() ? 
-                    <QuestionPickerModal numQuestions={5} /> : <StakesModal /> : null
+                    <QuestionPickerModal numQuestions={5} minAnswers={3} maxAnswers={4} /> : <StakesModal /> : null
         }
         
         <BigStrikeBoxes />

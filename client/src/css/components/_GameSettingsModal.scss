@@ -72,3 +72,40 @@
 {
     color: $yellow;
 }
+.GameSettingsModal__team-settings-controls
+{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    input
+    {
+        margin-bottom: 0;
+    }
+}
+.GameSettingsModal__generate-team,
+.GameSettingsModal__generate-stakes
+{
+    @include no-button-style;
+    background: transparent;
+    padding: 0;
+    color: $yellow;
+    border: none;
+    box-shadow: none;
+    margin: 0 1em 0 .5em;
+    cursor: pointer;
+
+    &:last-child
+    {
+        margin-right: 0;
+    }
+}
+.FastMoneyAnswers__answer-points
+{
+    opacity: 1;
+}
+.GameBoard--round-started .FastMoneyAnswers__answer-points
+{
+    opacity: .5;
+}

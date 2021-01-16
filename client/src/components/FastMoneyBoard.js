@@ -11,7 +11,7 @@ import FieldSet from './FieldSet';
 
 const FastMoneyBoard = ({questions}) => {
 
-    const {getCurrentRound,gameState,currentUserIsHost,broadcastSound} = useContext(GameContext);
+    const {getCurrentRound,gameState,currentUserIsHost,broadcastSound,startRound,stopRound} = useContext(GameContext);
     const {game,currentFastMoneyPreview} = gameState;
     const round = getCurrentRound();
     const question = questions[currentFastMoneyPreview];
@@ -66,7 +66,11 @@ const FastMoneyBoard = ({questions}) => {
                 <FieldSet extraClasses={["FastMoneyBoard__stakes"]} legend="Stakes">
                     {game.fastMoneyStakes}
                 </FieldSet>
-                <QuestionBoard question={question} onAnswerClick={onQBAnswerClick} />
+                
+                {
+                    //only show answer board if round is stopped. So as not to distract host
+                    round.started ? null : <QuestionBoard question={question} onAnswerClick={onQBAnswerClick} />
+                }
                 <FastMoneyInstructionsModal />
             </div> : null}
 
@@ -74,15 +78,26 @@ const FastMoneyBoard = ({questions}) => {
                 <FastMoneyAnswers 
                     answers={round.playerAnswers[0]} 
                     index={0}
-                    focusFirstOnStart={true}
+                    focusFirstOnStart={round.currentStage === 0}
                     onPointsFocus={onPlayerAnswerPointsFocus} />
                 <FastMoneyAnswers 
                     answers={round.playerAnswers[1]} 
                     index={1}
+                    focusFirstOnStart={round.currentStage === 1}
                     onPointsFocus={onPlayerAnswerPointsFocus} />
 
                 <div className="FastMoneyBoard__footer">
-                    {round.started ? <Timer time={config.FAST_MONEY.TIMERS[round.currentStage]} /> : null}
+
+                    {round.started ? <Timer time={config.FAST_MONEY.TIMERS[round.currentStage]} onComplete={()=>{
+                        broadcastSound('wrong');
+                        console.log('timer complete');
+
+                        setTimeout(()=>{
+                            stopRound();
+                        },500);
+                        
+                        
+                    }} /> : null}
                     
                     <div className="FastMoneyBoard__combined-total">
                         <span className="FastMoneyBoard__combined-total-label">Total:</span>

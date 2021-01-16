@@ -1,7 +1,8 @@
 import React,{useContext, useEffect, useState} from "react";
 import { GameContext } from "../contexts/gameContext";
 
-const Timer = ({time}) => {
+const Timer = ({time,
+                onComplete=()=>{}}) => {
 
     const {playSound} = useContext(GameContext);
     const [currentTime,setCurrentTime] = useState(null);
@@ -25,7 +26,7 @@ const Timer = ({time}) => {
             }
             else
             {
-                playSound('wrong');
+                onComplete();
             }
         }
         

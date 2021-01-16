@@ -16,7 +16,6 @@ const AboutInfo = ({}) => {
         <dialog className="modal" open={modalOpen}>
             <div className="modal__inner AboutInfo__inner">
                 <button type="button" className="btn--blank AboutInfo__close-modal" onClick={e=>{
-                        console.log('close',modalOpen);
 
                         setModalOpen(false);
                     }}>

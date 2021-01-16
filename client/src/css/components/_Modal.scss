@@ -43,3 +43,14 @@
         }
     }
 }
+.Modal__header
+{
+    position: sticky;
+    top: 1rem;
+    background: $white;
+    padding-bottom: 1em;
+}
+.Modal__title
+{
+    margin: 0;
+}
