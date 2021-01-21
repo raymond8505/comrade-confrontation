@@ -3,3 +3,4 @@ test-client/
 config.json
 config-remote.json
 server-config.json
+deploy-config.json

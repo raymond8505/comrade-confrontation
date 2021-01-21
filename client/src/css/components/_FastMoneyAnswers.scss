@@ -1,4 +1,4 @@
-.FastMoneyAnswers
+.FastMoneyAnswers__answers
 {
     list-style: none;
     padding: 0;
@@ -139,4 +139,11 @@
     margin-left: .5em;
     box-shadow: none;
     font-size: .8em;
+}
+.FastMoneyAnswers__title
+{
+    margin: 0;
+    font-size: 1rem;
+    text-align: left;
+    margin-bottom: .2em;
 }

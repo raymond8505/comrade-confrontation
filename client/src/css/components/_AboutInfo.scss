@@ -1,4 +1,4 @@
-.AboutInfo__btn
+.AboutInfo > .Modal__button
 {
     position: fixed;
     top: 2vmin;
@@ -35,4 +35,11 @@
 .AboutInfo__close-modal
 {
     float: right;
+}
+.AboutInfo h1 {
+    display: none;
+}
+.AboutInfo .Modal__header
+{
+    background: $red_dark;
 }

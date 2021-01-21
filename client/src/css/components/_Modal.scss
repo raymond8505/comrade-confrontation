@@ -2,6 +2,19 @@
 {
     display: none;
     text-align: left;
+    
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: rgba(black,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    z-index: 999;
+    pointer-events: none;
 
     &[open]
     {
@@ -17,6 +30,39 @@
     float: right;
     font-size: 2em;
     font-variant: normal;
+}
+.Modal__inner
+{
+    pointer-events: all;
+    max-width: calc(100% - 4em);
+    max-height: calc(100% - 4em);
+    background: $red_dark;
+    border: 2px solid $yellow;
+    padding: 2em;
+    padding-top: 0;
+    width: 80%;
+    box-shadow: 0 0 5vw 0 black;
+    overflow: auto;
+
+    @include phone-only
+    {
+        width: 100%;
+        max-width: none;
+        max-height: 98%;   
+    }
+
+    @include scrollbar-style($bar-color : $yellow,$track-color: transparent);
+}
+.Modal__header
+{
+    position: sticky;
+    top: 0;
+    padding-bottom: 1em;
+    padding-top: 2em;
+}
+.Modal__title
+{
+    margin: 0;
 }
 .Modal--black-and-white
 {
@@ -42,15 +88,8 @@
             color: $red_dark;
         }
     }
-}
-.Modal__header
-{
-    position: sticky;
-    top: 1rem;
-    background: $white;
-    padding-bottom: 1em;
-}
-.Modal__title
-{
-    margin: 0;
+    .Modal__header
+    {
+        background: $white;
+    }
 }

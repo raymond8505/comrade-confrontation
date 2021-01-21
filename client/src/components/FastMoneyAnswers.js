@@ -2,6 +2,7 @@ import { indexOf, round } from "lodash";
 import React,{useContext, useRef,useEffect} from "react";
 import { GameContext } from "../contexts/gameContext";
 import { nbsp,calculateFastMoneyTotal,getParentWithClass } from "../helpers";
+import config from "../config.json";
 
 const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus}) => {
 
@@ -166,23 +167,28 @@ const FastMoneyAnswers = ({answers,index,focusFirstOnStart = false,onPointsFocus
         setFastMoneyAnswers(gameState.game.ID,answersToSend,index);
     }
 
-    return (<ul className="FastMoneyAnswers" ref={answersShell}>
-        
-        {renderAnswers(answers)}
-        <li className="FastMoneyAnswers__total">
-            
-            {currentUserIsHost() ? 
-                <button tabIndex="-1" type="button" className="FastMoneyAnswers__submit-btn" onClick={onSubmitClick}>Submit</button> :
-                null
-            }
-            <span className="FastMoneyAnswers__answer-text">
-                Total:
-            </span>
-            <span className="FastMoneyAnswers__answer-points FastMoneyAnswers__answer-points--total">
-                {calculateFastMoneyTotal(answers,currentUserIsHost() || index === 0)}
-            </span>
-        </li>
-    </ul>);
+    return (<div className="FastMoneyAnswers">
+    
+                {currentUserIsHost() ? <h4 className="FastMoneyAnswers__title">Player {index + 1} ({config.FAST_MONEY.TIMERS[index]}s)</h4> : null}
+                <ul ref={answersShell} className="FastMoneyAnswers__answers">
+                    
+                    {renderAnswers(answers)}
+                    <li className="FastMoneyAnswers__total">
+                        
+                        {currentUserIsHost() ? 
+                            <button tabIndex="-1" type="button" className="FastMoneyAnswers__submit-btn" onClick={onSubmitClick}>Submit</button> :
+                            null
+                        }
+                        <span className="FastMoneyAnswers__answer-text">
+                            Total:
+                        </span>
+                        <span className="FastMoneyAnswers__answer-points FastMoneyAnswers__answer-points--total">
+                            {calculateFastMoneyTotal(answers,currentUserIsHost() || index === 0)}
+                        </span>
+                    </li>
+                </ul>
+
+            </div>);
 }
 
 export default FastMoneyAnswers;

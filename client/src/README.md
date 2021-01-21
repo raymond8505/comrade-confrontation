@@ -55,6 +55,20 @@ After both players' answers are submitted, The Host reveals the answers to the p
 
 ## Release Notes
 
+### 1.9.0
+- Performance tweaks on modals
+- About modal now includes instructions on how to play the game
+- Sound mute preference now remembered between games
+- point fields disabled when Rapid Rubles round in progress to simplify answer entry
+- Game Settings now provides buttons to cycle through random team name and stake suggestions
+- Rapid Rubles answers now only shown when round is stopped to simplify answer entry
+- Answers now have their number displayed to the Host for easy reference in game
+- Rapid Rubles Help modal now includes timer lengths for Host reference
+- Rapid Rubles questions now drawn from database like regular round question
+- Fixed bug that prevented answer clicking in Rapid Rubles
+- Made answer clicking process simpler- points will go to the points field of the last selected answer or points field, additionally, the points field that was filled will become focused after filling
+- Hovering on the game code will display the phonetic pronunciation of the code, for verbally relaying it to players in video chat.
+- Rapid Rubles answer board now displays the timer for each player above the board.
 ### 1.8.0
 - Pressing enter in a field on sign in now submits the form
 - The host can see the stakes on the Rapid Rubles board now

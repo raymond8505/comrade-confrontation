@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cd client && npm start",
     "build": "cd client && npm run build",
+    "deploy": "node deploy.js", 
     "devserver": "nodemon server.js --ignore *.json --ignore client/*",
     "prodserver": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -17,9 +18,12 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
+    "chalk": "^4.1.0",
+    "ftp": "^0.3.10",
     "lodash": "^4.17.20",
     "lorem-ipsum": "^2.0.3",
     "node-html-parser": "^2.0.0",
+    "react-tooltip": "^4.2.11",
     "ws": "^7.4.0"
   }
 }

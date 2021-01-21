@@ -93,6 +93,16 @@ const handleMessage = async (msg,sender) => {
                 user : host
             });
             break;
+        case 'skip-to-round' :
+            game = getGameByID(msg.data.gameID);
+            const skipRound = msg.data.round;
+
+            game.currentRound = skipRound;
+
+            updateGame(game);
+
+            broadcastToGame(game,'round-changed',{game});
+            break;
 
         //expects msg.data to be an object {gameID,userID}
         case 'join-game' :
@@ -491,7 +501,11 @@ const handleMessage = async (msg,sender) => {
                     !round.playerAnswers[msg.data.playerIndex][msg.data.answerIndex].revealed;
 
                 updateGame(game);
-                broadcastToGame(game,'fast-money-answer-toggled',{game});
+                broadcastToGame(game,'fast-money-answer-toggled',{
+                    game,
+                    playerIndex : msg.data.playerIndex,
+                    answerIndex : msg.data.answerIndex
+                });
             }
         break;
             

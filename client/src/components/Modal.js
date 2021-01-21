@@ -13,20 +13,20 @@ const Modal = ({children,
     
     
     
-    return (<div className="Modal__wrap"><button className={`Modal__button ${buttonClassName}`} onClick={e=>{
+    return (<div className={`Modal__wrap ${className}`}><button className={`Modal__button ${buttonClassName}`} onClick={e=>{
             setOpen(!open);
         }}>{buttonText}</button>
-        <dialog className={`modal Modal Modal--${theme} ${className}`} open={open}>
-            <div className="modal__inner Modal__inner">
+        {open ? <dialog className={`Modal Modal--${theme} `} open>
+            <div className="Modal__inner">
                 <header className="Modal__header">
                     <button className="Modal__close" onClick={e=>{
                         setOpen(false);
                     }}>&times;</button>
                     {title === undefined ? null : <h2 className="Modal__title">{title}</h2>}
-                    {children}
                 </header>
+                {children}
             </div>
-        </dialog></div>);
+        </dialog> : null}</div>);
 }
 
 export default Modal;

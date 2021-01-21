@@ -1,30 +1,21 @@
 import React,{useState,useContext, version} from "react";
 import { GameContext } from "../contexts/gameContext";
+import Modal from './Modal';
 
 const AboutInfo = ({}) => {
 
     const [modalOpen,setModalOpen] = useState(false);
     const {versionInfo} = useContext(GameContext);
 
-    return (<div className="AboutInfo">
-        <button type="button" className={`AboutInfo__btn${versionInfo !== '' ? ' AboutInfo--show' : ''}`} onClick={e=>{
-
-            setModalOpen(true);
-
-        }}>About</button>
-
-        <dialog className="modal" open={modalOpen}>
-            <div className="modal__inner AboutInfo__inner">
-                <button type="button" className="btn--blank AboutInfo__close-modal" onClick={e=>{
-
-                        setModalOpen(false);
-                    }}>
-                    <span className="fas fa-times-circle"></span>
-                </button>
-                <div dangerouslySetInnerHTML={{__html : versionInfo}}></div>
-            </div>
-        </dialog>
-    </div>);
+    return (
+        <Modal 
+            buttonText="About"
+            className="AboutInfo"
+            title="Comrade Confrontation"
+            >
+            <div dangerouslySetInnerHTML={{__html : versionInfo}}></div>
+        </Modal>
+    );
 }
 
 export default AboutInfo;
