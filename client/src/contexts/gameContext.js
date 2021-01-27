@@ -42,7 +42,7 @@ export const GameController = () => {
     const getLocalCredentials = () => {
         const creds = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
-        return creds === null ? null : JSON.parse(creds);
+        return creds === null ? {muted : false} : JSON.parse(creds);
     }
     const muteReducer = (state,newState) => {
 

@@ -24,13 +24,15 @@
 {
    // display: none;
 }
-.AboutInfo__inner
+.AboutInfo .Modal__inner
 {
     font-variant: normal;
     overflow: auto;
     color: #333;
     background: #efefef;
     border: none;
+
+    @include scrollbar-style($bar-color: $red_dark);
 }
 .AboutInfo__close-modal
 {
@@ -39,7 +41,7 @@
 .AboutInfo h1 {
     display: none;
 }
-.AboutInfo .Modal__header
+.AboutInfo .Modal__close
 {
-    background: $red_dark;
+    color: $red_dark;
 }
