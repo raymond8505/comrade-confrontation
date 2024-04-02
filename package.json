@@ -12,7 +12,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "sampleqs": "node generate-questions.js",
     "realqs": "node get-real-questions.js",
-    "install": "yarn && cd client && yarn"
+    "install-client": "cd client && yarn"
   },
   "keywords": [],
   "author": "",
