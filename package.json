@@ -4,14 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cd client && npm start",
-    "build": "cd client && npm run build",
-    "deploy": "node deploy.js", 
+    "start": "cd client && yarn start",
+    "build": "cd client && yarn build",
+    "deploy": "node deploy.js",
     "devserver": "nodemon server.js --ignore *.json --ignore client/*",
     "prodserver": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "sampleqs": "node generate-questions.js",
-    "realqs": "node get-real-questions.js"
+    "realqs": "node get-real-questions.js",
+    "install": "yarn && cd client && yarn"
   },
   "keywords": [],
   "author": "",
